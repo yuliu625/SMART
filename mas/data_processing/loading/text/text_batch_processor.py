@@ -22,15 +22,16 @@ class TextBatchProcessor:
 
     def batch_process(
         self,
-        loading_method: str,
+        loading_methods: list[str],
     ):
         pdf_paths = self._get_pdf_paths(self.original_pdf_dir)
-        for pdf_path in pdf_paths:
-            self.run_a_processor(
-                text_document_store_dir=self.text_document_store_dir,
-                pdf_path=pdf_path,
-                loading_method=loading_method,
-            )
+        for loading_method in loading_methods:
+            for pdf_path in pdf_paths:
+                self.run_a_processor(
+                    text_document_store_dir=self.text_document_store_dir,
+                    pdf_path=pdf_path,
+                    loading_method=loading_method,
+                )
 
     def run_a_processor(
         self,
