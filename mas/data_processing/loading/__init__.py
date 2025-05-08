@@ -4,6 +4,9 @@
 先将document使用假embedding-model编码，存入vector-store中，后续更新真正embedding-model的编码。
 
 文件树结构为:
+- base_dir
+    - original_pdf
+    - image_pdf
     - document_store
         - text
             - ${loading_method}
@@ -16,18 +19,17 @@ metadata内容:
 text:
 {
     'modality': 'text',
-    'loading_method': <rule, ocr, vlm>,
     'pdf_name': <Path.name>,
 }
 image:
 {
     'modality': 'image',
-    'loading_method': 'none',
     'pdf_name': <Path.parent.name>,
     'page_num': <Path.name>,
 }
 
 """
 
-
+from .batch_processor import BatchProcessor
+from .load_document_store import load_document_store
 
