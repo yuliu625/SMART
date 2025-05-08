@@ -5,3 +5,5 @@
     - pdf --识别文本--> single document --划分--> documents
 """
 
+from .text_batch_processor import TextBatchProcessor
+
