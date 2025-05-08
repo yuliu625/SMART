@@ -5,3 +5,6 @@
     - pdf --转图片--> 多个图片 --加载--> documents
 """
 
+from .pdf_image_converter import PdfImageConverter
+from .image_batch_processor import ImageBatchProcessor
+
