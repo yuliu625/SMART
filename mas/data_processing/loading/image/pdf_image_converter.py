@@ -14,12 +14,14 @@ class PdfImageConverter:
     def convert_pdf_to_images(
         self,
         pdf_path: str | Path,
-        output_folder: str | Path = None
+        output_folder: str | Path = None,
+        force_overwrite: bool = False,
     ) -> None:
         """
         使用pymupdf将pdf进行转换。
 
         Args:
+            force_overwrite: 是否覆盖已有文件。不覆盖为增量转换，覆盖会强制写入。
             pdf_path: 待转换的pdf的路径。
             output_folder: 转换后图片的保存路径。如果不提供，默认以pdf同名保存至同一路径下。
 
@@ -29,6 +31,11 @@ class PdfImageConverter:
         # 处理路径。
         pdf_path = Path(pdf_path)
         output_folder = pdf_path.parent / pdf_path.stem if output_folder is None else Path(output_folder)
+        if output_folder.exists() and not force_overwrite:
+            # 如果不存在。不进入这个条件，进行转换。
+            # 如果存在，不覆盖。进入这个条件，不转换。
+            # 如果存在，覆盖。执行后面的代码，进行转换和覆盖。
+            return
         output_folder.mkdir(exist_ok=True, parents=True)
         # 读取文件。
         pdf_document = fitz.open(pdf_path)
@@ -49,6 +56,7 @@ class PdfImageConverter:
         self,
         pdf_dir: str | Path,
         dir_to_save: str | Path = None,
+        force_overwrite: bool = False,
     ):
         """
         检索一个文件夹下的所有pdf文件，将它们转换为图片，在另一个文件夹下以同名子文件夹保存。
@@ -58,6 +66,7 @@ class PdfImageConverter:
             - 额外指定分辨率。这里默认安装该项目对应的任务可以正常进行的2倍分辨率进行。
 
         Args:
+            force_overwrite: 是否覆盖已有文件。不覆盖为增量转换，覆盖会强制写入。
             pdf_dir: 保存pdf的文件夹。
             dir_to_save: 要保存的新的文件夹路径。
 
@@ -71,7 +80,7 @@ class PdfImageConverter:
         # 识别文件
         pdf_path_list = list(pdf_dir.glob('*.pdf'))  # 以rglob方法就可以递归搜索了。
         for pdf_path in pdf_path_list:
-            self.convert_pdf_to_images(pdf_path, dir_to_save / pdf_path.name)
+            self.convert_pdf_to_images(pdf_path, dir_to_save / pdf_path.name, force_overwrite=force_overwrite)
         print(f"{pdf_dir} have been saved as images in {dir_to_save}.")
 
 
