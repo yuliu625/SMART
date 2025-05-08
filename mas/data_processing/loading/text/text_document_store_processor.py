@@ -2,7 +2,7 @@
 
 """
 
-from .text_loader import PymupdfTextLoader
+from .text_processor import PymupdfTextLoader
 from mas.models import YuFakeEmbeddingModel
 from mas.data_processing import MetadataTools
 
