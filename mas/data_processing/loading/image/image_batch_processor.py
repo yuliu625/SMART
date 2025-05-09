@@ -23,13 +23,13 @@ class ImageBatchProcessor:
 
     def batch_process(
         self,
-        loading_method: list[str],
+        loading_methods: list[str],
     ):
         image_pdf_dirs = self._get_image_pdf_dirs(
             original_pdf_dir=self.original_pdf_dir,
             base_image_pdf_dir=self.base_image_pdf_dir,
         )
-        for loading_method in loading_method:
+        for loading_method in loading_methods:
             for image_pdf_dir in image_pdf_dirs:
                 self.run_a_processor(
                     image_document_store_dir=self.image_document_store_dir,
