@@ -38,3 +38,5 @@ image:
 
 """
 
+from .build_vector_store import build_image_vector_store, build_text_vector_store
+
