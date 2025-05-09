@@ -1,7 +1,7 @@
 """
 
 """
-
+from mas.data_processing import MetadataTools
 from mas.utils import VectorStoreLoader, get_all_documents
 
 from pathlib import Path
@@ -27,14 +27,23 @@ class TextIndexer:
         loading_method: str,
         embedding_method: str,
     ):
-        ...
+        self.generate_vector_store_from_document_store(
+            loading_method=loading_method,
+            embedding_method=embedding_method,
+        )
 
-    def generate_embedding_for_document_store(
+    def generate_vector_store_from_document_store(
         self,
         loading_method: str,
         embedding_method: str,
     ):
-        ...
+        documents = self.get_documents(loading_method=loading_method)
+        vector_store = self.get_vector_store(loading_method=loading_method, embedding_method=embedding_method)
+        vector_store.add_texts(
+            texts=[document.page_content for document in documents],
+            metadatas=[self.get_metadata(document.metadata, embedding_method) for document in documents],
+        )
+        return vector_store
 
     def get_documents(
         self,
@@ -65,4 +74,14 @@ class TextIndexer:
             embedding_method=embedding_method,
         )
         return vector_store
+
+    def get_metadata(
+        self,
+        document_store_metadata: dict,
+        embedding_method: str,
+    ) -> dict:
+        metadata = document_store_metadata.copy()
+        metadata['embedding_method'] = embedding_method
+        return metadata
+
 
