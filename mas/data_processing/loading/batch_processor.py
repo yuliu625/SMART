@@ -51,7 +51,7 @@ class BatchProcessor:
             original_pdf_dir=self.original_pdf_dir,
             base_image_pdf_dir=self.base_image_pdf_dir,
             image_document_store_dir=self.image_document_store_dir,
-            loading_method=image_loading_methods,
+            loading_methods=image_loading_methods,
         )
 
     def convert_pdf_to_image(
@@ -84,12 +84,12 @@ class BatchProcessor:
         original_pdf_dir: str | Path,
         base_image_pdf_dir: str | Path,
         image_document_store_dir: str | Path,
-        loading_method: list[str],
+        loading_methods: list[str],
     ) -> None:
         image_batch_processor = ImageBatchProcessor(
             original_pdf_dir=original_pdf_dir,
             base_image_pdf_dir=base_image_pdf_dir,
             image_document_store_dir=image_document_store_dir,
         )
-        image_batch_processor.batch_process(loading_method=loading_method)
+        image_batch_processor.batch_process(loading_methods=loading_methods)
 
