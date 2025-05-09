@@ -10,8 +10,8 @@ from pathlib import Path
 
 def build_document_store(
     base_dir: str | Path,
-    text_loading_method: list[str],
-    image_loading_method: list[str],
+    text_loading_methods: list[str],
+    image_loading_methods: list[str],
     convert_image_method: str,  # ['force', 'incremental', 'none']
     sub_dir_dict: dict = None,
 ):
@@ -25,8 +25,8 @@ def build_document_store(
         image_document_store_dir=sub_dir_dict['image_document_store_dir'],
     )
     batch_processor.run(
-        text_loading_methods=text_loading_method,
-        image_loading_methods=image_loading_method,
+        text_loading_methods=text_loading_methods,
+        image_loading_methods=image_loading_methods,
         convert_image_method=convert_image_method,
     )
 
