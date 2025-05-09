@@ -43,9 +43,12 @@ class PymupdfTextLoader:
         """
         if loading_method == "rule":
             self.set_rule_loader()
+            print(f"loading text pdf by {loading_method}")
         elif loading_method == "ocr":
+            print(f"loading text pdf by {loading_method}")
             self.set_ocr_loader()
         elif loading_method == "vlm":
+            print(f"loading text pdf by {loading_method}")
             self.set_vlm_loader()
         documents: list[Document] = self.loader.load()
         return documents
