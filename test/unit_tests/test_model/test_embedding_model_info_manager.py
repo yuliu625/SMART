@@ -2,11 +2,11 @@
 测试获取embedding-model映射信息的正确。
 """
 
-from mas.models import EmbeddingModelInfoManager
+from mas.models import EmbeddingModelInfoMapper
 
 
 def test_embedding_model_info_manager(model_key: str = 'model_1'):
-    embedding_model_info_manager = EmbeddingModelInfoManager()
+    embedding_model_info_manager = EmbeddingModelInfoMapper()
     a_name = embedding_model_info_manager.get_name(model_key)
     a_dim = embedding_model_info_manager.get_dim(model_key)
     a_path = embedding_model_info_manager.get_path(model_key)
