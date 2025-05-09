@@ -1,0 +1,32 @@
+"""
+
+"""
+
+from .batch_processor import BatchProcessor
+from mas.utils import get_default_dir
+
+from pathlib import Path
+
+
+def build_document_store(
+    base_dir: str | Path,
+    text_loading_method: list[str],
+    image_loading_method: list[str],
+    convert_image_method: str,  # ['force', 'incremental', 'none']
+    sub_dir_dict: dict = None,
+):
+    if sub_dir_dict is None:
+        sub_dir_dict = get_default_dir(base_dir)
+
+    batch_processor = BatchProcessor(
+        original_pdf_dir=sub_dir_dict['original_pdf_dir'],
+        base_image_pdf_dir=sub_dir_dict['base_image_pdf_dir'],
+        text_document_store_dir=sub_dir_dict['text_document_store_dir'],
+        image_document_store_dir=sub_dir_dict['image_document_store_dir'],
+    )
+    batch_processor.run(
+        text_loading_methods=text_loading_method,
+        image_loading_methods=image_loading_method,
+        convert_image_method=convert_image_method,
+    )
+
