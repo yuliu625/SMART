@@ -8,7 +8,6 @@ from mas.data_processing import MetadataTools
 
 from langchain_chroma import Chroma
 from langchain_text_splitters import ExperimentalMarkdownSyntaxTextSplitter
-
 from pathlib import Path
 
 from langchain_core.documents import Document
