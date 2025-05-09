@@ -2,7 +2,8 @@
 生成embedding model的工厂。
 """
 
-from mas.models.yu_models.nomic_embed_vision_v15 import NomicEmbedVisionV15
+from .yu_models.nomic_embed_vision_v15 import NomicEmbedVisionV15
+from .embedding_model_info_mapper import EmbeddingModelInfoMapper
 
 import os
 
@@ -20,18 +21,7 @@ class EmbeddingModelFactory:
         - BaseEmbeddingModel，我具体实现。
     """
     def __init__(self):
-        ...
-
-    def get_qwen_embedding_model(
-        self,
-        model_name: Annotated[str, "qwen上的embedding_model的名字"] = 'text-embedding-v3',
-    ) -> Embeddings:
-        embedding_model = OpenAILikeEmbedding(
-            model_name=model_name,
-            api_base=os.environ['DASHSCOPE_API_BASE_URL'],
-            api_key=os.environ['DASHSCOPE_API_KEY'],
-        )
-        return embedding_model
+        self.embedding_model_info_mapper = EmbeddingModelInfoMapper()
 
     def get_embedding_model_by_key(
         self,
