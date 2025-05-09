@@ -31,5 +31,5 @@ image:
 """
 
 from .batch_processor import BatchProcessor
-from .load_document_store import load_document_store
+from .build_document_store import build_document_store
 
