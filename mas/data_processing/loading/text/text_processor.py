@@ -5,14 +5,14 @@
 from langchain_pymupdf4llm import PyMuPDF4LLMLoader
 from langchain_community.document_loaders.parsers import RapidOCRBlobParser
 from langchain_community.document_loaders.parsers import LLMImageBlobParser
-
 from langchain_openai import ChatOpenAI
+from langchain_core.rate_limiters import InMemoryRateLimiter
+
+from pathlib import Path
+import os
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.documents import Document
-
-import os
-from pathlib import Path
 
 
 class PymupdfTextLoader:
@@ -104,6 +104,9 @@ class PymupdfTextLoader:
             model='qwen-vl-max',
             base_url=os.environ['DASHSCOPE_API_BASE_URL'],
             api_key=os.environ['DASHSCOPE_API_KEY'],
+            rate_limiter=InMemoryRateLimiter(
+
+            ),
         )
         return vlm
 
