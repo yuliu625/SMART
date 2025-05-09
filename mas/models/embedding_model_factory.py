@@ -5,6 +5,7 @@
 from .yu_models.nomic_embed_vision_v15 import NomicEmbedVisionV15
 from .embedding_model_info_mapper import EmbeddingModelInfoMapper
 
+from langchain_huggingface import HuggingFaceEmbeddings
 import os
 
 from langchain_core.embeddings import Embeddings
@@ -33,11 +34,23 @@ class EmbeddingModelFactory:
         #     trust_remote_code=True
         # )
         # return embedding_model
+        if model_key == 'model1':
+            return self.get_model1()
         my_embedding = NomicEmbedVisionV15(
             text_model_path=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
             vision_model_path=r"D:\model\nomic-ai\nomic-embed-vision-v1.5",
         )
         return my_embedding
+
+    def get_model1(self):
+        embedding_model = HuggingFaceEmbeddings(
+            model_name=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
+            model_kwargs={
+                'trust_remote_code': True,  # 添加这个参数
+                # 'device': 'cuda' if torch.cuda.is_available() else 'cpu'
+            },
+        )
+        return embedding_model
 
 
 if __name__ == '__main__':
