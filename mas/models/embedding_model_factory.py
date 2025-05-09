@@ -2,7 +2,15 @@
 生成embedding model的工厂。
 """
 
-from .yu_models.nomic_embed_vision_v15 import NomicEmbedVisionV15
+from .yu_models import (
+    YuFakeEmbeddingModel,
+    ChromaMultiModalEmbeddingModel,
+)
+from .yu_models import (
+    NomicEmbedVisionV15,
+    CLIPVitLargePatch14,
+    BGEVLLarge,
+)
 from .embedding_model_info_mapper import EmbeddingModelInfoMapper
 
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -28,27 +36,67 @@ class EmbeddingModelFactory:
         self,
         model_key: str,
     ) -> Embeddings:
-        # embedding_model = HuggingFaceEmbedding(
-        #     # model_name=r"D:\model\nomic-ai\colnomic-embed-multimodal-7b",
-        #     model_name=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
-        #     trust_remote_code=True
-        # )
-        # return embedding_model
-        if model_key == 'model1':
+        if model_key == 'fake':
+            return YuFakeEmbeddingModel()
+        elif model_key == 'model1':
             return self.get_model1()
-        my_embedding = NomicEmbedVisionV15(
-            text_model_path=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
-            vision_model_path=r"D:\model\nomic-ai\nomic-embed-vision-v1.5",
-        )
-        return my_embedding
+        elif model_key == 'model2':
+            return self.get_model2()
+        elif model_key == 'model3':
+            return self.get_model3()
+        elif model_key == 'model4':
+            return self.get_model4()
+        elif model_key == 'model5':
+            return self.get_model5()
+        elif model_key == 'model6':
+            return self.get_model6()
 
     def get_model1(self):
         embedding_model = HuggingFaceEmbeddings(
             model_name=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
             model_kwargs={
-                'trust_remote_code': True,  # 添加这个参数
+                'trust_remote_code': True,
                 # 'device': 'cuda' if torch.cuda.is_available() else 'cpu'
             },
+        )
+        return embedding_model
+
+    def get_model2(self):
+        embedding_model = HuggingFaceEmbeddings(
+            model_name=r"D:\model\BAAI\bge-m3",
+            model_kwargs={
+                'trust_remote_code': True,
+                # 'device': 'cuda' if torch.cuda.is_available() else 'cpu'
+            },
+        )
+        return embedding_model
+
+    def get_model3(self):
+        embedding_model = HuggingFaceEmbeddings(
+            model_name=r"",
+            model_kwargs={
+                'trust_remote_code': True,
+                # 'device': 'cuda' if torch.cuda.is_available() else 'cpu'
+            },
+        )
+        return embedding_model
+
+    def get_model4(self):
+        embedding_model = NomicEmbedVisionV15(
+            text_model_path=r"D:\model\nomic-ai\nomic-embed-text-v1.5",
+            vision_model_path=r"D:\model\nomic-ai\nomic-embed-vision-v1.5",
+        )
+        return embedding_model
+
+    def get_model5(self):
+        embedding_model = CLIPVitLargePatch14(
+            model_path=r"D:\model\openai\clip-vit-large-patch14"
+        )
+        return embedding_model
+
+    def get_model6(self):
+        embedding_model = BGEVLLarge(
+            model_path=r"D:\model\BAAI\BGE-VL-large"
         )
         return embedding_model
 
