@@ -11,13 +11,15 @@ from .yu_models import (
     CLIPVitLargePatch14,
     BGEVLLarge,
 )
+# from .yu_models import (
+#
+# )
 from .embedding_model_info_mapper import EmbeddingModelInfoMapper
 
 from langchain_huggingface import HuggingFaceEmbeddings
 import os
 
 from langchain_core.embeddings import Embeddings
-from typing import Annotated
 
 
 class EmbeddingModelFactory:
@@ -25,9 +27,9 @@ class EmbeddingModelFactory:
     各种embedding-model的工厂。
 
     实现方法有:
-        - OpenAILikeEmbedding，云API请求。
-        - HuggingFaceEmbedding，本地推理。
-        - BaseEmbeddingModel，我具体实现。
+        - OpenAIEmbeddings，云API请求。
+        - HuggingFaceEmbeddings，本地推理。
+        - Embeddings，我具体实现。
     """
     def __init__(self):
         self.embedding_model_info_mapper = EmbeddingModelInfoMapper()
@@ -37,19 +39,21 @@ class EmbeddingModelFactory:
         model_key: str,
     ) -> Embeddings:
         if model_key == 'fake':
-            return YuFakeEmbeddingModel()
+            return YuFakeEmbeddingModel()  # my fake multi-modal embedding model
         elif model_key == 'model1':
-            return self.get_model1()
+            return self.get_model1()  # text. nomic-embed-text-v1.5
         elif model_key == 'model2':
-            return self.get_model2()
+            return self.get_model2()  # text. bge-m3
         elif model_key == 'model3':
-            return self.get_model3()
+            return self.get_model3()  # text. clip-vit-large-patch14
         elif model_key == 'model4':
-            return self.get_model4()
+            return self.get_model4()  # text-image. nomic-embed-vision-v1.5
         elif model_key == 'model5':
-            return self.get_model5()
+            return self.get_model5()  # text-image. clip-vit-large-patch14
         elif model_key == 'model6':
-            return self.get_model6()
+            return self.get_model6()  # text-image. BGE-VL-large
+        elif model_key == 'model7':
+            return self.get_model7()  # text-image.
 
     def get_model1(self):
         embedding_model = HuggingFaceEmbeddings(
@@ -72,12 +76,8 @@ class EmbeddingModelFactory:
         return embedding_model
 
     def get_model3(self):
-        embedding_model = HuggingFaceEmbeddings(
-            model_name=r"",
-            model_kwargs={
-                'trust_remote_code': True,
-                # 'device': 'cuda' if torch.cuda.is_available() else 'cpu'
-            },
+        embedding_model = CLIPVitLargePatch14(
+            model_path=r"D:\model\openai\clip-vit-large-patch14",
         )
         return embedding_model
 
@@ -90,13 +90,19 @@ class EmbeddingModelFactory:
 
     def get_model5(self):
         embedding_model = CLIPVitLargePatch14(
-            model_path=r"D:\model\openai\clip-vit-large-patch14"
+            model_path=r"D:\model\openai\clip-vit-large-patch14",
         )
         return embedding_model
 
     def get_model6(self):
         embedding_model = BGEVLLarge(
-            model_path=r"D:\model\BAAI\BGE-VL-large"
+            model_path=r"D:\model\BAAI\BGE-VL-large",
+        )
+        return embedding_model
+
+    def get_model7(self):
+        embedding_model = NomicEmbedVisionV15(
+
         )
         return embedding_model
 
