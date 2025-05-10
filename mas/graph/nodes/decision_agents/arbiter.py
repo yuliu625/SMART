@@ -1,0 +1,17 @@
+"""
+仲裁者。
+"""
+
+from langchain_core.runnables import Runnable
+
+
+class Arbiter:
+    def __init__(
+        self,
+        llm_chain: Runnable,
+    ):
+        self.llm_chain = llm_chain
+
+    def run(self, state):
+        ...
+
