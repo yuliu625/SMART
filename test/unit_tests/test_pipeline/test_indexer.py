@@ -17,7 +17,7 @@ def test_build_image_vector_store():
     build_image_vector_store(
         base_dir=r"D:\dataset\risk_mas_t",
         image_loading_methods=['none'],
-        image_embedding_methods=['model2']
+        image_embedding_methods=['model6']
     )
 
 
