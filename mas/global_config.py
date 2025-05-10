@@ -57,3 +57,8 @@ REQUIRED_CONFIG = dict(
     pdf_name="pdf的名字。最重要。",
 )
 
+
+# llm
+LLM_MAS_RETRIES = 100
+
+
