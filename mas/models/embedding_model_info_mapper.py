@@ -13,29 +13,47 @@ class EmbeddingModel(BaseModel):
 
 
 EMBEDDING_MODEL_INFO = dict(
-    model_1=EmbeddingModel(
+    model1=EmbeddingModel(
         name='nomic-embed-text-v1.5',
         dim=768,
         type='text',
-        path='nomic-ai/nomic-embed-text-v1.5',
+        path=r'D:\model\nomic-ai\nomic-embed-text-v1.5',
     ),
-    model_2=EmbeddingModel(
+    model2=EmbeddingModel(
+        name='bge-m3',
+        dim=768,
+        type='text',
+        path=r'D:\model\BAAI\bge-m3',
+    ),
+    model3=EmbeddingModel(
+        name='',
+        dim=768,
+        type='text',
+        path='nomic-ai/nomic-embed-vision-v1.5',
+    ),
+    model4=EmbeddingModel(
         name='nomic-embed-vision-v1.5',
         dim=768,
         type='image',
-        path='nomic-ai/nomic-embed-vision-v1.5',
+        path=r'D:\model\nomic-ai\nomic-embed-vision-v1.5',
     ),
-    model_3=EmbeddingModel(
+    model5=EmbeddingModel(
         name='clip-vit-large-patch14',
-        dim=1,
+        dim=768,
         type='image',
-        path='openai/clip-vit-large-patch14',
+        path=r'D:\model\openai\clip-vit-large-patch14',
     ),
-    model_4=EmbeddingModel(
-        name='colnomic-embed-multimodal-3b',
+    model6=EmbeddingModel(
+        name='BGE-VL-large',
+        dim=768,
+        type='image',
+        path=r'D:\model\BAAI\BGE-VL-large',
+    ),
+    model7=EmbeddingModel(
+        name='',
         dim=1,
         type='image',
-        path='omic-ai/colnomic-embed-multimodal-3b',
+        path=r'',
     ),
 )
 
