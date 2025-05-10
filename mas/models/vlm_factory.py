@@ -2,6 +2,8 @@
 生成VLM的工厂。
 """
 
+from langchain_openai import ChatOpenAI
+
 from typing import Annotated
 import os
 
@@ -21,7 +23,7 @@ class VLMFactory:
         Returns:
             llama-index中的MultiModalLLM。这里是qwen-vl-max，我默认使用这个。
         """
-        dashscope_multi_modal_llm = DashScopeMultiModal(
+        dashscope_multi_modal_llm = ChatOpenAI(
             model_name=model,
             api_key=os.environ['DASHSCOPE_API_KEY'],
             vl_high_resolution_images=True,  # 因为文档的缺失，不是很确定这个参数是否有效。为了冗余，会在每次请求时额外再指定。
