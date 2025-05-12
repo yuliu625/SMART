@@ -9,6 +9,7 @@ from .json_output_parser import JsonOutputParser
 # 项目相关
 from .get_default_dir import get_default_dir
 from .get_all_documents import get_all_documents
+from .visualize_graph import save_graph_png
 
 from .vector_store_loader import VectorStoreLoader
 
