@@ -1,6 +1,8 @@
 """
 
 """
+
+from mas.utils import get_default_dir
 from mas.data_processing import MetadataTools
 from mas.utils import VectorStoreLoader, get_all_documents
 
@@ -21,6 +23,7 @@ class TextIndexer:
         self.vector_store_loader = VectorStoreLoader(
             base_dir=base_dir,
         )
+        self.default_dir = get_default_dir(base_dir=base_dir)
 
     def run(
         self,
@@ -31,6 +34,13 @@ class TextIndexer:
             loading_method=loading_method,
             embedding_method=embedding_method,
         )
+
+    def generate_vector_store_from_txt(
+        self,
+        loading_method: str,
+        embedding_method: str,
+    ):
+        ...
 
     def generate_vector_store_from_document_store(
         self,
