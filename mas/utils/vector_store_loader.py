@@ -30,9 +30,9 @@ class VectorStoreLoader:
         loading_method: str,
     ) -> VectorStore:
         if modality == 'text':
-            persist_dir = self.sub_dir_dict['text_document_store_dir'] / loading_method
+            persist_dir = self.sub_dir_dict.text_document_store_dir / loading_method
         else:  # if modality == 'image':
-            persist_dir = self.sub_dir_dict['image_document_store_dir'] / loading_method
+            persist_dir = self.sub_dir_dict.image_document_store_dir / loading_method
         document_store = Chroma(
             persist_directory=str(persist_dir),
             embedding_function=YuFakeEmbeddingModel(),
@@ -46,9 +46,9 @@ class VectorStoreLoader:
         embedding_method: str,
     ) -> VectorStore:
         if modality == 'text':
-            persist_dir = self.sub_dir_dict['text_vector_store_dir'] / f"{embedding_method}--{loading_method}"
+            persist_dir = self.sub_dir_dict.text_vector_store_dir / f"{embedding_method}--{loading_method}"
         else:  # if modality == 'image':
-            persist_dir = self.sub_dir_dict['image_vector_store_dir'] / f"{embedding_method}--{loading_method}"
+            persist_dir = self.sub_dir_dict.image_vector_store_dir / f"{embedding_method}--{loading_method}"
         embedding_model = self._get_embedding_model(embedding_method=embedding_method)
         vector_store = Chroma(
             persist_directory=str(persist_dir),
