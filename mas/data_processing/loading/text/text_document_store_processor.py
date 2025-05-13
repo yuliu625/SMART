@@ -35,6 +35,18 @@ class TextDocumentStoreProcessor:
         self.add_documents_to_vector_store(documents=documents, metadata=metadata, loading_method=loading_method)
         print(f"added text {pdf_path.name} to {self.text_document_store_dir / loading_method}")
 
+    def run_from_txt(
+        self,
+        pdf_path: str | Path,
+        loading_method: str,
+        txt_path: str | Path,
+    ) -> None:
+        pdf_path = Path(pdf_path)
+        documents = self.load_pdf_from_text(txt_path=txt_path)
+        metadata = self.get_metadata(pdf_path=pdf_path)
+        self.add_documents_to_vector_store(documents=documents, metadata=metadata, loading_method=loading_method)
+        print(f"added text {pdf_path.name} to {self.text_document_store_dir / loading_method}")
+
     def load_pdf(
         self,
         pdf_path: str | Path,
@@ -43,6 +55,15 @@ class TextDocumentStoreProcessor:
         pdf_loader = PymupdfTextLoader(pdf_path=pdf_path)
         documents = pdf_loader.run(loading_method=loading_method)
         documents = self._parse_markdown(documents=documents)
+        return documents
+
+    def load_pdf_from_text(
+        self,
+        txt_path: str | Path,
+    ) -> list[Document]:
+        txt_path = Path(txt_path)
+        text = txt_path.read_text(encoding='utf-8')
+        documents = [Document(page_content=text)]
         return documents
 
     def get_metadata(
