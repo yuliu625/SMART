@@ -34,7 +34,7 @@ class PromptTemplateFactory:
             self.prompts_dir = Path(prompts_dir)
         self.prompts_dir = self.prompts_dir / mode
 
-    def get_system_prompt_template(
+    def get_system_message(
         self,
         agent_name: str,
         **kwargs,
