@@ -2,8 +2,8 @@
 
 """
 
-
 from .text_document_store_processor import TextDocumentStoreProcessor
+from mas.utils import get_default_dir
 
 from pathlib import Path
 
@@ -14,11 +14,12 @@ class TextBatchProcessor:
     """
     def __init__(
         self,
-        original_pdf_dir: str,
-        text_document_store_dir: str | Path,
+        base_dir: str,
     ):
-        self.original_pdf_dir = Path(original_pdf_dir)
-        self.text_document_store_dir = Path(text_document_store_dir)
+        default_dir = get_default_dir(base_dir=base_dir)
+        self.original_pdf_dir = default_dir.original_pdf_dir
+        self.txt_pdf_dir = default_dir.txt_pdf_dir
+        self.text_document_store_dir = default_dir.text_document_store_dir
 
     def batch_process(
         self,
@@ -42,9 +43,15 @@ class TextBatchProcessor:
         text_document_store_processor = TextDocumentStoreProcessor(
             text_document_store_dir=text_document_store_dir,
         )
-        text_document_store_processor.run(
+        # text_document_store_processor.run(
+        #     pdf_path=pdf_path,
+        #     loading_method=loading_method
+        # )
+        txt_path = self.txt_pdf_dir / loading_method / f"{pdf_path.stem}.txt"
+        text_document_store_processor.run_from_txt(
             pdf_path=pdf_path,
-            loading_method=loading_method
+            loading_method=loading_method,
+            txt_path=txt_path,
         )
 
     def _get_pdf_paths(
