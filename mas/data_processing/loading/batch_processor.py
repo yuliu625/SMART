@@ -4,6 +4,7 @@
 
 from .text import TextBatchProcessor
 from .image import PdfImageConverter, ImageBatchProcessor
+from mas.utils import get_default_dir
 
 from pathlib import Path
 
@@ -14,11 +15,14 @@ class BatchProcessor:
     """
     def __init__(
         self,
+        base_dir: str,
         original_pdf_dir: str | Path,
         base_image_pdf_dir: str | Path,
         text_document_store_dir: str | Path,
         image_document_store_dir: str | Path,
     ):
+        self.default_dir = get_default_dir(base_dir=base_dir)
+        self.base_dir = self.default_dir.base_dir
         self.original_pdf_dir = Path(original_pdf_dir)
         self.base_image_pdf_dir = Path(base_image_pdf_dir)
         self.text_document_store_dir = Path(text_document_store_dir)
@@ -74,8 +78,7 @@ class BatchProcessor:
         loading_methods: list[str],
     ) -> None:
         text_batch_processor = TextBatchProcessor(
-            original_pdf_dir=original_pdf_dir,
-            text_document_store_dir=text_document_store_dir,
+            base_dir=self.base_dir
         )
         text_batch_processor.batch_process(loading_methods=loading_methods)
 
