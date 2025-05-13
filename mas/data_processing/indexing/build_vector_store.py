@@ -20,9 +20,9 @@ def build_image_vector_store(
         sub_dir_dict = get_default_dir(base_dir)
 
     image_batch_indexer = ImageBatchIndexer(
-        original_pdf_dir=sub_dir_dict['original_pdf_dir'],
-        base_image_pdf_dir=sub_dir_dict['base_image_pdf_dir'],
-        image_vector_store_dir=sub_dir_dict['image_vector_store_dir'],
+        original_pdf_dir=sub_dir_dict.original_pdf_dir,
+        base_image_pdf_dir=sub_dir_dict.base_image_pdf_dir,
+        image_vector_store_dir=sub_dir_dict.image_vector_store_dir,
     )
     image_batch_indexer.batch_process(
         loading_methods=image_loading_methods,
