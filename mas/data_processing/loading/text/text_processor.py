@@ -13,6 +13,7 @@ import os
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.documents import Document
+from typing import Literal
 
 
 class PymupdfTextLoader:
@@ -29,7 +30,7 @@ class PymupdfTextLoader:
 
     def run(
         self,
-        loading_method: str = 'rule',
+        loading_method: Literal['rule', 'ocr', 'vlm'] = 'rule',
     ) -> list[Document]:
         """
         主要方法。
