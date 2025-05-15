@@ -21,7 +21,7 @@ class VLMFactory:
         由于现有的各种agent-framework对于VLM不完全支持，这里专门去使用。
 
         Returns:
-            llama-index中的MultiModalLLM。这里是qwen-vl-max，我默认使用这个。
+            langchain中的MultiModalLLM。这里是qwen-vl-max，我默认使用这个。
         """
         dashscope_multi_modal_llm = ChatOpenAI(
             model_name=model,
