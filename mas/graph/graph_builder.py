@@ -8,11 +8,15 @@ from .nodes import (
 )
 from .nodes import AgentFactory
 from .nodes.mas_nodes import route_verification_request
+from .edges.analysis_edges import (
+    condition_more_information,
+)
 from .edges.decision_edges import (
     condition_final_round,
 )
 from .edges.mas_edges import (
     is_need_verification,
+    call_analysis_agents,
 )
 
 from langgraph.graph import StateGraph
@@ -28,7 +32,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langchain_core.vectorstores import VectorStore
 
 
-class MASGraph:
+class MASGraphBuilder:
     def __init__(
         self,
         vector_store: VectorStore,
@@ -43,6 +47,9 @@ class MASGraph:
         self.rag_retriever_factory = RagRetrieverFactory(vector_store=vector_store, pdf_name=pdf_name)
         # 获取相关的agent。
         self.agent_factory = AgentFactory()
+        # analysis相关的agent
+        self.document_reader = self.agent_factory.get_document_reader()
+        self.analyst = self.agent_factory.get_analyst()
         # decision相关的agent
         self.recognizer = self.agent_factory.get_recognizer()
         self.validator = self.agent_factory.get_validator()
@@ -68,7 +75,7 @@ class MASGraph:
         self._add_rag_edges()
         self._add_analysis_edges()
         self._add_decision_edges()
-        # 连接2个系统。
+        # 连接3个系统。
         self._add_mas_edges()
         graph = self.graph_builder.compile()
         return graph
@@ -77,6 +84,7 @@ class MASGraph:
         """
         注册RAG模块的节点。
         """
+        # 从工厂中获取对应的RAG系统。
         retriever = self.rag_retriever_factory.get_multi_query_retriever()
         self.graph_builder.add_node('retriever', retriever.run)
 
@@ -84,6 +92,8 @@ class MASGraph:
         """
         注册分析模块的agent。
         """
+        self.graph_builder.add_node('document_reader', self.document_reader.run)
+        self.graph_builder.add_node('analyst', self.analyst.run)
 
     def _add_decision_nodes(self):
         """
@@ -102,7 +112,12 @@ class MASGraph:
         self.graph_builder.add_node('verification_requests_router', route_verification_request)
 
     def _add_analysis_edges(self):
-        ...
+        """
+        连接分析内部模块。
+
+        这里仅确定document_reader阅读完文档之后，会将结果给analyst分析。
+        """
+        self.graph_builder.add_edge('document_reader', 'analyst')
 
     def _add_decision_edges(self):
         """
@@ -118,6 +133,7 @@ class MASGraph:
         """
         连接RAG模块。
         """
+        # 这里后来的实现是将所有的RAG系统都封装在retriever类当中。
 
     def _add_mas_edges(self):
         """
@@ -126,20 +142,35 @@ class MASGraph:
         主要为了连接分析和决策2个子系统。
         """
         # 系统开始于从retrieve产生初始的查询。
-        self.graph_builder.add_edge(START, 'retriever')
-        # self.graph_builder.add_edge('retriever', END)
+        self.graph_builder.add_edge(START, 'recognizer')
+        # 获得retriever的结果后，document_reader需要对于文档进行阅读。
+        self.graph_builder.add_edge('retriever', 'document_reader')
+        # 分析模块，analyst会决定是否进行进一步分析。
+        self.graph_builder.add_conditional_edges(
+            'analyst',
+            condition_more_information,
+            {
+                'True': 'retriever',
+                'False': 'validator',
+            }
+        )
         # # 最后，创建整个MAS的开始和结束。
         # self.graph_builder.add_edge(START, 'recognizer')
         # # validator决定是否需要验证一些信息，如果需要，就修改请求，将相关请求交给路由要求相关分析系统重新进行分析。
-        # self.graph_builder.add_conditional_edges(
-        #     'validator',
-        #     is_need_verification,
-        #     {
-        #         'True': 'verification_requests_router',
-        #         'False': 'arbiter',
-        #     }
-        # )
+        self.graph_builder.add_conditional_edges(
+            'validator',
+            is_need_verification,
+            {
+                'True': 'verification_requests_router',
+                'False': 'arbiter',
+            }
+        )
+        self.graph_builder.add_conditional_edges(
+            'verification_requests_router',
+            call_analysis_agents,
+            ['arbiter', 'analyst']
+        )
         # self.graph_builder.add_edge('verification_requests_router', 'recognizer')
         # # arbiter进行最终仲裁，完成全部分析。
-        # self.graph_builder.add_edge('arbiter', END)
+        self.graph_builder.add_edge('arbiter', END)
 
