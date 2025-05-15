@@ -31,10 +31,19 @@ class MultiQueryRetriever:
         self.llm_chain = self._get_llm_chain()
 
     def run(self, state: MASState):
+        ...
+
+    def get_state_to_be_updated(
+        self,
+        current_query: str,
+        last_round_result_number: int,
+        query_chat_history: list[AnyMessage],
+        query_result_history: list[Document],
+    ):
         query_chat_history = self.process_query_chat_history(
-            current_query=state.current_query,
-            last_round_result_number=state.last_round_result_number,
-            query_chat_history=state.query_chat_history,
+            current_query=current_query,
+            last_round_result_number=last_round_result_number,
+            query_chat_history=query_chat_history,
         )
         # call llm，获得重写的query
         rewrite_queries = self.get_rewrite_queries(query_chat_history=query_chat_history)
@@ -47,7 +56,7 @@ class MultiQueryRetriever:
         # 处理查询结果
         processed_result = self.get_unique_results(
             current_query_results=query_result,
-            query_result_history=state.query_result_history,
+            query_result_history=query_result_history,
         )
         current_query_results = processed_result['current_query_results']
         query_result_history = processed_result['query_result_history']
