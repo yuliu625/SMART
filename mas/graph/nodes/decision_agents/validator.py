@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 class Validator(BaseAgent):
     """
-
+    根据已有信息，反复验证。
     """
     def __init__(
         self,
