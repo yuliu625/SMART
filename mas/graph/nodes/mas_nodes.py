@@ -20,6 +20,6 @@ def route_verification_request(state: MASState):
     Returns:
 
     """
-    verification_requests = state.verification_requests
-    # return state
+    if state.current_agent_name not in ['control_analyst', 'financial_analyst', 'strategic_analyst']:
+        return {'current_agent_name': 'arbiter'}
 
