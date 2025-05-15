@@ -6,9 +6,11 @@ from .agent_factory import AgentFactory
 
 from .rag import (
     RagRetrieverFactory,
-    parse_documents,
 )
-
+from .analysis_agents import (
+    BaseDocumentReader,
+    BaseAnalyst,
+)
 from .decision_agents import (
     Recognizer,
     Validator,
