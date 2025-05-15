@@ -10,7 +10,6 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, AnyM
 
 from langchain_core.runnables import Runnable
 from langchain_core.documents import Document
-from pydantic import BaseModel
 from typing import Literal
 
 
@@ -49,34 +48,53 @@ class BaseDocumentReader(BaseAgent):
                 - 重写query和获得结果的记录。
                 - 对应的analyst的chat_history。
         """
-        chat_history = self.read_documents(state=state)
-        return {
-            'document_reader_history': chat_history,
-            # 'analyst_chat_history': ,
-        }
+        ...
 
-    def read_documents(self, state: MASState) -> list[AnyMessage]:
+    def read_documents(
+        self,
+        current_query_results: list[Document],
+        current_query: str,
+        document_reader_chat_history: list[AnyMessage],
+    ) -> list[AnyMessage]:
         if self.mode == 'text':
-            return self.read_text_documents(state)
+            return self.read_text_documents(
+                current_query_results=current_query_results,
+                current_query=current_query,
+                document_reader_chat_history=document_reader_chat_history,
+            )
         else:  # self.mode == 'image':
-            return self.read_image_documents(state)
+            return self.read_image_documents(
+                current_query_results=current_query_results,
+                current_query=current_query,
+                document_reader_chat_history=document_reader_chat_history,
+            )
 
-    def read_text_documents(self, state: MASState) -> list[AnyMessage]:
+    def read_text_documents(
+        self,
+        current_query_results: list[Document],
+        current_query: str,
+        document_reader_chat_history: list[AnyMessage],
+    ) -> list[AnyMessage]:
         text_human_message = self._get_text_human_message(
-            documents=state.current_query_results,
-            text_content=state.current_query,
+            documents=current_query_results,
+            text_content=current_query,
         )
-        chat_history = state.document_reader_history + [text_human_message]
+        chat_history = document_reader_chat_history + [text_human_message]
         response = self.call_llm_chain(chat_history=chat_history)
         chat_history = chat_history + [response]
         return chat_history
 
-    def read_image_documents(self, state: MASState) -> list[AnyMessage]:
+    def read_image_documents(
+        self,
+        current_query_results: list[Document],
+        current_query: str,
+        document_reader_chat_history: list[AnyMessage],
+    ) -> list[AnyMessage]:
         image_human_message = self._get_text_human_message(
-            documents=state.current_query_results,
-            text_content=state.current_query,
+            documents=current_query_results,
+            text_content=current_query,
         )
-        chat_history = state.document_reader_history + [image_human_message]
+        chat_history = document_reader_chat_history + [image_human_message]
         response = self.call_llm_chain(chat_history=chat_history)
         chat_history = chat_history + [response]
         return chat_history
