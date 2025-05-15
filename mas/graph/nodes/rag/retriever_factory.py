@@ -52,4 +52,3 @@ class RagRetrieverFactory:
         )
         return multi_query_retriever
 
-
