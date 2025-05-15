@@ -27,7 +27,9 @@ def is_need_verification(state: MASState) -> bool:
         return False
 
 
-def call_analysis_agents(state: MASState) -> Literal['arbiter', 'analyst']:
+def call_analysis_agents(
+    state: MASState,
+) -> Literal['arbiter', 'control_analyst', 'financial_analyst', 'strategic_analyst']:
     """
     验证选择路由。
 
@@ -38,8 +40,8 @@ def call_analysis_agents(state: MASState) -> Literal['arbiter', 'analyst']:
         arbiter, 已经收集到足够的信息，可以进行仲裁。
         analyst, 请求某个analyst进行进一步分析。
     """
-    request_agents = list(state.verification_requests.keys())
-    if len(request_agents) == 0:
-        request_agents = ['arbiter']
-    return request_agents
+    if state.current_agent_name in ['control_analyst', 'financial_analyst', 'strategic_analyst']:
+        return state.current_agent_name
+    else:
+        return 'arbiter'
 
