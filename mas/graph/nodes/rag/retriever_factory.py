@@ -5,6 +5,11 @@
 from ...prompts import PromptTemplateFactory
 from ....models import LLMFactory
 from .multi_query_retriever import MultiQueryRetriever
+from .mas_multi_query_retrievers import (
+    ControlMultiQueryRetriever,
+    FinancialMultiQueryRetriever,
+    StrategicMultiQueryRetriever,
+)
 from mas.utils import VectorStoreLoader
 
 # from langchain.retrievers.multi_query import MultiQueryRetriever
@@ -51,4 +56,22 @@ class RagRetrieverFactory:
             retriever=self.retriever,
         )
         return multi_query_retriever
+
+    def get_control_multi_query_retriever(self):
+        control_multi_query_retriever = ControlMultiQueryRetriever(
+            retriever=self.retriever,
+        )
+        return control_multi_query_retriever
+
+    def get_financial_multi_query_retriever(self):
+        financial_multi_query_retriever = FinancialMultiQueryRetriever(
+            retriever=self.retriever,
+        )
+        return financial_multi_query_retriever
+
+    def get_strategic_multi_query_retriever(self):
+        strategic_multi_query_retriever = StrategicMultiQueryRetriever(
+            retriever=self.retriever,
+        )
+        return strategic_multi_query_retriever
 
