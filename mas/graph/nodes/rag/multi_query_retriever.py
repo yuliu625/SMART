@@ -15,6 +15,9 @@ from langchain_core.documents import Document
 
 
 class MultiQueryRetriever:
+    """
+
+    """
     def __init__(
         self,
         retriever: VectorStoreRetriever,
