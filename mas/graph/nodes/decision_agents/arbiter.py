@@ -13,7 +13,9 @@ from langchain_core.messages import AIMessage
 
 class Arbiter(BaseAgent):
     """
+    执行最终仲裁决定。
 
+    是LRM。
     """
     def __init__(
         self,
