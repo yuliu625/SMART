@@ -6,6 +6,7 @@ from mas.global_config import LLM_MAS_RETRIES
 from mas.utils import JsonOutputParser
 
 from langchain_core.runnables import Runnable
+from langchain_core.messages import AnyMessage, AIMessage
 from pydantic import BaseModel
 from typing import Type, Annotated
 
@@ -21,10 +22,9 @@ class BaseAgent:
         self._is_need_structured_output = is_need_structured_output
         self._structured_output_format = structured_output_format
 
-    def request_llm(self, messages: list):
-        content = ""
+    def call_llm_chain(self, chat_history: list[AnyMessage]) -> AIMessage:
         for i in range(LLM_MAS_RETRIES):
-            response = self.llm_chain.invoke(messages)
+            response = self.llm_chain.invoke({'chat_history': chat_history})
             content = response.content
             if not self._is_need_structured_output:
                 # 如果不需要结构化输出，请求一次就够了。
@@ -34,8 +34,7 @@ class BaseAgent:
             if result:
                 # 已经产生有效的结果，终止循环。
                 break
-        messages.append(response)
-        return messages
+        return response
 
     def _extract_json_from_response(self, response: str) -> dict | None:
         """这个方法使用我已经构建的复用工具来实现。"""
@@ -48,4 +47,16 @@ class BaseAgent:
                 response,
                 schema_model=self._structured_output_format,
             )
+
+    def get_agent_request(self, response: AIMessage) -> dict | list:
+        """
+        从LLM的响应中提取结构化信息。
+
+        Args:
+            response:
+
+        Returns:
+
+        """
+        return JsonOutputParser.extract_json_from_str(response.content, self._structured_output_format)
 
