@@ -2,5 +2,5 @@
 
 """
 
-from .graph_builder import MASGraph
+from .graph_builder import MASGraphBuilder
 
