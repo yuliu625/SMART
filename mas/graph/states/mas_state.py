@@ -54,9 +54,13 @@ class MASState(BaseModel):
         default=list,
         description="累计的validator的对话记录。"
     )
-    arbiter_decision: list[AnyMessage] = Field(
+    arbiter_chat_history: list[AnyMessage] = Field(
         default_factory=list,
         description="arbiter进行最终的仲裁的分析内容。",
+    )
+    arbiter_decision: dict = Field(
+        default_factory=dict,
+        description="arbiter的结构化输出。"
     )
     # rag and analyst
     # # control
