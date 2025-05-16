@@ -29,6 +29,8 @@ class ControlAnalyst(BaseAnalyst):
             this_agent_name='control',
             analyst_chat_history=state.control_analyst_chat_history,
             validator_chat_history=state.validator_chat_history,
+            arbiter_context=state.arbiter_context,
+            remaining_retrieve_rounds=state.remaining_retrieve_rounds,
         )
         return state_to_be_updated
 
