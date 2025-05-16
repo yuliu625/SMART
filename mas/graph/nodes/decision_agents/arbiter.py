@@ -8,7 +8,7 @@ from mas.utils import JsonOutputParser
 
 from langchain_core.runnables import Runnable
 from pydantic import BaseModel
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
 
 class Arbiter(BaseAgent):
@@ -30,7 +30,16 @@ class Arbiter(BaseAgent):
         self.llm_chain = llm_chain
 
     def run(self, state: MASState):
-        ...
+        # 合并所有的讨论记录。
+        arbiter_message_content = '\n\n'.join(state.arbiter_context)
+        # 使用llm-chain。
+        chat_history = [HumanMessage(content=arbiter_message_content)]
+        response = self.call_llm_chain(chat_history=chat_history)
+        agent_request = self.get_agent_request(response)
+        return {
+            'arbiter_chat_history': chat_history + [response],
+            'arbiter_decision': agent_request,
+        }
 
     def arbitrate(self, state: MASState):
         ...
