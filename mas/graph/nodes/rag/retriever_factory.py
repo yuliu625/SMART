@@ -10,7 +10,6 @@ from .mas_multi_query_retrievers import (
     FinancialMultiQueryRetriever,
     StrategicMultiQueryRetriever,
 )
-from mas.utils import VectorStoreLoader
 
 # from langchain.retrievers.multi_query import MultiQueryRetriever
 
