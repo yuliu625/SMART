@@ -25,15 +25,17 @@ class Recognizer(BaseAgent):
         )
 
     def run(self, state: MASState):
+        # 对于初始pdf的文本内容进行分析。
         response = self.call_llm_chain(chat_history=[HumanMessage(state.original_pdf_text)])
-        validator_chat_history = [HumanMessage(content=response.content)]
-        arbiter_contex = [(
-            "<!--recognizer-start-->"
-            + response.content
-            + "<!--recognizer-end-->"
+        # 标注身份。
+        arbiter_context = [(
+                "<!--recognizer-start-->\n\n"
+                + response.content
+                + "\n\n<!--recognizer-end-->"
         )]
+        validator_chat_history = [HumanMessage(content=arbiter_context)]
         return {
             'validator_chat_history': validator_chat_history,
-            'arbiter_contex': arbiter_contex,
+            'arbiter_contex': arbiter_context,
         }
 
