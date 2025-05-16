@@ -6,7 +6,7 @@ from ...states import MASState
 from ..base_agent import BaseAgent
 from mas.utils import get_image_content_dict_from_base64, get_text_content
 
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, AnyMessage
+from langchain_core.messages import AIMessage, HumanMessage, AnyMessage
 
 from langchain_core.runnables import Runnable
 from langchain_core.documents import Document
@@ -48,7 +48,6 @@ class BaseDocumentReader(BaseAgent):
                 - 重写query和获得结果的记录。
                 - 对应的analyst的chat_history。
         """
-        ...
 
     def read_documents(
         self,
