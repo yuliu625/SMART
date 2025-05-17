@@ -11,9 +11,9 @@ from .yu_models import (
     CLIPVitLargePatch14,
     BGEVLLarge,
 )
-# from .yu_models import (
-#
-# )
+from .yu_models import (
+    ColnomicEmbedMultimodal,
+)
 from .embedding_model_info_mapper import EmbeddingModelInfoMapper
 
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -53,7 +53,9 @@ class EmbeddingModelFactory:
         elif model_key == 'model6':
             return self.get_model6()  # text-image. BGE-VL-large
         elif model_key == 'model7':
-            return self.get_model7()  # text-image.
+            return self.get_model7()  # text-image. colnomic-embed-multimodal-3b
+        elif model_key == 'model8':
+            return self.get_model8()  # text-image. colnomic-embed-multimodal-7b
 
     def get_model1(self):
         embedding_model = HuggingFaceEmbeddings(
@@ -101,8 +103,14 @@ class EmbeddingModelFactory:
         return embedding_model
 
     def get_model7(self):
-        embedding_model = NomicEmbedVisionV15(
+        embedding_model = ColnomicEmbedMultimodal(
+            model_path=r"D:\model\nomic-ai\colnomic-embed-multimodal-3b"
+        )
+        return embedding_model
 
+    def get_model8(self):
+        embedding_model = ColnomicEmbedMultimodal(
+            model_path=r"D:\model\nomic-ai\colnomic-embed-multimodal-7b"
         )
         return embedding_model
 
