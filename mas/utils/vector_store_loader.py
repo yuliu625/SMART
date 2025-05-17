@@ -66,6 +66,3 @@ class VectorStoreLoader:
         )
         return embedding_model
 
-
-if __name__ == '__main__':
-    pass
