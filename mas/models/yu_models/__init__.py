@@ -11,3 +11,5 @@ from .clip_vit_large_patch14 import CLIPVitLargePatch14
 from .nomic_embed_vision_v15 import NomicEmbedVisionV15
 from .bge_vl_large import BGEVLLarge
 
+from .colnomic_embed_multimodal_7b import ColnomicEmbedMultimodal
+
