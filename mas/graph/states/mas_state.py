@@ -1,5 +1,5 @@
 """
-
+整个MAS的graph的计算状态。
 """
 
 from langchain_core.messages import AnyMessage
