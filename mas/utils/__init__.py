@@ -5,6 +5,7 @@
 # 我所有agent项目都会用到的工具。
 from .load_prompt_template import load_prompt_template
 from .json_output_parser import JsonOutputParser
+from .load_txt import load_txt
 
 # 项目相关
 from .get_default_dir import get_default_dir
