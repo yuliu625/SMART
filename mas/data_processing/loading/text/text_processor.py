@@ -102,12 +102,12 @@ class PymupdfTextLoader:
             VLM。这里用的是qwen最好的VLM。
         """
         vlm = ChatOpenAI(
-            model='qwen-vl-max',
+            model='qwen-vl-ocr-latest',
             base_url=os.environ['DASHSCOPE_API_BASE_URL'],
             api_key=os.environ['DASHSCOPE_API_KEY'],
-            rate_limiter=InMemoryRateLimiter(
-
-            ),
+            # rate_limiter=InMemoryRateLimiter(
+            #
+            # ),
         )
         return vlm
 
