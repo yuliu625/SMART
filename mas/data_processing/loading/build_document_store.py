@@ -7,12 +7,14 @@ from mas.utils import get_default_dir
 
 from pathlib import Path
 
+from typing import Literal
+
 
 def build_document_store(
     base_dir: str | Path,
     text_loading_methods: list[str],
     image_loading_methods: list[str],
-    convert_image_method: str,  # ['force', 'incremental', 'none']
+    convert_image_method: Literal['force', 'incremental', 'none'] = 'incremental',  # ['force', 'incremental', 'none']
     sub_dir_dict: dict = None,
 ):
     if sub_dir_dict is None:
