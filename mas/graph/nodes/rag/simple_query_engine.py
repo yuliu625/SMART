@@ -18,8 +18,8 @@ class SimpleQueryEngine:
         self.retriever = retriever
 
     def run(self, state: MASState):
-        documents = self.retriever.invoke(state.current_query)
+        documents = self.retriever.invoke(state.current_message)
         return {
-            'current_query_results': documents,
+            f'{state.current_agent_name}_query_results': documents,
         }
 
