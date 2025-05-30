@@ -2,6 +2,8 @@
 RAG子图的构建。
 """
 
+from __future__ import annotations
+
 from langgraph.graph import StateGraph
 
 from typing import TYPE_CHECKING
