@@ -2,6 +2,8 @@
 所有需要进行structured-output的数据类。
 """
 
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 from typing import Literal
 
