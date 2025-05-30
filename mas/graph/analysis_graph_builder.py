@@ -2,6 +2,8 @@
 分析系统子图的构建。
 """
 
+from __future__ import annotations
+
 from langgraph.graph import StateGraph
 
 from typing import TYPE_CHECKING
@@ -10,7 +12,7 @@ if TYPE_CHECKING:
     from langgraph.graph.state import CompiledStateGraph
 
 
-class RAGGraphBuilder:
+class AnalysisGraphBuilder:
     def __init__(self, state):
         self.graph_builder = StateGraph(state)
 
