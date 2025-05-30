@@ -2,6 +2,8 @@
 整个MAS的graph的计算状态。
 """
 
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING
