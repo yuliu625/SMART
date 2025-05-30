@@ -6,6 +6,8 @@ RAG系统会有多种架构和实现方法需要测试，具体的有:
     - MultiQueryRAG
 """
 
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING
