@@ -5,6 +5,8 @@
     - prompt-template-loader。
 """
 
+from __future__ import annotations
+
 # 需要的该包中的其他工具。引入其他项目建议直接将2个文件都复制。
 from .prompt_template_loader import PromptTemplateLoader
 
