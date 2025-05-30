@@ -2,6 +2,8 @@
 
 """
 
+from __future__ import annotations
+
 from mas.schemas.mas_state import MASState
 from mas.nodes import (
     RagRetrieverFactory,
