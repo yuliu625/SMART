@@ -80,7 +80,7 @@ class EmbeddingModelFactory:
         return embedding_model
 
     def get_model3(self):
-        embedding_model = CLIPVitLargePatch14(
+        embedding_model = CLIPVitEmbeddingModel(
             model_path=r"D:\model\openai\clip-vit-large-patch14",
         )
         return embedding_model
@@ -93,13 +93,13 @@ class EmbeddingModelFactory:
         return embedding_model
 
     def get_model5(self):
-        embedding_model = CLIPVitLargePatch14(
+        embedding_model = CLIPVitEmbeddingModel(
             model_path=r"D:\model\openai\clip-vit-large-patch14",
         )
         return embedding_model
 
     def get_model6(self):
-        embedding_model = BGEVLLarge(
+        embedding_model = BGEVL(
             model_path=r"D:\model\BAAI\BGE-VL-large",
         )
         return embedding_model
@@ -116,6 +116,3 @@ class EmbeddingModelFactory:
         )
         return embedding_model
 
-
-if __name__ == '__main__':
-    pass
