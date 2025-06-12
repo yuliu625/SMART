@@ -7,13 +7,14 @@ from __future__ import annotations
 from ..base_agent import BaseAgent
 from mas.schemas.structured_output_format import RequestAgent
 
-from langchain_core.messages import AnyMessage, HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.decision_state import DecisionState
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.messages import AnyMessage
 
 
 class Validator(BaseAgent):
@@ -53,8 +54,8 @@ class Validator(BaseAgent):
             # 继续运行。
             return dict(
                 shared_chat_history=chat_history,
-                current_agent_name=validator_response['agent_request']['agent_name'],
-                current_message=validator_response['agent_request']['agent_message'],
+                current_agent_name=validator_response['agent_request'].agent_name,
+                current_message=validator_response['agent_request'].agent_message,
                 remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
             )
 
@@ -67,7 +68,7 @@ class Validator(BaseAgent):
         agent_request = self.get_structured_output(raw_str=response.content)
         return dict(
             chat_history=chat_history + [response],
-            agent_request=agent_request,
+            agent_request=RequestAgent(**agent_request),
         )
 
     def _before_call_validator(
