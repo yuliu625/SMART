@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from mas.nodes.agent_factory import AgentFactory
+from mas.edges.analysis_edges import is_need_more_information
 
 from langgraph.graph import (
     StateGraph,
@@ -40,4 +41,14 @@ class AnalysisGraphBuilder:
         """
         注册MAS的edges。
         """
+        self.graph_builder.add_edge(START, 'analyst')
+        self.graph_builder.add_conditional_edges(
+            'analyst',
+            is_need_more_information,
+            {
+                True: 'document_reader',
+                False: END,
+            }
+        )
+        self.graph_builder.add_edge('document_reader', 'analyst')
 
