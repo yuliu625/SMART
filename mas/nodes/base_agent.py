@@ -4,9 +4,9 @@
 使用我构建的工具类JsonOutputExtractor，但是简化大量可设置的参数。
 
 预期的派生类:
-    - NormalAgent: 普通的对话agent。
-    - JsonAgent: 可以有结构化数据输出的agent。
-    - PydanticAgent: 强制输出符合schema的输出。
+    - NormalAgent: 普通的对话agent。完全没有结构化数据相关的需求。
+    - JsonAgent: 有结构化数据输出的agent。但并不提取结构化输出，仅以规范的方式与其他agent进行对话。
+    - PydanticAgent: 强制输出符合schema的输出。需要使用结构化输出进行计算或指令。
 """
 
 from __future__ import annotations
@@ -16,27 +16,34 @@ from mas.utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
 
-from typing import TYPE_CHECKING, Literal
+from collections import Counter
+
+from typing import TYPE_CHECKING, Literal, Self, cast
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseChatModel
-    from langchain_core.messages import AnyMessage
+    from langchain_core.messages import AnyMessage, SystemMessage
     from langchain_core.prompts import ChatPromptTemplate
     from pydantic import BaseModel
 
 
 class BaseAgent:
     """
-    基础的agent。
+    基础的agent。具体结构化数据提取的功能。
 
     注意:
         - 没有chat-history维护的功能，仅持有system-prompt的状态。如果实现:
             - langchain: 在派生类中以属性维护。
             - langgraph: 维护图状态。
             2种实现派生类均需要实现chat-history的管理，可灵活自定义。
+        - 多模态支持。熟悉命名中为llm，但也支持vlm。如果实现，需要相关的chat-history方法支持。
 
     具有功能:
         - 请求LLM进行生成。
         - 结构化输出校验和重试。
+
+    预期使用方法:
+        - 继承该超类，指定BaseAgent类型，仅管理chat-history，使用call_llm_with_retry方法。
+        - 如果需要，对于具体的LLM，重写call_llm方法。
     """
     def __init__(
         self,
@@ -70,14 +77,22 @@ class BaseAgent:
         self._schema_pydantic_base_model = schema_pydantic_base_model
         self._schema_check_type = schema_check_type
 
-    @staticmethod
+    # ====该MAS需要实现。====
+    def process_state(
+        self,
+        state,
+    ) -> dict:
+        raise NotImplementedError("这个MAS中所有agent的统一的注册方法。")
+
+    # ====最基础方法。====
     def call_llm(
+        self,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
         chat_history: list[AnyMessage],
     ) -> AIMessage:
         """
-        构建chain进行生成。
+        构建chain，进行内容生成。
 
         这是一个最常用的chain。独立构建是为了:
             - 自主维护chat-history。
@@ -85,6 +100,11 @@ class BaseAgent:
 
         注意:
             - 约定chat_history是以'chat_history'这个key传递。
+            - 对于传入的chat_prompt_template，它是以system-message而不是以system-message-prompt-template初始化的。因为:
+                - system-message更加安全。
+                - system-message-prompt-template可以提前format。
+                - chat_prompt_template可以以partial实现类似的效果，但复杂化问题。
+                - 这个类默认是固定身份的agent，并处于确定的计算图。
             - 默认LLM的响应一定是AIMessage。
 
         Args:
@@ -97,13 +117,27 @@ class BaseAgent:
         """
         llm_chain = chat_prompt_template | llm
         response = llm_chain.invoke(input={'chat_history': chat_history})
-        assert isinstance(response, AIMessage)
+        response = cast('AIMessage', response)
+        # assert isinstance(response, AIMessage)
         return response
 
-    def call_llm_with_retry(
+    # ====最基础方法。====
+    async def a_call_llm(
         self,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
+        chat_history: list[AnyMessage],
+    ) -> AIMessage:
+        """call_llm的异步版本。"""
+        llm_chain = chat_prompt_template | llm
+        response = await llm_chain.ainvoke(input={'chat_history': chat_history})
+        response = cast('AIMessage', response)
+        # assert isinstance(response, AIMessage)
+        return response
+
+    # ====主要方法。====
+    def call_llm_with_retry(
+        self,
         chat_history: list[AnyMessage],
     ) -> AIMessage:
         """
@@ -112,14 +146,14 @@ class BaseAgent:
         需要使用:
             - JsonOutputExtractor: 已构建的工具类。
             - self.call_llm: 进行一般请求。
+            - self._chat_prompt_template (ChatPromptTemplate): 构建的chat-prompt-template，一般仅包含system-prompt。
+            - self._llm (BaseChatModel): chat-model，可以生成内容。
             - self._is_need_structured_output: 是否需要结构化输出。如果不需要，仅一次响应。
             - self._max_retries: 最大尝试生成次数。
             - self._schema_pydantic_base_model: 在需要结构化输出的情况下，进行dataclass检验。
             - self._schema_check_type: 在需要结构化输出的情况下，进行dataclass检验的类型。
 
         Args:
-            chat_prompt_template (ChatPromptTemplate): 构建的chat-prompt-template，一般仅包含system-prompt。
-            llm (BaseChatModel): chat-model，可以生成内容。
             chat_history (list[AnyMessage]): 过去的对话记录。
 
         Returns:
@@ -128,15 +162,15 @@ class BaseAgent:
         # 如果不需要结构化输出，得到一次请求的响应即可。
         if not self._is_need_structured_output:
             return self.call_llm(
-                chat_prompt_template=chat_prompt_template,
-                llm=llm,
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
                 chat_history=chat_history,
             )
         # 如果需要结构化输出，在最大可重试次数内进行请求。
         for _ in range(self._max_retries):
             response = self.call_llm(
-                chat_prompt_template=chat_prompt_template,
-                llm=llm,
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
                 chat_history=chat_history,
             )
             # 检测响应内容，是否符合结构化输出要求。
@@ -144,6 +178,32 @@ class BaseAgent:
                 # 如果是有内容的，返回响应。
                 return response
 
+    # ====主要方法。====
+    async def a_call_llm_with_retry(
+        self,
+        chat_history: list[AnyMessage],
+    ) -> AIMessage:
+        """call_llm_with_retry的异步版本。"""
+        # 如果不需要结构化输出，得到一次请求的响应即可。
+        if not self._is_need_structured_output:
+            return await self.a_call_llm(
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
+                chat_history=chat_history,
+            )
+        # 如果需要结构化输出，在最大可重试次数内进行请求。
+        for _ in range(self._max_retries):
+            response = await self.a_call_llm(
+                chat_prompt_template=self._chat_prompt_template,
+                llm=self._llm,
+                chat_history=chat_history,
+            )
+            # 检测响应内容，是否符合结构化输出要求。
+            if self.get_structured_output(raw_str=response.content):
+                # 如果是有内容的，返回响应。
+                return response
+
+    # ====工具方法。====
     def get_structured_output(
         self,
         raw_str: str,
@@ -171,4 +231,40 @@ class BaseAgent:
             schema_pydantic_base_model=self._schema_pydantic_base_model,
             schema_check_type=self._schema_check_type,
         )
+
+    # ====工具方法。====
+    def format_system_prompt_template(
+        self,
+        format_kwargs: dict,
+    ) -> Self:
+        """
+        在已经构建agent后，安全格式化system-message-prompt-template。
+
+        会进行严格检测input-variables和format-kwargs的一致性。
+        这个方法设计为只执行一次。
+
+        Args:
+            format_kwargs (dict): 对system-message-prompt-template进行partial的参数。
+
+        Returns:
+            Self: 处理后的对象。
+        """
+        # 检测原始system-message-prompt-template中的变量。
+        system_message_prompt_template_input_variables = list(self._chat_prompt_template.input_variables)
+        system_message_prompt_template_input_variables.remove('chat_history')  # 仅修改副本的记录。
+        # 判断。变量名必须完全一致，一次完成format。
+        assert Counter(system_message_prompt_template_input_variables) == Counter(list(format_kwargs.keys()))
+        # 修改chat-prompt-template。实际意义等同将system-message-prompt-template处理为system-message。
+        self._chat_prompt_template = self._chat_prompt_template.partial(**format_kwargs)
+        return self
+
+    # ====冗余方法。====
+    @staticmethod
+    def get_chat_prompt_template(
+        system_message: SystemMessage,
+    ):
+        """
+        这是个冗余的方法。配套使用PromptTemplateLoader是直接可以加载chat_prompt_template的。
+        """
+        raise NotImplementedError
 
