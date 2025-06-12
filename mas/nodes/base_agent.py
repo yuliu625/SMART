@@ -258,6 +258,18 @@ class BaseAgent:
         self._chat_prompt_template = self._chat_prompt_template.partial(**format_kwargs)
         return self
 
+    # ====该MAS添加方法。====
+    @staticmethod
+    def wrap_message_content_with_agent_name(
+        agent_name: str,
+        original_content: str,
+    ) -> str:
+        return (
+            f"<!--{agent_name}-start-->\n\n"
+            + original_content
+            + f"\n\n<!--{agent_name}-end-->"
+        )
+
     # ====冗余方法。====
     @staticmethod
     def get_chat_prompt_template(
