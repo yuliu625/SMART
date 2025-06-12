@@ -5,16 +5,17 @@
 from __future__ import annotations
 
 from ..base_agent import BaseAgent
+from mas.utils.human_content_input_processor import HumanContentInputProcessor
 
-from langchain_core.messages import HumanMessage, AnyMessage
+from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from mas.schemas.analysis_state import AnalysisState
-    from langchain_core.runnables import Runnable
     from langchain_core.documents import Document
-    from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.language_models import BaseChatModel
+    from langchain_core.messages import AnyMessage
 
 
 class BaseDocumentReader(BaseAgent):
@@ -55,25 +56,34 @@ class BaseDocumentReader(BaseAgent):
                 - 重写query和获得结果的记录。
                 - 对应的analyst的chat_history。
         """
+        raise NotImplementedError
+
+    # def read_documents(
+    #     self,
+    #     current_query_results: list[Document],
+    #     current_query: str,
+    #     document_reader_chat_history: list[AnyMessage],
+    # ) -> list[AnyMessage]:
+    #     if self.mode == 'text':
+    #         return self.read_text_documents(
+    #             current_query_results=current_query_results,
+    #             current_query=current_query,
+    #             document_reader_chat_history=document_reader_chat_history,
+    #         )
+    #     else:  # self.mode == 'image':
+    #         return self.read_image_documents(
+    #             current_query_results=current_query_results,
+    #             current_query=current_query,
+    #             document_reader_chat_history=document_reader_chat_history,
+    #         )
 
     def read_documents(
         self,
-        current_query_results: list[Document],
-        current_query: str,
-        document_reader_chat_history: list[AnyMessage],
-    ) -> list[AnyMessage]:
-        if self.mode == 'text':
-            return self.read_text_documents(
-                current_query_results=current_query_results,
-                current_query=current_query,
-                document_reader_chat_history=document_reader_chat_history,
-            )
-        else:  # self.mode == 'image':
-            return self.read_image_documents(
-                current_query_results=current_query_results,
-                current_query=current_query,
-                document_reader_chat_history=document_reader_chat_history,
-            )
+        query: str,
+        text_documents: list[Document] = None,
+        image_documents: list[Document] = None,
+    ):
+        ...
 
     def read_text_documents(
         self,
@@ -86,7 +96,7 @@ class BaseDocumentReader(BaseAgent):
             text_content=current_query,
         )
         chat_history = document_reader_chat_history + [text_human_message]
-        response = self.call_llm_chain(chat_history=chat_history)
+        response = self.call_llm_with_retry(chat_history=chat_history)
         chat_history = chat_history + [response]
         return chat_history
 
@@ -101,16 +111,16 @@ class BaseDocumentReader(BaseAgent):
             text_content=current_query,
         )
         chat_history = document_reader_chat_history + [image_human_message]
-        response = self.call_llm_chain(chat_history=chat_history)
+        response = self.call_llm_with_retry(chat_history=chat_history)
         chat_history = chat_history + [response]
         return chat_history
 
-    def _get_text_human_message(
-        self,
-        documents: list[Document],
-        text_content: str,
-    ) -> HumanMessage:
-        documents_str = '\n\n'.join([document.page_content for document in documents])
+    @staticmethod
+    def text_documents_to_text(
+        text_documents: list[Document],
+    ) -> str:
+        documents_str = '\n\n'.join([text_document.page_content for text_document in text_documents])
+        return documents_str
         human_message_content = (
             "从原文件中查找到以下几个相关的文档：\n\n"
             + documents_str
@@ -118,16 +128,16 @@ class BaseDocumentReader(BaseAgent):
         )
         return HumanMessage(content=human_message_content)
 
-    def _get_image_human_message(
-        self,
-        documents: list[Document],
-        text_content: str,
-    ) -> HumanMessage:
+    @staticmethod
+    def image_documents_to_content_dict(
+        image_documents: list[Document],
+    ) -> list[dict]:
         documents_contents = [
-            get_image_content_dict_from_base64(base64_str=document.page_content)
-            for document in documents
+            HumanContentInputProcessor.get_image_content_dict_from_base64(base64_str=image_document.page_content)
+            for image_document in image_documents
         ]
-        query_content_dict = get_text_content(text=text_content)
+        return documents_contents
+        query_content_dict = HumanContentInputProcessor.get_text_content_dict(text=text_content)
         human_message_content = documents_contents + [query_content_dict]
         return HumanMessage(content=human_message_content)
 
