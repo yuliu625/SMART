@@ -2,7 +2,7 @@
 
 """
 
-from mas.nodes.prompts.prompt_template_factories import AllPromptTemplateFactory
+from mas.nodes.prompts.prompt_template_factories import RAGPromptTemplateFactory
 from mas.nodes.models import LLMFactory
 from .multi_query_retriever import MultiQueryRetriever
 from .mas_multi_query_retrievers import (
@@ -22,7 +22,7 @@ class RagRetrieverFactory:
         vector_store: VectorStore,
         pdf_name: str,
     ):
-        self.prompt_template_factory = AllPromptTemplateFactory()
+        self.prompt_template_factory = RAGPromptTemplateFactory()
         self.llm_factory = LLMFactory()
 
         self.retriever = self.get_retriever(
