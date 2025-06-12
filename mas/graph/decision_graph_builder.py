@@ -41,4 +41,5 @@ class DecisionGraphBuilder:
         """
         注册MAS的edges。
         """
+        self.graph_builder.add_edge('recognizer', 'validator')
 
