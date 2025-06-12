@@ -8,7 +8,6 @@ from mas.schemas.mas_state import MASState
 from mas.nodes import (
     RagRetrieverFactory,
 )
-from mas.nodes import AgentFactory
 from mas.nodes import route_verification_request
 from mas.edges import (
     condition_more_information,
@@ -18,14 +17,19 @@ from mas.edges import (
     call_analysis_agents,
 )
 
-from langgraph.graph import StateGraph
-from langgraph.graph.graph import (
-    END,
+from mas.nodes.agent_factory import AgentFactory
+
+from langgraph.graph import (
+    StateGraph,
     START,
+    END,
 )
 
-from langgraph.graph.state import CompiledStateGraph
-from langchain_core.vectorstores import VectorStore
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from langgraph.graph.state import CompiledStateGraph
+    from langgraph.checkpoint.base import BaseCheckpointSaver
+    from langchain_core.vectorstores import VectorStore
 
 
 class MASGraphBuilder:
