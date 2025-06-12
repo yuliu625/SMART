@@ -4,12 +4,20 @@
 
 from __future__ import annotations
 
-from langgraph.graph import StateGraph
+from mas.nodes.agent_factory import AgentFactory
+
+from mas.nodes.agent_factory import AgentFactory
+
+from langgraph.graph import (
+    StateGraph,
+    START,
+    END,
+)
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    # import MASState here
     from langgraph.graph.state import CompiledStateGraph
+    from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
 class AnalysisGraphBuilder:
@@ -18,10 +26,11 @@ class AnalysisGraphBuilder:
 
     def build_graph(
         self,
+        checkpointer: BaseCheckpointSaver | None = None,
     ) -> CompiledStateGraph:
         self._add_nodes()
         self._add_edges()
-        graph = self.graph_builder.compile()
+        graph = self.graph_builder.compile(checkpointer=checkpointer)
         return graph
 
     def _add_nodes(self):
