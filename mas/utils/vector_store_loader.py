@@ -2,27 +2,23 @@
 加载默认路径的vector-store。
 """
 
-from .get_default_dir import get_default_dir
-from mas.models import EmbeddingModelFactory, YuFakeEmbeddingModel
+from mas.nodes.models import EmbeddingModelFactory, YuFakeEmbeddingModel
 
 from langchain_chroma import Chroma
-
 from pathlib import Path
 
-from langchain_core.embeddings import Embeddings
-from langchain_core.vectorstores import VectorStore
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from langchain_core.embeddings import Embeddings
+    from langchain_core.vectorstores import VectorStore
 
 
 class VectorStoreLoader:
     def __init__(
         self,
-        base_dir: str | Path,
-        sub_dir_dict: dict = None,
+        file_tree,
     ):
-        self.base_dir = Path(base_dir)
-        if sub_dir_dict is None:
-            sub_dir_dict = get_default_dir(self.base_dir)
-        self.sub_dir_dict = sub_dir_dict
+        self.file_tree = file_tree
 
     def get_document_store(
         self,
