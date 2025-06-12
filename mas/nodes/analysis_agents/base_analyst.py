@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from ..base_agent import BaseAgent
+from mas.schemas.structured_output_format import RequestAgent
 
 from langchain_core.messages import AIMessage, HumanMessage
 
@@ -52,9 +53,8 @@ class BaseAnalyst(BaseAgent):
         state_to_be_updated = {}
         response = self.analyze(
             chat_history=analyst_chat_history,
-            remaining_retrieve_rounds=remaining_retrieve_rounds,
         )
-        agent_request = self.get_structured_output(response=response)
+        agent_request = self.get_structured_output(response=response.content)
         # 无论怎么样，记录本次analyst的分析。
         state_to_be_updated[f'{this_agent_name}_analyst_chat_history'] = analyst_chat_history + [response]
         if agent_request['agent_name'] == 'validator':
@@ -89,20 +89,25 @@ class BaseAnalyst(BaseAgent):
     def analyze(
         self,
         chat_history: list[AnyMessage],
-        remaining_retrieve_rounds: int,
-    ) -> AIMessage:
+    ) -> dict:
         # 这里可以直接请求，因为document-reader已经将阅读的结果以HumanMessage写到analyst的chat-history里。
-        if remaining_retrieve_rounds == 0:
-            chat_history = self._process_last_round_retrieve(chat_history)
         response = self.call_llm_with_retry(chat_history=chat_history)
-        return response
+        agent_request = self.get_structured_output(raw_str=response.content)
+        return dict(
+            chat_history=chat_history + [response],
+            agent_request=RequestAgent(**agent_request),
+        )
 
-    def _process_last_round_retrieve(
+    def _before_call_analyst(
         self,
         chat_history: list[AnyMessage],
+        remaining_retrieve_rounds: int,
     ) -> list[AnyMessage]:
-        last_round_content = chat_history[-1].content
-        last_round_content = last_round_content + "\n\n已经用完这一轮分析的查询次数，这次必须做出小结交给validator进行验证。"
+        if remaining_retrieve_rounds == 0:
+            last_round_content = chat_history[-1].content
+            last_round_content = last_round_content + "\n\n已经用完这一轮分析的查询次数，这次必须做出小结交给validator进行验证。"
+        else:
+            last_round_content = chat_history[-1].content
         chat_history[-1] = HumanMessage(content=last_round_content)
         return chat_history
 
