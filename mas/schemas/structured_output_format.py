@@ -25,7 +25,7 @@ class RequestAgent(BaseModel):
     ] = Field(
         description="指定下一个运行的agent的名字。"
     )
-    message: str = Field(
+    agent_message: str = Field(
         description="传递给下一个的agent的信息。"
     )
 
