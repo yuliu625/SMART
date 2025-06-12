@@ -5,15 +5,16 @@
 from __future__ import annotations
 
 from ..base_agent import BaseAgent
-from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
 
-from pydantic import BaseModel
+from langchain_core.messages import AIMessage, HumanMessage
+
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from mas.schemas.analysis_state import AnalysisState
-    from langchain_core.runnables import Runnable
-    from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.language_models import BaseChatModel
+    from langchain_core.messages import AnyMessage
+    from pydantic import BaseModel
 
 
 class BaseAnalyst(BaseAgent):
@@ -22,20 +23,23 @@ class BaseAnalyst(BaseAgent):
     """
     def __init__(
         self,
+        agent_name: str,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
     ):
         super().__init__(
             chat_prompt_template=chat_prompt_template,
             llm=llm,
             max_retries=10,
             is_need_structured_output=True,
-            schema_pydantic_base_model=None,
+            schema_pydantic_base_model=schema_pydantic_base_model,
             schema_check_type='dict',
         )
+        self.agent_name = agent_name
 
     def process_state(self, state: AnalysisState) -> dict:
-        ...
+        raise NotImplementedError
 
     def get_state_to_be_updated(
         self,
@@ -50,7 +54,7 @@ class BaseAnalyst(BaseAgent):
             chat_history=analyst_chat_history,
             remaining_retrieve_rounds=remaining_retrieve_rounds,
         )
-        agent_request = self.get_agent_request(response=response)
+        agent_request = self.get_structured_output(response=response)
         # 无论怎么样，记录本次analyst的分析。
         state_to_be_updated[f'{this_agent_name}_analyst_chat_history'] = analyst_chat_history + [response]
         if agent_request['agent_name'] == 'validator':
@@ -87,10 +91,10 @@ class BaseAnalyst(BaseAgent):
         chat_history: list[AnyMessage],
         remaining_retrieve_rounds: int,
     ) -> AIMessage:
-        # 这里可以直接请求，因为document-reader已经将阅读的结果以HumanMessage写到analyst的chat-history里了。
+        # 这里可以直接请求，因为document-reader已经将阅读的结果以HumanMessage写到analyst的chat-history里。
         if remaining_retrieve_rounds == 0:
             chat_history = self._process_last_round_retrieve(chat_history)
-        response = self.call_llm_chain(chat_history=chat_history)
+        response = self.call_llm_with_retry(chat_history=chat_history)
         return response
 
     def _process_last_round_retrieve(
