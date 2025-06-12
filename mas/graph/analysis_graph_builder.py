@@ -6,8 +6,6 @@ from __future__ import annotations
 
 from mas.nodes.agent_factory import AgentFactory
 
-from mas.nodes.agent_factory import AgentFactory
-
 from langgraph.graph import (
     StateGraph,
     START,
