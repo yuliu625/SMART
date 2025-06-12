@@ -60,21 +60,6 @@ class AgentFactory:
     ) -> BaseAnalyst:
         ...
 
-    # def _get_document_reader(self):
-    #     document_llm_chain = self._get_llm_chain(llm_name='qwen-vl-max', agent_name='document_reader')
-    #     document_reader = BaseDocumentReader(
-    #         llm_chain=document_llm_chain,
-    #     )
-    #     return document_reader
-    #
-    # def _get_analyst(self):
-    #     analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='analyst')
-    #     analyst = BaseAnalyst(
-    #         llm_chain=analyst_llm_chain,
-    #         structured_output_format=RequestAgent,
-    #     )
-    #     return analyst
-
     def get_recognizer(
         self,
         system_message_prompt_template_name: str,
@@ -117,56 +102,56 @@ class AgentFactory:
         )
         return arbiter
 
-    def get_control_document_reader(self):
-        control_document_reader_llm_chain = self._get_vlm_chain(
-            vlm_name='qwen-vl-max', agent_name='control_document_reader'
-        )
-        control_document_reader = ControlDocumentReader(
-            llm_chain=control_document_reader_llm_chain,
-        )
-        return control_document_reader
-
-    def get_control_analyst(self):
-        control_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='control_analyst')
-        control_analyst = ControlAnalyst(
-            llm_chain=control_analyst_llm_chain,
-            structured_output_format=RequestAgent,
-        )
-        return control_analyst
-
-    def get_financial_document_reader(self):
-        financial_document_reader_llm_chain = self._get_vlm_chain(
-            vlm_name='qwen-vl-max', agent_name='financial_document_reader'
-        )
-        financial_document_reader = FinancialDocumentReader(
-            llm_chain=financial_document_reader_llm_chain,
-        )
-        return financial_document_reader
-
-    def get_financial_analyst(self):
-        financial_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='financial_analyst')
-        financial_analyst = FinancialAnalyst(
-            llm_chain=financial_analyst_llm_chain,
-            structured_output_format=RequestAgent,
-        )
-        return financial_analyst
-
-    def get_strategic_document_reader(self):
-        strategic_document_reader_llm_chain = self._get_vlm_chain(
-            vlm_name='qwen-vl-max', agent_name='strategic_document_reader'
-        )
-        strategic_document_reader = StrategicDocumentReader(
-            llm_chain=strategic_document_reader_llm_chain,
-        )
-        return strategic_document_reader
-
-    def get_strategic_analyst(self):
-        strategic_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='strategic_analyst')
-        strategic_analyst = StrategicAnalyst(
-            llm_chain=strategic_analyst_llm_chain,
-            structured_output_format=RequestAgent,
-        )
-        return strategic_analyst
+    # def get_control_document_reader(self):
+    #     control_document_reader_llm_chain = self._get_vlm_chain(
+    #         vlm_name='qwen-vl-max', agent_name='control_document_reader'
+    #     )
+    #     control_document_reader = ControlDocumentReader(
+    #         llm_chain=control_document_reader_llm_chain,
+    #     )
+    #     return control_document_reader
+    #
+    # def get_control_analyst(self):
+    #     control_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='control_analyst')
+    #     control_analyst = ControlAnalyst(
+    #         llm_chain=control_analyst_llm_chain,
+    #         structured_output_format=RequestAgent,
+    #     )
+    #     return control_analyst
+    #
+    # def get_financial_document_reader(self):
+    #     financial_document_reader_llm_chain = self._get_vlm_chain(
+    #         vlm_name='qwen-vl-max', agent_name='financial_document_reader'
+    #     )
+    #     financial_document_reader = FinancialDocumentReader(
+    #         llm_chain=financial_document_reader_llm_chain,
+    #     )
+    #     return financial_document_reader
+    #
+    # def get_financial_analyst(self):
+    #     financial_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='financial_analyst')
+    #     financial_analyst = FinancialAnalyst(
+    #         llm_chain=financial_analyst_llm_chain,
+    #         structured_output_format=RequestAgent,
+    #     )
+    #     return financial_analyst
+    #
+    # def get_strategic_document_reader(self):
+    #     strategic_document_reader_llm_chain = self._get_vlm_chain(
+    #         vlm_name='qwen-vl-max', agent_name='strategic_document_reader'
+    #     )
+    #     strategic_document_reader = StrategicDocumentReader(
+    #         llm_chain=strategic_document_reader_llm_chain,
+    #     )
+    #     return strategic_document_reader
+    #
+    # def get_strategic_analyst(self):
+    #     strategic_analyst_llm_chain = self._get_llm_chain(llm_name='qwen-max', agent_name='strategic_analyst')
+    #     strategic_analyst = StrategicAnalyst(
+    #         llm_chain=strategic_analyst_llm_chain,
+    #         structured_output_format=RequestAgent,
+    #     )
+    #     return strategic_analyst
 
     # def _get_llm_chain(
     #     self,
