@@ -49,10 +49,9 @@ class Recognizer(BaseAgent):
         # 对于初始pdf的文本内容进行分析。
         response = self.call_llm_with_retry(chat_history=[HumanMessage(content=original_pdf_text)])
         # 标注身份。
-        arbiter_context = (
-            "<!--recognizer-start-->\n\n"
-            + response.content
-            + "\n\n<!--recognizer-end-->"
+        arbiter_context = self.wrap_message_content_with_agent_name(
+            agent_name='recognizer',
+            original_content=response.content,
         )
         return arbiter_context
 
