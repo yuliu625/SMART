@@ -11,7 +11,6 @@ from langchain_core.messages import HumanMessage
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.decision_state import DecisionState
-    from langchain_core.runnables import Runnable
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
 
@@ -37,17 +36,23 @@ class Recognizer(BaseAgent):
         )
 
     def process_state(self, state: DecisionState) -> dict:
-        # 对于初始pdf的文本内容进行分析。
-        response = self.call_llm_chain(chat_history=[HumanMessage(state.original_pdf_text)])
-        # 标注身份。
-        arbiter_context = [(
-                "<!--recognizer-start-->\n\n"
-                + response.content
-                + "\n\n<!--recognizer-end-->"
-        )]
-        validator_chat_history = [HumanMessage(content=arbiter_context)]
+        arbiter_context = self.recognize(original_pdf_text=state.original_pdf_text)
+        shared_chat_history = [HumanMessage(content=arbiter_context)]
         return {
-            'validator_chat_history': validator_chat_history,
-            'arbiter_contex': arbiter_context,
+            'shared_chat_history': shared_chat_history,
         }
+
+    def recognize(
+        self,
+        original_pdf_text: str,
+    ) -> str:
+        # 对于初始pdf的文本内容进行分析。
+        response = self.call_llm_with_retry(chat_history=[HumanMessage(content=original_pdf_text)])
+        # 标注身份。
+        arbiter_context = (
+            "<!--recognizer-start-->\n\n"
+            + response.content
+            + "\n\n<!--recognizer-end-->"
+        )
+        return arbiter_context
 
