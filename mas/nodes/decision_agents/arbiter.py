@@ -5,15 +5,16 @@
 from __future__ import annotations
 
 from ..base_agent import BaseAgent
+from mas.schemas.structured_output_format import ArbiterDecision
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.decision_state import DecisionState
-    from langchain_core.runnables import Runnable
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
+    from langchain_core.messages import AnyMessage
 
 
 class Arbiter(BaseAgent):
@@ -31,23 +32,44 @@ class Arbiter(BaseAgent):
             chat_prompt_template=chat_prompt_template,
             llm=llm,
             max_retries=10,
-            is_need_structured_output=False,
-            schema_pydantic_base_model=None,
+            is_need_structured_output=True,
+            schema_pydantic_base_model=ArbiterDecision,
             schema_check_type='dict',
         )
 
     def process_state(self, state: DecisionState) -> dict:
-        # 合并所有的讨论记录。
-        arbiter_message_content = '\n\n'.join(state.arbiter_context)
-        # 使用llm-chain。
-        chat_history = [HumanMessage(content=arbiter_message_content)]
-        response = self.call_llm_chain(chat_history=chat_history)
-        agent_request = self.get_agent_request(response)
-        return {
-            'arbiter_chat_history': chat_history + [response],
-            'arbiter_decision': agent_request,
-        }
+        return self.arbitrate(
+            shared_chat_history=state.shared_chat_history,
+        )
 
-    def arbitrate(self, state: DecisionState):
-        ...
+    def arbitrate(
+        self,
+        shared_chat_history: list[AnyMessage],
+    ) -> dict:
+        # 合并所有的讨论记录。
+        merged_content = self.merge_chat_history(chat_history=shared_chat_history)
+        # 获取llm响应。
+        response = self.call_llm_with_retry(chat_history=[HumanMessage(content=merged_content)])
+        # 提取最终结论。
+        arbiter_decision = self.get_structured_output(raw_str=response.content)
+        return dict(
+            shared_chat_history=shared_chat_history + [response],
+            arbiter_decision=arbiter_decision,
+        )
+
+    def merge_chat_history(
+        self,
+        chat_history: list[AnyMessage],
+    ) -> str:
+        merged_content = ""  # '\n\n'.join(message.content for message in chat_history)
+        for message in chat_history:
+            if isinstance(message, AIMessage):
+                merged_content += self.wrap_message_content_with_agent_name(
+                    agent_name='validator',
+                    original_content=message.content,
+                )
+            else:
+                merged_content += message.content
+            merged_content += '\n\n'
+        return merged_content
 
