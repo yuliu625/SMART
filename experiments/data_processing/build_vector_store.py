@@ -2,7 +2,7 @@
 
 """
 
-from mas.data_processing import (
+from data_processing import (
     build_document_store,
     build_text_vector_store,
     build_image_vector_store,
