@@ -3,8 +3,8 @@
 """
 
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
+
 from typing import Literal
 
 
@@ -16,7 +16,7 @@ class RAGRewriteResponse(BaseModel):
     )
 
 
-# ====analysis====
+# ====analysis & decision====
 class RequestAgent(BaseModel):
     agent_name: Literal[
         'arbiter', 'validator',
@@ -32,9 +32,15 @@ class RequestAgent(BaseModel):
 
 # ====decision====
 class ArbiterDecision(BaseModel):
-    decision: str = Field(description="最终的决定。")
-    risk: bool = Field(description="是否存在风险的判断。")
-    confidence: float = Field(description="对于仲裁结果的置信度。")
+    decision: str = Field(
+        description="最终的决定。"
+    )
+    risk: bool = Field(
+        description="是否存在风险的判断。"
+    )
+    confidence: float = Field(
+        description="对于仲裁结果的置信度。"
+    )
 
 
 class ConfidenceOutput(BaseModel):
