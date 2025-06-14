@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from ..base_agent import BaseAgent
+from mas.nodes.base_agent import BaseAgent
 from mas.utils.human_content_input_processor import HumanContentInputProcessor
 
 from langchain_core.messages import HumanMessage
@@ -12,6 +12,7 @@ from langchain_core.messages import HumanMessage
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from mas.schemas.analysis_state import AnalysisState
+    from langchain_core.runnables import RunnableConfig
     from langchain_core.documents import Document
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.language_models import BaseChatModel
@@ -47,12 +48,17 @@ class BaseDocumentReader(BaseAgent):
             schema_check_type='dict',
         )
 
-    def process_state(self, state: AnalysisState) -> dict:
+    def process_state(
+        self,
+        state: AnalysisState,
+        config: RunnableConfig,
+    ) -> dict:
         """
         根据当前的问题，阅读对应的文档。
 
         Args:
             state: 具体使用参数为current_query和current_query_results。
+            config:
 
         Returns:
             更新:
