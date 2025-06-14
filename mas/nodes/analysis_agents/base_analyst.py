@@ -4,14 +4,15 @@
 
 from __future__ import annotations
 
-from ..base_agent import BaseAgent
-from mas.schemas.structured_output_format import RequestAgent
+from mas.nodes.base_agent import BaseAgent
+from mas.schemas.structured_output_format import AgentRequest
 
 from langchain_core.messages import AIMessage, HumanMessage
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from mas.schemas.analysis_state import AnalysisState
+    from langchain_core.runnables import RunnableConfig
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage
@@ -39,8 +40,21 @@ class BaseAnalyst(BaseAgent):
         )
         self.agent_name = agent_name
 
-    def process_state(self, state: AnalysisState) -> dict:
-        raise NotImplementedError
+    def process_state(
+        self,
+        state: AnalysisState,
+        config: RunnableConfig,
+    ) -> dict:
+        chat_histories = self._before_call_analyst(
+            chat_history=state.chat_history,
+            remaining_retrieve_rounds=state.remaining_retrieve_rounds,
+        )
+        analysis_result = self.analyze(
+            chat_history=chat_histories,
+        )
+        return dict(
+
+        )
 
     def get_state_to_be_updated(
         self,
@@ -95,7 +109,7 @@ class BaseAnalyst(BaseAgent):
         agent_request = self.get_structured_output(raw_str=response.content)
         return dict(
             chat_history=chat_history + [response],
-            agent_request=RequestAgent(**agent_request),
+            agent_request=AgentRequest(**agent_request),
         )
 
     def _before_call_analyst(
