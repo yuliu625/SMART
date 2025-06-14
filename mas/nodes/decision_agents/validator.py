@@ -4,14 +4,18 @@
 
 from __future__ import annotations
 
-from ..base_agent import BaseAgent
-from mas.schemas.structured_output_format import RequestAgent
+from mas.nodes.base_agent import BaseAgent
+from mas.schemas.structured_output_format import (
+    AgentRequest,
+    AgentProcessedResult,
+)
 
 from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.decision_state import DecisionState
+    from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.messages import AnyMessage
@@ -31,44 +35,50 @@ class Validator(BaseAgent):
             llm=llm,
             max_retries=10,
             is_need_structured_output=True,
-            schema_pydantic_base_model=RequestAgent,
+            schema_pydantic_base_model=AgentRequest,
             schema_check_type='dict',
         )
 
-    def process_state(self, state: DecisionState) -> dict:
+    def process_state(
+        self,
+        state: DecisionState,
+        config: RunnableConfig,
+    ) -> dict:
         # 处理
-        chat_history = self._before_call_validator(
-            chat_history=state.setup_chat_history,
+        validator_result = self.validate(
+            shared_chat_history=state.shared_chat_history,
             remaining_validation_rounds=state.remaining_validation_rounds,
-        )
-        validator_response = self.validate(
-            chat_history=state.shared_chat_history,
         )
         if state.remaining_validation_rounds == 0:
             # 已经用完验证次数，需要进行仲裁。
             return dict(
-                shared_chat_history=chat_history,
+                shared_chat_history=validator_result.chat_history,
                 current_agent_name='arbiter',
             )
         else:
             # 继续运行。
             return dict(
-                shared_chat_history=chat_history,
-                current_agent_name=validator_response['agent_request'].agent_name,
-                current_message=validator_response['agent_request'].agent_message,
+                shared_chat_history=validator_result.chat_history,
+                current_agent_name=validator_result.agent_request.agent_name,
+                current_message=validator_result.agent_request.agent_message,
                 remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
             )
 
     def validate(
         self,
-        chat_history: list[AnyMessage],
-    ) -> dict:
+        shared_chat_history: list[AnyMessage],
+        remaining_validation_rounds: int,
+    ) -> AgentProcessedResult:
+        shared_chat_history = self._before_call_validator(
+            chat_history=shared_chat_history,
+            remaining_validation_rounds=remaining_validation_rounds,
+        )
         # 这里可以直接请求，因为analyst已经将分析的结果以HumanMessage写到validator的chat-history里了，并且已标明身份。
-        response = self.call_llm_with_retry(chat_history=chat_history)
+        response = self.call_llm_with_retry(chat_history=shared_chat_history)
         agent_request = self.get_structured_output(raw_str=response.content)
-        return dict(
-            chat_history=chat_history + [response],
-            agent_request=RequestAgent(**agent_request),
+        return AgentProcessedResult(
+            chat_history=shared_chat_history + [response],
+            agent_request=AgentRequest(**agent_request),
         )
 
     def _before_call_validator(
@@ -77,6 +87,7 @@ class Validator(BaseAgent):
         remaining_validation_rounds: int,
     ) -> list[AnyMessage]:
         chat_history_ = chat_history.copy()
+        #
         if len(chat_history_) == 1:
             return chat_history_
         last_round_content = chat_history_[-1].content
