@@ -20,7 +20,7 @@ from .decision_agents import (
     Arbiter,
 )
 from mas.schemas.structured_output_format import (
-    RequestAgent,
+    AgentRequest,
     ArbiterDecision,
 )
 from mas.nodes.prompts.prompt_template_factories import AllPromptTemplateFactory
