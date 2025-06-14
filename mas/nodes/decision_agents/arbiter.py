@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from ..base_agent import BaseAgent
+from mas.nodes.base_agent import BaseAgent
 from mas.schemas.structured_output_format import ArbiterDecision
 
 from langchain_core.messages import HumanMessage, AIMessage
@@ -12,6 +12,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.decision_state import DecisionState
+    from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.messages import AnyMessage
@@ -37,9 +38,16 @@ class Arbiter(BaseAgent):
             schema_check_type='dict',
         )
 
-    def process_state(self, state: DecisionState) -> dict:
-        return self.arbitrate(
+    def process_state(
+        self,
+        state: DecisionState,
+        config: RunnableConfig,
+    ) -> dict:
+        arbiter_result = self.arbitrate(
             shared_chat_history=state.shared_chat_history,
+        )
+        return dict(
+
         )
 
     def arbitrate(
