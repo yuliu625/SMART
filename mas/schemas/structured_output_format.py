@@ -5,6 +5,8 @@
 from __future__ import annotations
 from pydantic import BaseModel, Field
 
+from langchain_core.messages import AnyMessage
+
 from typing import Literal
 
 
@@ -17,7 +19,7 @@ class RAGRewriteResponse(BaseModel):
 
 
 # ====analysis & decision====
-class RequestAgent(BaseModel):
+class AgentRequest(BaseModel):
     agent_name: Literal[
         'arbiter', 'validator',
         'document_reader',
@@ -27,6 +29,18 @@ class RequestAgent(BaseModel):
     )
     agent_message: str = Field(
         description="传递给下一个的agent的信息。"
+    )
+
+
+class AgentProcessedResult(BaseModel):
+    """
+
+    """
+    chat_history: list[AnyMessage] = Field(
+        description="",
+    )
+    agent_request: AgentRequest | None = Field(
+        description="",
     )
 
 
