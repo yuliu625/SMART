@@ -5,7 +5,8 @@
 from __future__ import annotations
 
 from mas.nodes.base_agent import BaseAgent
-from mas.utils.human_content_input_processor import HumanContentInputProcessor
+from mas.utils.content_block_processor import ContentBlockProcessor
+from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage
 
@@ -35,6 +36,7 @@ class BaseDocumentReader(BaseAgent):
         self,
         chat_prompt_template: ChatPromptTemplate,
         llm: BaseChatModel,
+        mode: Literal['text', 'image', 'multimodal'],
     ):
         """
         文档阅读者，完全不做任何限制的LLM。
@@ -47,6 +49,7 @@ class BaseDocumentReader(BaseAgent):
             schema_pydantic_base_model=None,
             schema_check_type='dict',
         )
+        self.mode = mode
 
     def process_state(
         self,
@@ -58,10 +61,10 @@ class BaseDocumentReader(BaseAgent):
 
         Args:
             state: 具体使用参数为current_query和current_query_results。
-            config:
+            config (RunnableConfig):
 
         Returns:
-            更新:
+            dict:
                 - 重写query和获得结果的记录。
                 - 对应的analyst的chat_history。
         """
@@ -97,11 +100,6 @@ class BaseDocumentReader(BaseAgent):
         chat_history_ = chat_history_ + [response]
         return chat_history_
 
-    def get_human_message(
-        self,
-    ):
-        ...
-
     def read_image_documents(
         self,
         chat_history: list[AnyMessage],
@@ -110,7 +108,7 @@ class BaseDocumentReader(BaseAgent):
     ) -> list[AnyMessage]:
         chat_history_ = chat_history.copy()
         image_content_dicts = self.image_documents_to_content_dicts(image_documents=image_documents)
-        human_message_content = image_content_dicts + [HumanContentInputProcessor.get_text_content_dict(text=query)]
+        human_message_content = image_content_dicts + [ContentBlockProcessor.get_text_content_block(text=query)]
         chat_history_ = chat_history_ + [HumanMessage(
             content=human_message_content,
         )]
@@ -118,24 +116,55 @@ class BaseDocumentReader(BaseAgent):
         chat_history_ = chat_history_ + [response]
         return chat_history_
 
+    def get_human_message(
+        self,
+        query: str,
+        text_documents: list[Document] | None = None,
+        image_documents: list[Document] | None = None,
+    ) -> HumanMessage:
+        if text_documents is not None and image_documents is None:
+            # 仅文本文档的情况。
+            text_documents_str = self.text_documents_to_str(text_documents=text_documents)
+            human_message_content = self.wrap_message_content_with_agent_name(
+                agent_name='text-documents',
+                original_content=text_documents_str,
+            )
+            human_message_content = (
+                human_message_content
+                + f"\n\n{query}"
+            )
+            return HumanMessage(content=human_message_content)
+        elif text_documents is None and image_documents is not None:
+            # 仅图片文档的情况。
+            image_documents_contents = self.image_documents_to_content_dicts(image_documents=image_documents)
+            query_content_dict = ContentBlockProcessor.get_text_content_block(text=query)
+            human_message_content = image_documents_contents + [query_content_dict]
+            return HumanMessage(content=human_message_content)
+        elif text_documents is not None and image_documents is not None:
+            # 文本和图片模态都有的情况。
+            image_documents_contents = self.image_documents_to_content_dicts(image_documents=image_documents)
+        else:
+            raise
+
     @staticmethod
     def text_documents_to_str(
         text_documents: list[Document],
     ) -> str:
-        documents_str = '\n\n'.join([text_document.page_content for text_document in text_documents])
-        human_message_content = (
-            "从原文件中查找到以下几个相关的文本片段: \n\n"
-            + documents_str
-            + '\n\n'
-        )
-        return human_message_content
+        text_documents_str = '\n\n'.join([text_document.page_content for text_document in text_documents])
+        return text_documents_str
+        # human_message_content = (
+        #     "从原文件中查找到以下几个相关的文本片段: \n\n"
+        #     + documents_str
+        #     + '\n\n'
+        # )
+        # return human_message_content
 
     @staticmethod
     def image_documents_to_content_dicts(
         image_documents: list[Document],
     ) -> list[dict]:
         image_documents_contents = [
-            HumanContentInputProcessor.get_image_content_dict_from_base64(base64_str=image_document.page_content)
+            ContentBlockProcessor.get_image_content_block_from_base64(base64_str=image_document.page_content)
             for image_document in image_documents
         ]
         return image_documents_contents
