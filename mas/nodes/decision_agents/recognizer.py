@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from mas.nodes.base_agent import BaseAgent
 from mas.schemas.structured_output_format import AgentProcessedResult
+from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage
 
@@ -107,9 +108,9 @@ class Recognizer(BaseAgent):
                 这个专用方法实际返回的是shared-chat-history，为list[HumanMessage]，仅一条初始的human-message。
         """
         # 标注身份。
-        arbiter_first_message_context = self.wrap_message_content_with_agent_name(
-            agent_name='recognizer',
-            original_content=recognizer_response.content,
+        arbiter_first_message_context = ContentAnnotator.annotate_with_html_comment(
+            tag='recognizer',
+            original_text=recognizer_response.content,
         )
         # 构建chat-history。
         shared_chat_history = [HumanMessage(content=arbiter_first_message_context)]
