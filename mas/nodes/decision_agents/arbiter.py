@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from mas.nodes.base_agent import BaseAgent
 from mas.schemas.structured_output_format import ArbiterDecision
+from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage, AIMessage
 
@@ -72,9 +73,9 @@ class Arbiter(BaseAgent):
         merged_content = ""  # '\n\n'.join(message.content for message in chat_history)
         for message in chat_history:
             if isinstance(message, AIMessage):
-                merged_content += self.wrap_message_content_with_agent_name(
-                    agent_name='validator',
-                    original_content=message.content,
+                merged_content += ContentAnnotator.annotate_with_html_comment(
+                    tag='validator',
+                    original_text=message.content,
                 )
             else:
                 merged_content += message.content
