@@ -44,6 +44,15 @@ class Validator(BaseAgent):
         state: DecisionState,
         config: RunnableConfig,
     ) -> dict:
+        """
+
+        Args:
+            state:
+            config (RunnableConfig): 运行设置。
+
+        Returns:
+            dict: 进行更新的字段，包括:
+        """
         # 处理
         validator_result = self.validate(
             shared_chat_history=state.shared_chat_history,
@@ -69,11 +78,19 @@ class Validator(BaseAgent):
         shared_chat_history: list[AnyMessage],
         remaining_validation_rounds: int,
     ) -> AgentProcessedResult:
+        """
+
+        Args:
+            shared_chat_history:
+            remaining_validation_rounds:
+
+        Returns:
+            AgentProcessedResult:
+        """
         shared_chat_history = self._before_call_validator(
             chat_history=shared_chat_history,
             remaining_validation_rounds=remaining_validation_rounds,
         )
-        # 这里可以直接请求，因为analyst已经将分析的结果以HumanMessage写到validator的chat-history里了，并且已标明身份。
         response = self.call_llm_with_retry(chat_history=shared_chat_history)
         agent_request = self.get_structured_output(raw_str=response.content)
         return AgentProcessedResult(
@@ -86,17 +103,29 @@ class Validator(BaseAgent):
         chat_history: list[AnyMessage],
         remaining_validation_rounds: int,
     ) -> list[AnyMessage]:
+        """
+
+        Args:
+            chat_history:
+            remaining_validation_rounds:
+
+        Returns:
+            list[AnyMessage]:
+        """
         chat_history_ = chat_history.copy()
-        #
+        # 如果是刚刚初始化的chat-history。里面的message是recognizer写的。
         if len(chat_history_) == 1:
+            # 直接返回chat-history，不做处理。
             return chat_history_
         last_round_content = chat_history_[-1].content
         if remaining_validation_rounds == 0:
+            # 最后验证提醒。
             last_round_content = (
                 last_round_content
                 + "\n\n已经用完验证次数，现在必须做出分析结论交给arbiter进行仲裁。"
             )
         else:
+            # 一般情况，添加验证次数提示。
             last_round_content = (
                 last_round_content
                 + f"\n\n还剩{remaining_validation_rounds}次验证次数。"
