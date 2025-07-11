@@ -1,5 +1,5 @@
 """
-
+PIL.Image的部分常见处理方法。
 """
 
 from __future__ import annotations
@@ -8,8 +8,14 @@ import base64
 from PIL import Image
 from io import BytesIO
 
+from typing import TYPE_CHECKING
+# if TYPE_CHECKING:
+
 
 class PILImageBridge:
+    """
+    PIL.Image的部分常见处理方法。
+    """
     @staticmethod
     def base64_to_pil(
         image_base64: str,
@@ -25,7 +31,7 @@ class PILImageBridge:
             image_base64: 图片的base64编码后的字符串。
 
         Returns:
-            (Image)，二进制图片格式。
+            Image: 二进制图片格式。
         """
         image_data = base64.b64decode(image_base64)
         image = Image.open(BytesIO(image_data))
@@ -42,7 +48,7 @@ class PILImageBridge:
             uri: 图片的uri。
 
         Returns:
-            (str), base64字符串。
+            str: base64字符串。
         """
         with open(uri, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode("utf-8")
