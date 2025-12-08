@@ -1,10 +1,10 @@
 """
+对于原始文件的处理方法。
 
+内容:
+- PDF文件处理方法:
+    - rule: 基于规则对于原始文档进行解析。
+    - OCR: 使用传统OCR工具进行解析。
+    - VLM: 使用现有的新VLM-based OCR工具进行解析和构建。
 """
-
-from .metadata_tools import MetadataTools
-
-from .loading.text.pdf_to_txt import pdfs_to_txts
-from .loading import build_document_store
-from .indexing import build_text_vector_store, build_image_vector_store
 
