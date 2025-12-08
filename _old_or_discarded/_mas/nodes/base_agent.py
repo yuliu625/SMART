@@ -15,7 +15,6 @@ from __future__ import annotations
 from mas.utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
-
 from collections import Counter
 
 from typing import TYPE_CHECKING, Literal, Self, cast
