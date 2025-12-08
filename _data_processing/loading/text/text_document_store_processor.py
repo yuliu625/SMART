@@ -4,7 +4,7 @@
 
 from .text_processor import PymupdfTextLoader
 from mas.nodes.models import YuFakeEmbeddingModel
-from data_processing import MetadataTools
+from _data_processing import MetadataTools
 
 from langchain_chroma import Chroma
 from langchain_text_splitters import ExperimentalMarkdownSyntaxTextSplitter

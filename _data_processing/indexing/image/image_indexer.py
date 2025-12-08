@@ -2,7 +2,7 @@
 
 """
 
-from data_processing import MetadataTools
+from _data_processing import MetadataTools
 from mas.nodes.models import EmbeddingModelFactory
 
 from langchain_chroma import Chroma
