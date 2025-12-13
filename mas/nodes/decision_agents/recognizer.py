@@ -34,8 +34,8 @@ class Recognizer(BaseAgent):
     """
     def __init__(
         self,
-        main_llm_system_message: SystemMessage,
         main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
     ):
         # 基本的agent，不对于输出进行限制。
         super().__init__(
@@ -45,8 +45,8 @@ class Recognizer(BaseAgent):
             # 不需要结构化输出。
             is_need_structured_output=False,
             formatter_llm=None,
-            formatter_llm_system_message=None,
             schema_pydantic_base_model=None,
+            formatter_llm_system_message=None,
             formatter_llm_max_retries=3,
         )
         self.main_llm_system_message = main_llm_system_message
@@ -69,15 +69,19 @@ class Recognizer(BaseAgent):
                 - shared_chat_history: 初始化的shared-chat-history。
                 - current_agent_name: 下一个运行的agent。冗余字段，固定边一定指向 'validator'。
         """
-        recognizer_result = await self.recognize(
+        recognizer_response = await self.recognize_original_pdf_text(
             original_pdf_text=state.original_pdf_text,
         )
-        return {
-            'shared_memory': recognizer_result.messages,
-            'current_agent_name': 'validator',
-        }
+        # 获得共享的memory。
+        decision_shared_messages = self.initiate_decision_shared_messages(
+            recognizer_message=recognizer_response['ai_message'],  # 这里的response只需要ai_message。
+        )
+        return dict(
+            decision_shared_messages=decision_shared_messages,
+            current_agent_name='validator',
+        )
 
-    async def recognize(
+    async def recognize_original_pdf_text(
         self,
         original_pdf_text: str,
     ) -> AgentProcessedResult:
@@ -97,16 +101,12 @@ class Recognizer(BaseAgent):
                 HumanMessage(content=original_pdf_text),
             ],
         )
-        # 获得共享的memory。
-        shared_memory = self.initiate_shared_memeory(
-            recognizer_message=response['ai_message'],  # 这里的response只需要ai_message。
-        )
         return AgentProcessedResult(
-            messages=shared_memory,
+            messages=response['ai_message'],
             agent_request='validator',  # 并没有发出请求，但是下一个一定是validator。
         )
 
-    def initiate_shared_memeory(
+    def initiate_decision_shared_messages(
         self,
         recognizer_message: AIMessage,
     ) -> list[AnyMessage]:
@@ -127,8 +127,8 @@ class Recognizer(BaseAgent):
             original_text=recognizer_message.content,
         )
         # 构建chat-history。
-        shared_memory = [
+        decision_shared_messages = [
             HumanMessage(content=arbiter_first_message_content),  # 把recognizer的信息放进去。
         ]
-        return shared_memory
+        return decision_shared_messages
 
