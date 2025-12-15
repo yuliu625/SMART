@@ -6,8 +6,8 @@
 
 from __future__ import annotations
 
-from mas.agent_nodes.base_agent import BaseAgent
-from mas.schemas.structured_output_format import ArbiterDecision
+from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
+# from mas.schemas.structured_output_format import ArbiterDecision
 from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage, AIMessage
@@ -25,7 +25,7 @@ class Arbiter(BaseAgent):
     """
     执行最终仲裁决定。
 
-    是LRM。
+    约定是LRM。
     """
     def __init__(
         self,
@@ -67,35 +67,54 @@ class Arbiter(BaseAgent):
         state: DecisionState,
         config: RunnableConfig,
     ) -> dict:
+        """
+        整个MAS的终点，将全部的decision_shared_messages交给Arbiter进行分析和做出最终决策。
+
+        Args:
+            state (DecisionState): 使用的state。需要字段:
+                - decision_shared_messages: 再arbiter之前全部的分析。
+            config (RunnableConfig): 运行设置。
+
+        Returns:
+            dict: 进行更新的字段，包括:
+                - decision_shared_messages: 完整的decision_shared_messages。
+                - final_decision: 最终完整的analysis and decision。
+                - current_agent_name: 下一个运行的agent。冗余字段，固定边一定指向 'end'。系统不会再运行。
+        """
         # 合并所有的讨论记录。
+        # before call arbiter llm
         decision_shared_content = self.merge_decision_shared_messages(
             decision_shared_messages=state.decision_shared_messages,
         )
-        arbiter_result = self.arbitrate(
+        # 执行最终决定。
+        arbiter_result = await self.arbitrate(
             decision_shared_content=decision_shared_content,
         )
+        # final decision shared message
+        # after call arbiter llm
+        final_decision_shared_messages = self.process_final_decision(
+            arbiter_message=arbiter_result.ai_message,
+            decision_shared_messages=state.decision_shared_messages,
+        )
         return dict(
-            decision_shared_messages=decision_shared_messages,
-            current_agent_name='validator',
+            decision_shared_messages=final_decision_shared_messages,
+            final_decision=arbiter_result.structured_output,
+            current_agent_name='end',
         )
 
     # ====主要方法。====
     async def arbitrate(
         self,
         decision_shared_content: str,
-    ) -> dict:
+    ) -> BaseAgentResponse:
         # 获取llm响应。
         response = await self.a_call_llm_with_retry(
             messages=[
+                self.main_llm_system_message,
                 HumanMessage(content=decision_shared_content),
             ],
         )
-        # 提取最终结论。
-        arbiter_decision = self.get_structured_output(raw_str=response.content)
-        return dict(
-            decision_shared_messages=decision_shared_messages + [response],
-            arbiter_decision=arbiter_decision,
-        )
+        return response
 
     # ====工具方法。====
     def merge_decision_shared_messages(
@@ -116,4 +135,32 @@ class Arbiter(BaseAgent):
             merged_content += message.content
             merged_content += '\n\n'
         return merged_content
+
+    # ====工具方法。====
+    def process_final_decision(
+        self,
+        arbiter_message: AIMessage,
+        decision_shared_messages: list[AnyMessage],
+    ) -> list[AnyMessage]:
+        """
+        为保证统一性，将最后的arbiter的message也使用ContentAnnotator进行处理。
+
+        Args:
+            arbiter_message (AIMessage): Arbiter的message。但是没有标记tag。
+            decision_shared_messages (list[AnyMessage]): 在Arbiter之前的decision_shared_messages。
+
+        Returns:
+            list[AnyMessage]: Arbiter的message被标记，全部完整的decision_shared_messages。
+        """
+        assert isinstance(arbiter_message, AIMessage)
+        # 标注身份。
+        arbiter_last_message_content = ContentAnnotator.annotate_with_html_comment(
+            tag='Arbiter',
+            original_text=arbiter_message.content,
+        )
+        # 构建decision_shared_messages。
+        decision_shared_messages = decision_shared_messages + [
+            HumanMessage(content=arbiter_last_message_content),  # 把arbiter的信息放进去。
+        ]
+        return decision_shared_messages
 
