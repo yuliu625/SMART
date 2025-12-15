@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-from mas.schemas.structured_output_format import AgentProcessedResult
 from mas.agent_nodes.base_agent import BaseAgent
 from mas.utils.content_annotator import ContentAnnotator
 
@@ -57,7 +56,7 @@ class Recognizer(BaseAgent):
         config: RunnableConfig,
     ) -> dict:
         """
-        由于recognizer为初始化运行且仅运行一次，recognizer不专门设置chat-history，并自己完成chat-history转换过程。
+        由于recognizer为初始化运行且仅运行一次，recognizer不专门设置chat-history，由recognizer完成全部的初始化。
 
         Args:
             state (DecisionState): 使用的state。需要字段:
@@ -66,7 +65,7 @@ class Recognizer(BaseAgent):
 
         Returns:
             dict: 进行更新的字段，包括:
-                - shared_chat_history: 初始化的shared-chat-history。
+                - decision_shared_messages: 初始化的decision_shared_messages。
                 - current_agent_name: 下一个运行的agent。冗余字段，固定边一定指向 'validator'。
         """
         recognizer_response = await self.recognize_original_pdf_text(
@@ -74,26 +73,29 @@ class Recognizer(BaseAgent):
         )
         # 获得共享的memory。
         decision_shared_messages = self.initiate_decision_shared_messages(
-            recognizer_message=recognizer_response['ai_message'],  # 这里的response只需要ai_message。
+            recognizer_message=recognizer_response,  # 这里的response只需要ai_message。
         )
+        assert isinstance(decision_shared_messages, list)
+        assert len(decision_shared_messages) == 1
+        assert isinstance(decision_shared_messages[0], AIMessage)
         return dict(
             decision_shared_messages=decision_shared_messages,
-            current_agent_name='validator',
+            current_agent_name='validator',  # 并没有发出请求，但是下一个一定是validator。
         )
 
     # ====主要方法。====
     async def recognize_original_pdf_text(
         self,
         original_pdf_text: str,
-    ) -> AgentProcessedResult:
+    ) -> AIMessage:
         """
-        读取原始文档的文本，以decision模块的shared-chat-history返回。
+        读取原始文档的文本，以decision模块的decision_shared_messages返回。
 
         Args:
             original_pdf_text (str): 原始文档的文本信息。
 
         Returns:
-            AgentProcessedResult: 初始化的shared-chat-history。agent_request为空。
+            AIMessage: 初始化的decision_shared_messages。agent_request为空。
         """
         # 对于初始pdf的文本内容进行分析。
         response = await self.a_call_llm_with_retry(
@@ -102,10 +104,11 @@ class Recognizer(BaseAgent):
                 HumanMessage(content=original_pdf_text),
             ],
         )
-        return AgentProcessedResult(
-            messages=response['ai_message'],
-            agent_request='validator',  # 并没有发出请求，但是下一个一定是validator。
-        )
+        return response.ai_message
+        # return AgentProcessedResult(
+        #     messages=response.ai_message,
+        #     agent_request='validator',  # 并没有发出请求，但是下一个一定是validator。
+        # )
 
     # ====工具方法。====
     def initiate_decision_shared_messages(
@@ -113,24 +116,24 @@ class Recognizer(BaseAgent):
         recognizer_message: AIMessage,
     ) -> list[AnyMessage]:
         """
-        将recognizer初始识别的结果转换，封装为初始shared-chat-history。
+        将recognizer初始识别的结果转换，封装为初始decision_shared_messages。
 
         Args:
             recognizer_message (AIMessage): recognizer初始识别的结果。
 
         Returns:
-            list[AnyMessage]: chat-history。
-                这个专用方法实际返回的是shared-chat-history，为list[HumanMessage]，仅一条初始的human-message。
+            list[AnyMessage]: decision_shared_messages。
+                这个专用方法实际返回的是decision_shared_messages，为list[HumanMessage]，仅一条初始的human-message。
         """
         assert isinstance(recognizer_message, AIMessage)
         # 标注身份。
-        arbiter_first_message_content = ContentAnnotator.annotate_with_html_comment(
+        recognizer_first_message_content = ContentAnnotator.annotate_with_html_comment(
             tag='Recognizer',
             original_text=recognizer_message.content,
         )
-        # 构建chat-history。
+        # 构建decision_shared_messages。
         decision_shared_messages = [
-            HumanMessage(content=arbiter_first_message_content),  # 把recognizer的信息放进去。
+            HumanMessage(content=recognizer_first_message_content),  # 把recognizer的信息放进去。
         ]
         return decision_shared_messages
 
