@@ -7,7 +7,6 @@
 from __future__ import annotations
 
 from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
-# from mas.schemas.structured_output_format import ArbiterDecision
 from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage, AIMessage
