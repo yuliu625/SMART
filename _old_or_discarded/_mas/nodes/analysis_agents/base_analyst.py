@@ -4,18 +4,18 @@
 
 from __future__ import annotations
 
-from mas.nodes.base_agent import BaseAgent
-from mas.schemas.structured_output_format import (
+from _old_or_discarded._mas.nodes.base_agent import BaseAgent
+from _old_or_discarded._mas.schemas.structured_output_format import (
     AgentRequest,
     AgentProcessedResult,
 )
-from mas.utils.content_annotator import ContentAnnotator
+from _old_or_discarded._mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import AIMessage, HumanMessage
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
-    from mas.schemas.analysis_state import AnalysisState
+    from _old_or_discarded._mas.schemas.analysis_state import AnalysisState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_core.language_models import BaseChatModel
