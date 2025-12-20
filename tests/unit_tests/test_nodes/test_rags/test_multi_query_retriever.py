@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from mas.schemas import MASState
 from mas.utils import VectorStoreLoader
-from mas.nodes import RagRetrieverFactory
+from mas.agent_nodes import RagRetrieverFactory
 
 
 def test_multi_query_retriever_1():
