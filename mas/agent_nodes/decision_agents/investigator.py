@@ -53,13 +53,22 @@ class Investigator(BaseAgent):
         config: RunnableConfig,
     ) -> dict:
         """
+        Decision-Module最重要的部分，进行分析和决策。
 
         Args:
-            state:
+            state (MASState): 使用的state。需要字段:
+                - decision_shared_messages:
+                    - Case1: Surveyor之后的shared_messages。
+                    - Case2: Analyst之后的shared_messages。
+                - remaining_validation_rounds: 剩余的验证次数。
             config (RunnableConfig): 运行设置。
 
         Returns:
             dict: 进行更新的字段，包括:
+                - decision_shared_messages: 更新了investigator后的shared_messages。
+                - current_agent_name: 下一个运行的agent。
+                - current_message: investigator对analyst提出的要求。
+                - remaining_validation_rounds: 剩余的验证次数。
         """
         # Agent内: 根据甚于验证次数，处理surveyor或analyst的message。
         decision_shared_messages = self.before_call_investigator(
