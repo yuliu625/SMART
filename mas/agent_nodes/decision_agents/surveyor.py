@@ -6,7 +6,7 @@ Decision-Module，起始阶段agent。
 
 from __future__ import annotations
 
-from mas.agent_nodes.base_agent import BaseAgent
+from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
 from mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage
@@ -75,7 +75,7 @@ class Surveyor(BaseAgent):
         )
         # 获得共享的memory。
         decision_shared_messages = self.initiate_decision_shared_messages(
-            surveyor_message=recognizer_response,  # 这里的response只需要ai_message。
+            surveyor_message=recognizer_response.ai_message,  # 这里的response只需要ai_message。
         )
         assert isinstance(decision_shared_messages, list)
         assert len(decision_shared_messages) == 1
@@ -89,7 +89,7 @@ class Surveyor(BaseAgent):
     async def read_original_pdf_text(
         self,
         original_pdf_text: str,
-    ) -> AIMessage:
+    ) -> BaseAgentResponse:
         """
         读取原始文档的文本，以decision模块的decision_shared_messages返回。
 
@@ -106,7 +106,7 @@ class Surveyor(BaseAgent):
                 HumanMessage(content=original_pdf_text),
             ],
         )
-        return response.ai_message
+        return response
         # return AgentProcessedResult(
         #     messages=response.ai_message,
         #     agent_request='validator',  # 并没有发出请求，但是下一个一定是validator。
