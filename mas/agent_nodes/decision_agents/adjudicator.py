@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
 
-class Arbiter(BaseAgent):
+class Adjudicator(BaseAgent):
     """
     执行最终仲裁决定。
 
@@ -87,23 +87,23 @@ class Arbiter(BaseAgent):
             decision_shared_messages=state.decision_shared_messages,
         )
         # 执行最终决定。
-        arbiter_result = await self.arbitrate(
+        adjudicator_result = await self.review_report(
             decision_shared_content=decision_shared_content,
         )
         # final decision shared message
         # after call arbiter llm
         final_decision_shared_messages = self.process_final_decision(
-            arbiter_message=arbiter_result.ai_message,
+            adjudicator_message=adjudicator_result.ai_message,
             decision_shared_messages=state.decision_shared_messages,
         )
         return dict(
             decision_shared_messages=final_decision_shared_messages,
-            final_decision=arbiter_result.structured_output,
+            final_decision=adjudicator_result.structured_output,
             current_agent_name='end',
         )
 
     # ====主要方法。====
-    async def arbitrate(
+    async def review_report(
         self,
         decision_shared_content: str,
     ) -> BaseAgentResponse:
@@ -111,7 +111,7 @@ class Arbiter(BaseAgent):
         response = await self.a_call_llm_with_retry(
             messages=[
                 self.main_llm_system_message,
-                HumanMessage(content=decision_shared_content),
+                HumanMessage(content=decision_shared_content),  # 这一条HumanMessage已包括全部的messages。
             ],
         )
         return response
@@ -133,34 +133,34 @@ class Arbiter(BaseAgent):
         merged_content = ""  # '\n\n'.join(message.content for message in chat_history)
         for message in decision_shared_messages:
             merged_content += message.content
-            merged_content += '\n\n'
+            merged_content += "\n\n以上是原始文档的简要情况和全部的分析情况。现在，对该公司的情况做出最终的总结和判别。"
         return merged_content
 
     # ====工具方法。====
     def process_final_decision(
         self,
-        arbiter_message: AIMessage,
+        adjudicator_message: AIMessage,
         decision_shared_messages: list[AnyMessage],
     ) -> list[AnyMessage]:
         """
-        为保证统一性，将最后的arbiter的message也使用ContentAnnotator进行处理。
+        为保证统一性，将最后的adjudicator的message也使用ContentAnnotator进行处理。
 
         Args:
-            arbiter_message (AIMessage): Arbiter的message。但是没有标记tag。
-            decision_shared_messages (list[AnyMessage]): 在Arbiter之前的decision_shared_messages。
+            adjudicator_message (AIMessage): Adjudicator的message。但是没有标记tag。
+            decision_shared_messages (list[AnyMessage]): 在Adjudicator之前的decision_shared_messages。
 
         Returns:
-            list[AnyMessage]: Arbiter的message被标记，全部完整的decision_shared_messages。
+            list[AnyMessage]: Adjudicator的message被标记，全部完整的decision_shared_messages。
         """
-        assert isinstance(arbiter_message, AIMessage)
+        assert isinstance(adjudicator_message, AIMessage)
         # 标注身份。
-        arbiter_last_message_content = ContentAnnotator.annotate_with_html_comment(
-            tag='Arbiter',
-            original_text=arbiter_message.content,
+        adjudicator_last_message_content = ContentAnnotator.annotate_with_html_comment(
+            tag='Adjudicator',
+            original_text=adjudicator_message.content,
         )
         # 构建decision_shared_messages。
         decision_shared_messages = decision_shared_messages + [
-            HumanMessage(content=arbiter_last_message_content),  # 把arbiter的信息放进去。
+            HumanMessage(content=adjudicator_last_message_content),  # 把arbiter的信息放进去。
         ]
         return decision_shared_messages
 
