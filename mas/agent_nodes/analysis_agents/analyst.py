@@ -55,3 +55,11 @@ class Analyst(BaseAgent):
     ) -> dict:
         ...
 
+    # ====主要方法。====
+    async def read_documents(
+        self,
+        analysis_messages: str,
+    ) -> BaseAgentResponse:
+        ...
+
+
