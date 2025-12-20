@@ -8,7 +8,7 @@ import pytest
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
-from mas.nodes import AgentFactory
+from mas.agent_nodes import AgentFactory
 
 from langchain_core.messages import HumanMessage
 
