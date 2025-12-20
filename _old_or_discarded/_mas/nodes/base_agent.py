@@ -12,7 +12,7 @@
 from __future__ import annotations
 
 # 下面这个工具类是必要的，需要在具体项目中设定具体的导入路径。
-from mas.utils.json_output_extractor import JsonOutputExtractor
+from _old_or_discarded._mas.utils.json_output_extractor import JsonOutputExtractor
 
 from langchain_core.messages import AIMessage
 from collections import Counter
