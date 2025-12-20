@@ -13,7 +13,7 @@ from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.decision_state import DecisionState
+    from mas.schemas.mas_state import MASState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, AIMessage, SystemMessage
@@ -54,7 +54,7 @@ class Surveyor(BaseAgent):
 
     async def process_state(
         self,
-        state: DecisionState,
+        state: MASState,
         config: RunnableConfig,
     ) -> dict:
         """
@@ -119,6 +119,7 @@ class Surveyor(BaseAgent):
     ) -> list[AnyMessage]:
         """
         将surveyor初始识别的结果转换，封装为初始decision_shared_messages。
+        对于shared_messages，主要使用者为investigator，surveyor以HumanMessage初始化作为启动。
 
         Args:
             surveyor_message (AIMessage): surveyor初始识别的结果。
@@ -130,7 +131,7 @@ class Surveyor(BaseAgent):
         assert isinstance(surveyor_message, AIMessage)
         # 标注身份。
         surveyor_first_message_content = ContentAnnotator.annotate_with_html_comment(
-            tag='Surveyor',
+            tag='surveyor',
             original_text=surveyor_message.content,
         )
         # 构建decision_shared_messages。
