@@ -4,8 +4,8 @@
 
 from __future__ import annotations
 
-from mas.nodes.base_agent import BaseAgent
-from mas.schemas.structured_output_format import (
+from _old_or_discarded._mas.nodes.base_agent import BaseAgent
+from _old_or_discarded._mas.schemas.structured_output_format import (
     AgentRequest,
     AgentProcessedResult,
 )
@@ -14,7 +14,7 @@ from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.decision_state import DecisionState
+    from _old_or_discarded._mas.schemas.decision_state import DecisionState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.prompts import ChatPromptTemplate
