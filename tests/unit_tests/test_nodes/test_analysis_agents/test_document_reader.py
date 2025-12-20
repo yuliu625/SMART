@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-from mas.nodes import AgentFactory
+from mas.agent_nodes import AgentFactory
 from mas.utils import get_text_content, get_image_content_dict_from_base64
 from mas.utils.base64_to_pil import uri_to_base64
 
