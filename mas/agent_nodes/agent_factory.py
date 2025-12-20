@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from mas.agent_nodes.decision_agents.recognizer import Recognizer
+from mas.agent_nodes.decision_agents.surveyor import Surveyor
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
