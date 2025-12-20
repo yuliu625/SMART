@@ -8,7 +8,7 @@ import pytest
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
-from mas.nodes.models import EmbeddingModelFactory
+from mas.agent_nodes.models import EmbeddingModelFactory
 
 
 def test_embedding_model_factory_1():
