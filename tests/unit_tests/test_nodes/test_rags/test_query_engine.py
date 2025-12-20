@@ -8,8 +8,8 @@ import pytest
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
-from mas.nodes import RagRetrieverFactory
-from mas.nodes.models import LLMFactory
+from mas.agent_nodes import RagRetrieverFactory
+from mas.agent_nodes.models import LLMFactory
 from mas.utils import VectorStoreLoader
 
 
