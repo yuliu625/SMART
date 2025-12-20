@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from mas.schemas import MASState
+from _old_or_discarded._mas.schemas import MASState
 
 from typing import TYPE_CHECKING, Literal
 # if TYPE_CHECKING:
