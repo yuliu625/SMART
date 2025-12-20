@@ -19,12 +19,12 @@ from .decision_agents import (
     Validator,
     Arbiter,
 )
-from mas.schemas.structured_output_format import (
+from _old_or_discarded._mas.schemas.structured_output_format import (
     AgentRequest,
     ArbiterDecision,
 )
-from mas.nodes.prompts.prompt_template_factories import AllPromptTemplateFactory
-from mas.nodes.models import LLMFactory, VLMFactory
+from _old_or_discarded._mas.nodes.prompts.prompt_template_factories import AllPromptTemplateFactory
+from _old_or_discarded._mas.nodes.models import LLMFactory, VLMFactory
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
