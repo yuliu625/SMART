@@ -19,11 +19,9 @@ class RAGRewriteResponse(BaseModel):
 
 
 # ====analysis & decision====
-class AgentRequest(BaseModel):
+class AnalystRequest(BaseModel):
     agent_name: Literal[
-        'arbiter', 'validator',
-        'document_reader',
-        'control_analyst', 'financial_analyst', 'strategic_analyst',
+        'arbiter', 'analyst',
     ] = Field(
         description="指定下一个运行的agent的名字。"
     )
@@ -32,16 +30,10 @@ class AgentRequest(BaseModel):
     )
 
 
-class AgentProcessedResult(BaseModel):
-    """
-
-    """
-    chat_history: list[AnyMessage] = Field(
-        description="",
-    )
-    agent_request: AgentRequest | None = Field(
-        description="",
-    )
+class InvestigatorRequest(BaseModel):
+    agent_name: Literal[
+        'investigator',
+    ]
 
 
 # ====decision====
