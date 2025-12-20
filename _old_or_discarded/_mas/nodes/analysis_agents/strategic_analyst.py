@@ -2,7 +2,7 @@
 
 """
 
-from mas.schemas import MASState
+from _old_or_discarded._mas.schemas import MASState
 from .base_analyst import BaseAnalyst
 
 from langchain_core.runnables import Runnable
