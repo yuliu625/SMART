@@ -14,7 +14,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.decision_state import DecisionState
+    from mas.schemas.mas_state import MASState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
@@ -64,7 +64,7 @@ class Adjudicator(BaseAgent):
 
     async def process_state(
         self,
-        state: DecisionState,
+        state: MASState,
         config: RunnableConfig,
     ) -> dict:
         """
@@ -105,7 +105,7 @@ class Adjudicator(BaseAgent):
     # ====主要方法。====
     async def review_report(
         self,
-        decision_shared_content: str,
+        decision_shared_content: str,  # 特殊初始情况，直接输入string。
     ) -> BaseAgentResponse:
         # 获取llm响应。
         response = await self.a_call_llm_with_retry(
@@ -144,6 +144,7 @@ class Adjudicator(BaseAgent):
     ) -> list[AnyMessage]:
         """
         为保证统一性，将最后的adjudicator的message也使用ContentAnnotator进行处理。
+        对于shared_messages，adjudicator实际并不参与，这个方法仅为保证规范性进行统一整理。
 
         Args:
             adjudicator_message (AIMessage): Adjudicator的message。但是没有标记tag。
@@ -155,12 +156,12 @@ class Adjudicator(BaseAgent):
         assert isinstance(adjudicator_message, AIMessage)
         # 标注身份。
         adjudicator_last_message_content = ContentAnnotator.annotate_with_html_comment(
-            tag='Adjudicator',
+            tag='adjudicator',
             original_text=adjudicator_message.content,
         )
         # 构建decision_shared_messages。
         decision_shared_messages = decision_shared_messages + [
-            HumanMessage(content=adjudicator_last_message_content),  # 把arbiter的信息放进去。
+            HumanMessage(content=adjudicator_last_message_content),  # 标准化记录adjudicator的信息。
         ]
         return decision_shared_messages
 
