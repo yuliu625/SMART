@@ -3,7 +3,7 @@
 """
 
 from .base_document_reader import BaseDocumentReader
-from mas.schemas import MASState
+from _old_or_discarded._mas.schemas import MASState
 
 from langchain_core.messages import HumanMessage
 
