@@ -13,9 +13,7 @@ if TYPE_CHECKING:
 
 
 class MASState(BaseModel):
-    original_pdf_text: str = Field(
-        description="原始的pdf文档的text。专门用一个字段是为了避免和current_message出现问题。",
-    )
+    # MAS条件控制。
     # current related, 整个MAS控制相关。
     current_agent_name: str = Field(
         default="arbiter",
@@ -25,47 +23,42 @@ class MASState(BaseModel):
         default="",
         description="调用当前agent的上一个agent传递的信息。",
     )
+
+    # Decision Module
+    decision_shared_messages: list[AnyMessage] = Field(
+        default_factory=list,
+        description="所有decision中的agent共用的messages。"
+    )
+    ## Surveyor
+    original_pdf_text: str = Field(
+        description="原始的pdf文档的text。专门用一个字段是为了避免和current_message出现问题。",
+    )
+    ## Investigator
+    ### 剩余验证步骤，如果用完，就必须交给adjudicator进行最终决定。
+    remaining_validation_rounds: int = Field(
+        default=10,
+        description="validator剩余可进行验证的次数。",
+    )
     more_information: bool = Field(
         default=False,
         description="analyst选择是否需要进一步的分析。",
     )
-    # validator related
-    # # 剩余验证步骤，如果用完，就必须交给arbiter进行最终仲裁。
-    remaining_validation_rounds: int = Field(
-        default=5,
-        description="validator剩余可进行验证的次数。",
-    )
-    remaining_retrieve_rounds: int = Field(
-        default=5,
-        description="analyst剩余可以进行查询次数。"
-    )
-    # # validator要求analysis模块要进行重新分析的{agent: content}。
+    ## validator要求analysis模块要进行重新分析的{agent: content}。
     is_need_verification: bool = Field(
         default=False,
         description="validator决定是否需要analyst进一步分析。",
     )
-    # decision agents
-    recognizer_chat_history: list[AnyMessage] = Field(
-        default_factory=list,
-        description="recognizer通过长文本进行全面的判断",
-    )
-    validator_chat_history: list[AnyMessage] = Field(
-        default_factory=list,
-        description="validator进行各种验证的记录。",
-    )
-    arbiter_context: list[str] = Field(
-        default=list,
-        description="累计的validator的对话记录。"
-    )
-    arbiter_chat_history: list[AnyMessage] = Field(
-        default_factory=list,
-        description="arbiter进行最终的仲裁的分析内容。",
-    )
-    arbiter_decision: dict = Field(
+    ## Adjudicator
+    final_decision: dict = Field(
         default_factory=dict,
-        description="arbiter的结构化输出。"
+        description="Adjudicator的结构化输出。",
     )
-    # rag and analyst
+
+    # Analysis Module
+    remaining_retrieve_rounds: int = Field(
+        default=5,
+        description="analyst剩余可以进行查询次数。",
+    )
     last_round_result_number: int = Field(
         default=-1,
         description="上轮获取的结果的数量",
@@ -78,7 +71,7 @@ class MASState(BaseModel):
         default_factory=list,
         description="历史查询的结果，返回新查询结果是用于去重。",
     )
-    # # query result
+    ## query result
     current_query_results: list[Document] = Field(
         default_factory=list,
         description="当前轮返回的最终结果。",
