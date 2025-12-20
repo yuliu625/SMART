@@ -4,15 +4,15 @@
 
 from __future__ import annotations
 
-from mas.nodes.base_agent import BaseAgent
-from mas.utils.content_block_processor import ContentBlockProcessor
-from mas.utils.content_annotator import ContentAnnotator
+from _old_or_discarded._mas.nodes.base_agent import BaseAgent
+from _old_or_discarded._mas.utils.content_block_processor import ContentBlockProcessor
+from _old_or_discarded._mas.utils.content_annotator import ContentAnnotator
 
 from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
-    from mas.schemas.analysis_state import AnalysisState
+    from _old_or_discarded._mas.schemas.analysis_state import AnalysisState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.documents import Document
     from langchain_core.prompts import ChatPromptTemplate
