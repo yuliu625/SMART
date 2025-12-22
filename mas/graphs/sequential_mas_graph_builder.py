@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from mas.schemas.mas_state import MASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+from mas.agent_nodes.agent_factory import AgentFactory
 
 from langgraph.graph import (
     StateGraph,
@@ -43,9 +44,19 @@ class SequentialMASGraphBuilder:
         """
         注册MAS的nodes。
         """
+        # Decision-Module
+        surveyor = AgentFactory.create_surveyor()
+        investigator = AgentFactory.create_investigator()
+        adjudicator = AgentFactory.create_adjudicator()
+        self.graph_builder.add_node('surveyor', surveyor.process_state)
+        self.graph_builder.add_node('investigator', investigator.process_state)
+        self.graph_builder.add_node('adjudicator', adjudicator.process_state)
 
     def _add_edges(self):
         """
         注册MAS的edges。
         """
+        self.graph_builder.add_edge(START, 'surveyor')
+        self.graph_builder.add_edge('surveyor', 'investigator')
+        self.graph_builder.add_edge('adjudicator', END)
 
