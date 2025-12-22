@@ -21,7 +21,7 @@ class RAGRewriteResponse(BaseModel):
 # ====analysis & decision====
 class AnalystRequest(BaseModel):
     agent_name: Literal[
-        'arbiter', 'analyst',
+        'investigator', 'rag',
     ] = Field(
         description="指定下一个运行的agent的名字。"
     )
