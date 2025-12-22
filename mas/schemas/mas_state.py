@@ -37,16 +37,16 @@ class MASState(BaseModel):
     ### 剩余验证步骤，如果用完，就必须交给adjudicator进行最终决定。
     remaining_validation_rounds: int = Field(
         default=10,
-        description="validator剩余可进行验证的次数。",
+        description="Investigator剩余可进行验证的次数。",
     )
     more_information: bool = Field(
         default=False,
-        description="analyst选择是否需要进一步的分析。",
+        description="Analyst选择是否需要进一步的分析。",
     )
     ## validator要求analysis模块要进行重新分析的{agent: content}。
     is_need_verification: bool = Field(
         default=False,
-        description="validator决定是否需要analyst进一步分析。",
+        description="Investigator决定是否需要Analyst进一步分析。",
     )
     ## Adjudicator
     final_decision: dict = Field(
