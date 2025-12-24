@@ -3,7 +3,7 @@
 """
 
 from _old_or_discarded._data_processing import MetadataTools
-from mas.nodes.models import EmbeddingModelFactory
+from _old_or_discarded._mas.nodes.models import EmbeddingModelFactory
 
 from langchain_chroma import Chroma
 
