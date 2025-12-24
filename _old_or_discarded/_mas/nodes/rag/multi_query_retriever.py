@@ -2,11 +2,11 @@
 
 """
 
-from mas.global_config import LLM_MAS_RETRIES
-from mas.schemas import MASState
-from mas.nodes.prompts import PromptTemplateFactory
-from mas.utils import JsonOutputParser
-from mas.nodes.models import LLMFactory
+from _old_or_discarded._mas.global_config import LLM_MAS_RETRIES
+from _old_or_discarded._mas.schemas import MASState
+from _old_or_discarded._mas.nodes.prompts import PromptTemplateFactory
+from _old_or_discarded._mas.utils import JsonOutputParser
+from _old_or_discarded._mas.nodes.models import LLMFactory
 from langchain_core.messages import SystemMessage, HumanMessage, AnyMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
