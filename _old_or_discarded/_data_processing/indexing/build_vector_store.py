@@ -4,7 +4,7 @@
 
 from .text import TextBatchIndexer
 from .image import ImageBatchIndexer
-from mas.utils import get_default_dir
+from _old_or_discarded._mas.utils import get_default_dir
 
 
 from pathlib import Path
