@@ -2,7 +2,7 @@
 
 """
 
-from mas.schemas import MASState
+from _old_or_discarded._mas.schemas import MASState
 from .multi_query_retriever import MultiQueryRetriever
 
 from langchain_core.vectorstores import VectorStoreRetriever
