@@ -2,8 +2,8 @@
 
 """
 
-from mas.utils import get_default_dir
-from mas.utils import VectorStoreLoader, get_all_documents
+from _old_or_discarded._mas.utils import get_default_dir
+from _old_or_discarded._mas.utils import VectorStoreLoader, get_all_documents
 
 from pathlib import Path
 
