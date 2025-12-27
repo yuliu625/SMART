@@ -3,7 +3,7 @@
 """
 
 from .batch_processor import BatchProcessor
-from mas.utils import get_default_dir
+from _old_or_discarded._mas.utils import get_default_dir
 
 from pathlib import Path
 
