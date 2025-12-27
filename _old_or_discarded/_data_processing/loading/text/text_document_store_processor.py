@@ -3,7 +3,7 @@
 """
 
 from .text_processor import PymupdfTextLoader
-from mas.nodes.models import YuFakeEmbeddingModel
+from _old_or_discarded._mas.nodes.models import YuFakeEmbeddingModel
 from _old_or_discarded._data_processing import MetadataTools
 
 from langchain_chroma import Chroma
