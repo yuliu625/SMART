@@ -4,7 +4,7 @@
 
 from .text import TextBatchProcessor
 from .image import PdfImageConverter, ImageBatchProcessor
-from mas.utils import get_default_dir
+from _old_or_discarded._mas.utils import get_default_dir
 
 from pathlib import Path
 
