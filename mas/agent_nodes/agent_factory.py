@@ -7,6 +7,7 @@ from __future__ import annotations
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
+from mas.agent_nodes.analysis_agents.analyst import Analyst
 
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
