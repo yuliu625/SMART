@@ -58,8 +58,14 @@ class Analyst(BaseAgent):
     # ====主要方法。====
     async def read_documents(
         self,
-        analysis_messages: str,
+        analysis_messages: list[AnyMessage],
     ) -> BaseAgentResponse:
-        ...
+        # 获取llm响应。
+        response = await self.a_call_llm_with_retry(
+            messages=[
+                self.main_llm_system_message,
+            ] + analysis_messages,
+        )
+        return response
 
 
