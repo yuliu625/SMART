@@ -7,7 +7,8 @@ from pydantic import BaseModel, Field
 
 from langchain_core.messages import AnyMessage
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
+# if TYPE_CHECKING:
 
 
 # ====RAG====
