@@ -1,0 +1,31 @@
+"""
+读取原始数据库中获取的数据的方法。
+"""
+
+from __future__ import annotations
+
+import pandas as pd
+
+from typing import TYPE_CHECKING
+# if TYPE_CHECKING:
+
+
+def read_xlsx_from_csmar(
+    xlsx_path: str,
+) -> pd.DataFrame:
+    """
+    读取从CSMAR数据的xlsx数据。
+
+    Args:
+        xlsx_path:
+
+    Returns:
+
+    """
+    df = pd.read_excel(
+        xlsx_path,
+        skiprows=[1, 2, ],  # 去除2行column说明。
+        dtype=str,  # 禁用自动类型推断。全部column都为str。
+    )
+    return df
+
