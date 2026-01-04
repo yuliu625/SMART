@@ -1,0 +1,39 @@
+"""
+选择ST公司的方法。
+"""
+
+from __future__ import annotations
+
+import pandas as pd
+
+from typing import TYPE_CHECKING
+# if TYPE_CHECKING:
+
+
+def select_st_by_stock_name(
+    df: pd.DataFrame,
+    stock_name_column: str,
+) -> pd.DataFrame:
+    """
+    默认筛选方法，通过Stock Name中的ST pattern。
+
+    Args:
+        df:
+        stock_name_column:
+
+    Returns:
+
+    """
+    df_ = df[df[stock_name_column].str.contains('ST')]  # 官方规定为含有ST。
+    return df_
+
+
+def select_and_save_st_by_stock_name(
+    df: pd.DataFrame,
+    stock_name_column: str,
+    result_path: str,
+) -> pd.DataFrame:
+    df_ = df[df[stock_name_column].str.contains('ST')]
+    df_.to_excel(result_path, index=False)
+    return df_
+
