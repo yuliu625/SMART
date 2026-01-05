@@ -17,10 +17,10 @@ def read_xlsx_from_csmar(
     读取从CSMAR数据的xlsx数据。
 
     Args:
-        xlsx_path:
+        xlsx_path (str): CSMAR导出的xlsx数据集的路径。
 
     Returns:
-
+        pd.DataFrame: 可以正常处理的df。
     """
     df = pd.read_excel(
         xlsx_path,
