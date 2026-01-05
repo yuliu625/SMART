@@ -17,10 +17,10 @@ def select_active_companies(
     通过公司活动情况，选择处于交易的公司。
 
     Args:
-        df:
+        df (pd.DataFrame): 符合CSMAR字段设置的数据集。需要提前的预处理。
 
     Returns:
-
+        pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df['Statco'].isin(['A'])]  # 也可以增加'N'。
     return df_
