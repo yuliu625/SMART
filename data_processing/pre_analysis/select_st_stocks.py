@@ -18,11 +18,11 @@ def select_st_by_stock_name(
     默认筛选方法，通过Stock Name中的ST pattern。
 
     Args:
-        df:
-        stock_name_column:
+        df (pd.DataFrame): 符合CSMAR字段设置的数据集。需要提前的预处理。
+        stock_name_column (str): CSMAR中的字段名。
 
     Returns:
-
+        pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df[stock_name_column].str.contains('ST')]  # 官方规定为含有ST。
     return df_
