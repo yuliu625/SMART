@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import pandas as pd
 
@@ -23,5 +24,6 @@ def select_active_companies(
         pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df['Statco'].isin(['A'])]  # 也可以增加'N'。
+    logger.trace("CSMAR STATCO: \n", df_)
     return df_
 
