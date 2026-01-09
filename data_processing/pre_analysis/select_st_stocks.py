@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import pandas as pd
 
@@ -25,6 +26,7 @@ def select_st_by_stock_name(
         pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df[stock_name_column].str.contains('ST')]  # 官方规定为含有ST。
+    logger.trace()
     return df_
 
 
