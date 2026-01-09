@@ -10,20 +10,20 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-def read_xlsx_from_csmar(
-    xlsx_path: str,
+def read_xlsx_from_csmar_trd_co(
+    csmar_trd_co_xlsx_file_path: str,
 ) -> pd.DataFrame:
     """
     读取从CSMAR数据的xlsx数据。
 
     Args:
-        xlsx_path (str): CSMAR导出的xlsx数据集的路径。
+        csmar_trd_co_xlsx_file_path (str): CSMAR导出的xlsx数据集的路径。
 
     Returns:
         pd.DataFrame: 可以正常处理的df。
     """
     df = pd.read_excel(
-        xlsx_path,
+        csmar_trd_co_xlsx_file_path,
         skiprows=[1, 2, ],  # 去除2行column说明。
         dtype=str,  # 禁用自动类型推断。全部column都为str。
     )
