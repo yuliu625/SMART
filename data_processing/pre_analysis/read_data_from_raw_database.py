@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import pandas as pd
 
@@ -22,10 +23,12 @@ def read_xlsx_from_csmar_trd_co(
     Returns:
         pd.DataFrame: 可以正常处理的df。
     """
+    logger.debug(f"CSMAR TRD Co file path: {csmar_trd_co_xlsx_file_path}")
     df = pd.read_excel(
         csmar_trd_co_xlsx_file_path,
         skiprows=[1, 2, ],  # 去除2行column说明。
         dtype=str,  # 禁用自动类型推断。全部column都为str。
     )
+    logger.trace("CSMAR TRD Co file: \n", csmar_trd_co_xlsx_file_path)
     return df
 
