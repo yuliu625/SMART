@@ -26,7 +26,7 @@ def select_st_by_stock_name(
         pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df[stock_name_column].str.contains('ST')]  # 官方规定为含有ST。
-    logger.trace()
+    logger.trace("CSMAR TRD Co:", df_)
     return df_
 
 
@@ -36,6 +36,7 @@ def select_and_save_st_by_stock_name(
     result_path: str,
 ) -> pd.DataFrame:
     df_ = df[df[stock_name_column].str.contains('ST')]
+    logger.trace("CSMAR TRD Co:", df_)
     df_.to_excel(result_path, index=False)
     return df_
 
