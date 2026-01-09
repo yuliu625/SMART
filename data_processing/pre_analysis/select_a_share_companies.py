@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 import pandas as pd
 
@@ -23,6 +24,7 @@ def select_a_share_companies_by_market_type(
         pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df['Markettype'].isin(['1', '4', '16', '32', '64'])]
+    logger.trace("CSMAR TRD: \n", df_)
     return df_
 
 
@@ -41,5 +43,6 @@ def select_a_share_companies_by_currency(
         pd.DataFrame: 筛选后的数据集。
     """
     df_ = df[df['Curtrd'] == 'CNY']
+    logger.trace("SMAR TRD: \n", df_)
     return df_
 
