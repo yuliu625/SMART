@@ -6,6 +6,7 @@ from __future__ import annotations
 from loguru import logger
 
 import pandas as pd
+from pathlib import Path
 
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
@@ -33,10 +34,11 @@ def select_st_by_stock_name(
 def select_and_save_st_by_stock_name(
     df: pd.DataFrame,
     stock_name_column: str,
-    result_path: str,
+    result_path: str | Path,
 ) -> pd.DataFrame:
     df_ = df[df[stock_name_column].str.contains('ST')]
     logger.trace("CSMAR TRD Co:\n", df_)
     df_.to_excel(result_path, index=False)
+    logger.success(f"Save to {result_path}")
     return df_
 
