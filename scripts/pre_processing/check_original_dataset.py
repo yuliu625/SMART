@@ -19,12 +19,15 @@ def check_csmar_pdf_existence(
     processed_csmar_trd_co_xlsx_file_path: str | Path,
     pdf_dir: str | Path,
 ) -> None:
+    # 读取处理过的CSMAR数据集，字段和DES文件相同。
     processed_csmar_trd_co_df: pd.DataFrame = read_processed_xlsx_from_csmar_trd_co(
-        csmar_trd_co_xlsx_file_path=processed_csmar_trd_co_xlsx_file_path,
+        processed_csmar_trd_co_xlsx_file_path=processed_csmar_trd_co_xlsx_file_path,
     )
+    # 仅获取stock code。
     target_name_list: list[str] = list(
         processed_csmar_trd_co_df['Stkcd']
     )
+    # 使用构建的方法进行检查文件存在情况。
     check_original_pdf_existence(
         target_name_list=target_name_list,
         pdf_dir=pdf_dir,
