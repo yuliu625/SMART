@@ -23,7 +23,13 @@ def select_a_share_companies_by_market_type(
     Returns:
         pd.DataFrame: 筛选后的数据集。
     """
-    df_ = df[df['Markettype'].isin(['1', '4', '16', '32', '64'])]
+    df_ = df[df['Markettype'].isin([
+        '1',  # 上证A股市场 (不包含科创板）
+        '4',  # 深证A股市场（不包含创业板）
+        '16',  # 创业板
+        '32',  # 科创板
+        # '64',  # 北证A股市场
+    ])]
     logger.trace("CSMAR TRD: \n", df_)
     return df_
 
