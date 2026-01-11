@@ -38,6 +38,7 @@ def main(
 
 
 if __name__ == '__main__':
+    # 查看全部公司的pdf文件。
     all_companies_path_ = r"D:\dataset\smart\original_data\csmar\all_companies_in_2024.xlsx"
     pdf_dir_ = r"D:\dataset\smart\original_data\cninfo"
     check_csmar_pdf_existence(
@@ -45,6 +46,7 @@ if __name__ == '__main__':
         pdf_dir=pdf_dir_,
     )
 
+    # 查看ST公司的pdf文件。
     st_companies_path_ = r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
     pdf_dir_ = r"D:\dataset\smart\original_data\cninfo"
     check_csmar_pdf_existence(
