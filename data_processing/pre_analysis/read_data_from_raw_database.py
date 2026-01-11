@@ -54,3 +54,45 @@ def read_processed_xlsx_from_csmar_trd_co(
     logger.trace("CSMAR TRD Co file: \n", processed_csmar_trd_co_xlsx_file_path)
     return df
 
+
+def read_xlsx_from_csmar_fs_combas(
+    csmar_fs_combas_xlsx_file_path: str,
+) -> pd.DataFrame:
+    logger.debug(f"CSMAR FS combas file path: {csmar_fs_combas_xlsx_file_path}")
+    column_dtypes = {
+        'Stkcd': str,
+        'ShortName': str,
+        'Typrep': str,
+        'IfCorrect': int,
+        'A001000000': float,  # 资产总计
+    }
+    df = pd.read_excel(
+        csmar_fs_combas_xlsx_file_path,
+        skiprows=[1, 2, ],  # 去除2行column说明。
+        dtype=column_dtypes,
+        parse_dates=['Accper'],
+    )
+    logger.trace("CSMAR FS Combas file: \n", csmar_fs_combas_xlsx_file_path)
+    return df
+
+
+def read_processed_xlsx_from_csmar_fs_combas(
+    processed_csmar_fs_combas_xlsx_file_path: str,
+) -> pd.DataFrame:
+    logger.debug(f"CSMAR FS combas file path: {processed_csmar_fs_combas_xlsx_file_path}")
+    column_dtypes = {
+        'Stkcd': str,
+        'ShortName': str,
+        # 'Typrep': str,
+        # 'IfCorrect': int,
+        'A001000000': float,  # 资产总计
+    }
+    df = pd.read_excel(
+        processed_csmar_fs_combas_xlsx_file_path,
+        # skiprows=[1, 2, ],  # 去除2行column说明。
+        dtype=column_dtypes,
+        parse_dates=['Accper'],
+    )
+    logger.trace("CSMAR FS Combas file: \n", processed_csmar_fs_combas_xlsx_file_path)
+    return df
+
