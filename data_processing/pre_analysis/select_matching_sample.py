@@ -25,36 +25,43 @@ def select_matching_sample_by_total_assets(
     df_not_st_with_total_assets: pd.DataFrame,
 ) -> pd.DataFrame:
     matched_list = []
-    for _, st in df_st_with_total_assets.iterrows():
-        # 尝试 1: 严格匹配同行业
-        candidates = df_not_st_with_total_assets[df_not_st_with_total_assets['Nnindcd'] == st['Nnindcd']]
+    # 复制一份候选池，避免修改原始 DataFrame
+    pool = df_not_st_with_total_assets.copy()
 
-        # 尝试 2: 如果同行业没找到，匹配行业大类 (取代码前两位)
+    for _, st in df_st_with_total_assets.iterrows():
+        # 如果候选池已经空了，跳出循环
+        if pool.empty:
+            break
+
+        # 尝试 1: 严格匹配同行业
+        candidates = pool[pool['Nnindcd'] == st['Nnindcd']]
+
+        # 尝试 2: 行业大类
         if candidates.empty:
             st_category = str(st['Nnindcd'])[:2]
-            candidates = df_not_st_with_total_assets[df_not_st_with_total_assets['Nnindcd'].str.startswith(st_category, na=False)]
+            candidates = pool[pool['Nnindcd'].astype(str).str.startswith(st_category)]
 
-        # 尝试 3: 如果还是没找到（极端情况），在全市场找规模最接近的
+        # 尝试 3: 全市场
         if candidates.empty:
-            candidates = df_not_st_with_total_assets
+            candidates = pool
 
-        # 在候选池中寻找资产规模最接近的一家
-        # 注意：使用 .abs() 找到差值绝对值最小的索引
+        # 寻找资产规模最接近的一家
         idx = (candidates['A001000000'] - st['A001000000']).abs().idxmin()
-        best_match = candidates.loc[idx]
+        best_match = pool.loc[idx] # 注意这里直接从 pool 取，确保索引一致
 
         # 将结果存入列表
-        matched_list.append(
-            {
-                'ST_Stkcd': st['Stkcd'],
-                'ST_Name': st['Stknme'],
-                'ST_Assets': st['A001000000'],
-                'Control_Stkcd': best_match['Stkcd'],
-                'Control_Name': best_match['Stknme'],
-                'Control_Assets': best_match['A001000000'],
-                'Match_Quality': 'Industry' if st['Nnindcd'] == best_match['Nnindcd'] else 'Category',
-            }
-        )
+        matched_list.append({
+            'ST_Stkcd': st['Stkcd'],
+            'ST_Name': st['Stknme'],
+            'ST_Assets': st['A001000000'],
+            'Control_Stkcd': best_match['Stkcd'],
+            'Control_Name': best_match['Stknme'],
+            'Control_Assets': best_match['A001000000'],
+            'Match_Quality': 'Industry' if st['Nnindcd'] == best_match['Nnindcd'] else 'Category',
+        })
+
+        # 关键步骤: 从 pool 中剔除已选中的样本。
+        pool = pool.drop(idx)
     df_matched = pd.DataFrame(matched_list)
     df_sample = pd.merge(
         df_not_st_with_total_assets, df_matched['Control_Stkcd'],
