@@ -27,6 +27,7 @@ def check_csmar_pdf_existence(
     target_name_list: list[str] = list(
         processed_csmar_trd_co_df['Stkcd']
     )
+    logger.info(f"Num of target_name_list: {len(target_name_list)}")
     # 使用构建的方法进行检查文件存在情况。
     check_original_pdf_existence(
         target_name_list=target_name_list,
@@ -54,6 +55,20 @@ if __name__ == '__main__':
     pdf_dir_ = r"D:\dataset\smart\original_data\cninfo"
     check_csmar_pdf_existence(
         processed_csmar_trd_co_xlsx_file_path=st_companies_path_,
+        pdf_dir=pdf_dir_,
+    )
+
+    # 查看matching sample的pdf文件。
+    st_companies_path_ = r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+    pdf_dir_ = r"D:\dataset\smart\original_data\sample"
+    check_csmar_pdf_existence(
+        processed_csmar_trd_co_xlsx_file_path=st_companies_path_,
+        pdf_dir=pdf_dir_,
+    )
+    matching_sample_path_ = r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
+    pdf_dir_ = r"D:\dataset\smart\original_data\sample"
+    check_csmar_pdf_existence(
+        processed_csmar_trd_co_xlsx_file_path=matching_sample_path_,
         pdf_dir=pdf_dir_,
     )
 
