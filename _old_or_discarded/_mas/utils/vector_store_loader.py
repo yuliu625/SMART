@@ -2,7 +2,7 @@
 加载默认路径的vector-store。
 """
 
-from mas.nodes.models import EmbeddingModelFactory, YuFakeEmbeddingModel
+from _old_or_discarded._mas.nodes.models import EmbeddingModelFactory, YuFakeEmbeddingModel
 
 from langchain_chroma import Chroma
 from pathlib import Path
