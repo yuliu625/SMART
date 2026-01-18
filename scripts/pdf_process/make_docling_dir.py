@@ -18,10 +18,29 @@ from typing import TYPE_CHECKING
 
 
 def default_batch_conver_pdf_via_docling(
-    pdf_path: str | Path,
+    pdf_dir: str | Path,
     result_dir: str | Path,
 ) -> None:
-    ...
+    # 路径处理。
+    pdf_dir = Path(pdf_dir)
+    result_dir = Path(result_dir)
+    pdf_path_list = list(pdf_dir.rglob('*.pdf'))
+    result_markdown_paths = [
+        result_dir / f"{pdf_path.stem}.md"
+        for pdf_path in pdf_path_list
+    ]
+    # 执行转换。
+    pdf_pipeline_options = build_pdf_pipeline_options(
+        is_do_table_structure=True,
+        is_do_ocr=False,
+        images_scale=2.0,
+        is_extract_images=False,
+    )
+    batch_convert_pdf_via_docling(
+        pdf_paths=pdf_path_list,
+        result_markdown_paths=result_markdown_paths,
+        pipeline_options=pdf_pipeline_options,
+    )
 
 
 def main(
@@ -32,6 +51,14 @@ def main(
 
 if __name__ == '__main__':
     # 默认转换方法。
+    ## 无图片。
+    pdf_dir_ = r""
+    result_dir_ = r""
+    default_batch_conver_pdf_via_docling(
+        pdf_dir=pdf_dir_,
+        result_dir=result_dir_,
+    )
+    ## 有图片。
     pdf_dir_ = r""
     result_dir_ = r""
 
