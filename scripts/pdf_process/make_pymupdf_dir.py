@@ -72,12 +72,16 @@ def main(
 
 if __name__ == '__main__':
     # 最基础的转换。
+    ## 无图片。
     pdf_dir_ = r""
     result_dir_ = r""
-    # batch_convert_pdf_via_pymupdf4llm(
-    #     pdf_dir=pdf_dir_,
-    #     result_dir=result_dir_,
-    # )
+    batch_convert_pdf_via_pymupdf4llm(
+        pdf_dir=pdf_dir_,
+        result_dir=result_dir_,
+    )
+    ## 有图片。
+    pdf_dir_ = r""
+    result_dir_ = r""
     batch_convert_pdf_via_pymupdf4llm_with_images(
         pdf_dir=pdf_dir_,
         result_dir=result_dir_,
