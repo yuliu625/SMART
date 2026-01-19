@@ -71,7 +71,7 @@ class Adjudicator(BaseAgent):
 
         Args:
             state (DecisionState): 使用的state。需要字段:
-                - decision_shared_messages: 再arbiter之前全部的分析。
+                - decision_shared_messages: 在adjudicator之前全部的分析。
             config (RunnableConfig): 运行设置。
 
         Returns:
