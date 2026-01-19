@@ -43,6 +43,38 @@ def default_batch_conver_pdf_via_docling(
     )
 
 
+def default_incremental_batch_conver_pdf_via_docling(
+    pdf_dir: str | Path,
+    result_dir: str | Path,
+) -> None:
+    # 路径处理。
+    pdf_dir = Path(pdf_dir)
+    result_dir = Path(result_dir)
+    pdf_path_list = list(pdf_dir.rglob('*.pdf'))
+    # HACK: 简单处理list。
+    result_markdown_paths = []
+    for _i in range(len(pdf_path_list)):
+        result_markdown_path = result_dir / f"{pdf_path_list[_i].stem}.md"
+        if not result_markdown_path.exists():
+            result_markdown_paths.append(result_markdown_path)
+    pdf_path_list = pdf_path_list[-len(result_markdown_paths):]
+    assert len(pdf_path_list) == len(result_markdown_paths)
+    assert pdf_path_list[0].stem == result_markdown_paths[0].stem
+    logger.info(f"PDF to convert: {len(pdf_path_list)}")
+    # 执行转换。
+    pdf_pipeline_options = build_pdf_pipeline_options(
+        is_do_table_structure=True,
+        is_do_ocr=False,
+        images_scale=2.0,
+        is_extract_images=False,
+    )
+    batch_convert_pdf_via_docling(
+        pdf_paths=pdf_path_list,
+        result_markdown_paths=result_markdown_paths,
+        pipeline_options=pdf_pipeline_options,
+    )
+
+
 def main(
 
 ):
@@ -54,7 +86,11 @@ if __name__ == '__main__':
     ## 无图片。
     pdf_dir_ = r""
     result_dir_ = r""
-    default_batch_conver_pdf_via_docling(
+    # default_batch_conver_pdf_via_docling(
+    #     pdf_dir=pdf_dir_,
+    #     result_dir=result_dir_,
+    # )
+    default_incremental_batch_conver_pdf_via_docling(
         pdf_dir=pdf_dir_,
         result_dir=result_dir_,
     )
