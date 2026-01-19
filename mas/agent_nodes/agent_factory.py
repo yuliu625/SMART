@@ -12,6 +12,9 @@ from mas.agent_nodes.analysis_agents.analyst import Analyst
 from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from mas.agent_nodes.base_agent import BaseAgent
+    from langchain_core.language_models import BaseChatModel
+    from langchain_core.messages import AnyMessage, AIMessage, SystemMessage
+    from pydantic import BaseModel
 
 
 class AgentFactory:
@@ -22,35 +25,62 @@ class AgentFactory:
             'analyst', 'rag_agent',
         ],
     ) -> BaseAgent:
-        ...
+        raise NotImplementedError
 
     @staticmethod
     def create_surveyor(
-
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
     ) -> BaseAgent:
-        ...
+        surveyor = Surveyor(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+        )
+        return surveyor
 
     @staticmethod
     def create_investigator(
-
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage,
     ) -> BaseAgent:
-        ...
+        investigator = Investigator(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+        )
+        return investigator
 
     @staticmethod
     def create_adjudicator(
-
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage,
     ) -> BaseAgent:
-        ...
+        adjudicator = Adjudicator(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+        )
+        return adjudicator
 
     @staticmethod
     def create_analyst(
 
     ) -> BaseAgent:
-        ...
+        raise NotImplementedError
 
     @staticmethod
     def create_rag_agent(
 
     ) -> BaseAgent:
-        ...
+        raise NotImplementedError
 
