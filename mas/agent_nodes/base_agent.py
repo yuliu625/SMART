@@ -25,8 +25,12 @@ V2:
 """
 
 from __future__ import annotations
+from loguru import logger
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import (
+    HumanMessage,
+    AIMessage,
+)
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING, cast
@@ -34,14 +38,18 @@ if TYPE_CHECKING:
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage, AIMessage
+    from pydantic import BaseModel
 
 
 class BaseAgentResponse(BaseModel):
+    """
+    当前文件BaseAgent中定义的输出格式。可根据具体项目需求修改。
+    """
     ai_message: AIMessage = Field(
         description="原始的LLM返回的AIMessage",
     )
     structured_output: BaseModel | None = Field(
-        description="根据BaseAgent的设置，提取的结构化输出。"
+        description="根据BaseAgent的设置，提取的结构化输出。",
     )
 
 
@@ -176,11 +184,12 @@ class BaseAgent:
                 )
                 break
             except Exception as e:
-                print(e)
+                logger.error(e)
         if response is None:
             raise RuntimeError("main llm 达到最大重试次数。")
         # 如果不需要结构化输出，直接返回响应结果。
         if not self._is_need_structured_output:
+            logger.debug(f"Type of response: {type(response)}")
             return BaseAgentResponse(
                 ai_message=response,
                 structured_output=None,
@@ -197,7 +206,7 @@ class BaseAgent:
                     )
                     break
                 except Exception as e:
-                    print(e)
+                    logger.error(e)
             if structured_output is None:
                 raise RuntimeError("formatter llm 达到最大重试次数。")
             return BaseAgentResponse(
