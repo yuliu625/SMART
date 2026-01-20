@@ -4,7 +4,7 @@
 
 # from __future__ import annotations
 #
-# from mas.schemas.mas_state import MASState
+# from mas.schemas.mas_state import FinalMASState
 # from mas.agent_nodes import (
 #     RagRetrieverFactory,
 # )
@@ -33,7 +33,7 @@
 
 from __future__ import annotations
 
-from mas.schemas.final_mas_state import MASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+from mas.schemas.final_mas_state import FinalMASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
 
 from langgraph.graph import (
     StateGraph,
@@ -47,13 +47,13 @@ if TYPE_CHECKING:
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
-class MASGraphBuilder:
+class FinalMASGraphBuilder:
     """
     计算图的构造器。
     """
     def __init__(
         self,
-        state: type[MASState],
+        state: type[FinalMASState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
@@ -79,7 +79,7 @@ class MASGraphBuilder:
         """
 
 
-# class MASGraphBuilder:
+# class FinalMASGraphBuilder:
 #     def __init__(
 #         self,
 #         vector_store: VectorStore,
@@ -89,7 +89,7 @@ class MASGraphBuilder:
 #         self.vector_store = vector_store
 #         self.pdf_name = pdf_name
 #         # 构建状态图。
-#         self.graph_builder = StateGraph(MASState)
+#         self.graph_builder = StateGraph(FinalMASState)
 #         # 构建query-engine。
 #         self.rag_retriever_factory = RagRetrieverFactory(vector_store=vector_store, pdf_name=pdf_name)
 #         # 获取相关的agent。
