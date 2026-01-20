@@ -6,7 +6,8 @@ from __future__ import annotations
 from loguru import logger
 
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
-from mas.agent_nodes.agent_factory import AgentFactory
+from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
+# from mas.agent_nodes.agent_factory import AgentFactory
 
 from langgraph.graph import (
     StateGraph,
@@ -16,6 +17,7 @@ from langgraph.graph import (
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
+    from mas.agent_nodes.base_agent import BaseAgent
     from langgraph.graph.state import CompiledStateGraph
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
@@ -34,19 +36,26 @@ class SingleAgentMASGraphBuilder:
 
     def build_graph(
         self,
+        adjudicator: Adjudicator,
         checkpointer: BaseCheckpointSaver | None = None,
     ) -> CompiledStateGraph:
-        self._add_nodes()
+        self._add_nodes(
+            adjudicator=adjudicator,
+        )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
+        logger.info(f"Built single agent MAS graph.")
         return graph
 
-    def _add_nodes(self):
+    def _add_nodes(
+        self,
+        adjudicator: Adjudicator,
+    ):
         """
         注册MAS的nodes。
         """
         # Decision Module
-        adjudicator = AgentFactory.create_adjudicator()
+        # adjudicator = AgentFactory.create_adjudicator()
         self.graph_builder.add_node('adjudicator', adjudicator.process_state)
 
     def _add_edges(self):
