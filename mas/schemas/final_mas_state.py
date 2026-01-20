@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from langchain_core.messages import AnyMessage
 
 
-class MASState(BaseModel):
+class FinalMASState(BaseModel):
     # MAS条件控制。
     # current related, 整个MAS控制相关。
     current_agent_name: str = Field(
