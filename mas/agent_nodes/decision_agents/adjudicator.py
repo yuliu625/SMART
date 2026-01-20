@@ -13,7 +13,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.final_mas_state import MASState
+    from mas.schemas.final_mas_state import FinalMASState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
@@ -63,7 +63,7 @@ class Adjudicator(BaseAgent):
 
     async def process_state(
         self,
-        state: MASState,
+        state: FinalMASState,
         config: RunnableConfig,
     ) -> dict:
         """
