@@ -27,7 +27,7 @@ class MASState(BaseModel):
     # Decision Module
     decision_shared_messages: list[AnyMessage] = Field(
         default_factory=list,
-        description="所有decision中的agent共用的messages。"
+        description="所有decision中的agent共用的messages。",
     )
     ## Surveyor
     original_pdf_text: str = Field(
@@ -51,7 +51,7 @@ class MASState(BaseModel):
     ## Adjudicator
     final_decision: dict = Field(
         default_factory=dict,
-        description="Adjudicator的结构化输出。",
+        description="Adjudicator结构化输出的最终决策。",
     )
 
     # Analysis Module
