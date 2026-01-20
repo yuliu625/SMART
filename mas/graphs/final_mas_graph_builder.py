@@ -33,7 +33,7 @@
 
 from __future__ import annotations
 
-from mas.schemas.mas_state import MASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+from mas.schemas.final_mas_state import MASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
 
 from langgraph.graph import (
     StateGraph,
