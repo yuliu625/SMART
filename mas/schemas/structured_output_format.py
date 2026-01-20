@@ -13,36 +13,45 @@ from typing import TYPE_CHECKING, Literal
 
 # ====RAG====
 class RAGRewriteResponse(BaseModel):
-    items: list[str] = Field(
-        description="multi-query-RAG中，进行query重写的agent生成的结果。",
-        min_length=3, max_length=5,
+    """
+
+    """
+    queries: list[str] = Field(
+        description="将原始query进行重写后的多个query。",
+        min_length=3, max_length=5,  # 对于输出的数量进行限制。
     )
 
 
-# ====analysis & decision====
+# ==== Analysis ====
 class AnalystRequest(BaseModel):
+    """
+
+    """
     agent_name: Literal[
         'investigator', 'rag',
     ] = Field(
-        description="指定下一个运行的agent的名字。"
+        description="指定下一个运行的agent的名字。",
     )
     agent_message: str = Field(
-        description="传递给下一个的agent的信息。"
+        description="传递给下一个的agent的信息。",
     )
 
 
+# ==== Decision ====
+## ==== Investigator ====
 class InvestigatorRequest(BaseModel):
     agent_name: Literal[
         'investigator',
     ]
+## ==== Adjudicator ====
+class AdjudicatorDecision(BaseModel):
+    """
 
-
-# ====decision====
-class ArbiterDecision(BaseModel):
+    """
     decision: str = Field(
         description="最终的决定。"
     )
-    risk: bool = Field(
+    has_risk: bool = Field(
         description="是否存在风险的判断。"
     )
     confidence: float = Field(
@@ -50,6 +59,7 @@ class ArbiterDecision(BaseModel):
     )
 
 
+# confidence
 class ConfidenceOutput(BaseModel):
     content: str
     confidence: float
