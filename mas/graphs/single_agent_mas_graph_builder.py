@@ -3,8 +3,10 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
-# from ? import MASState  # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.agent_nodes.agent_factory import AgentFactory
 
 from langgraph.graph import (
     StateGraph,
@@ -18,13 +20,13 @@ if TYPE_CHECKING:
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
-class BaseGraphBuilder:
+class SingleAgentMASGraphBuilder:
     """
     计算图的构造器。
     """
     def __init__(
         self,
-        state#: type[MASState],
+        state: type[SingleAgentMASState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
@@ -43,9 +45,16 @@ class BaseGraphBuilder:
         """
         注册MAS的nodes。
         """
+        # Decision Module
+        adjudicator = AgentFactory.create_adjudicator()
+        self.graph_builder.add_node('adjudicator', adjudicator.process_state)
 
     def _add_edges(self):
         """
         注册MAS的edges。
         """
+        # 输入内容后，直接输入给adjudicator。
+        self.graph_builder.add_edge(START, 'adjudicator')
+        # Adjudicator完成解析，整个流程结束。
+        self.graph_builder.add_edge('adjudicator', END)
 
