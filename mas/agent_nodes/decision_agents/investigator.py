@@ -13,7 +13,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.final_mas_state import MASState
+    from mas.schemas.final_mas_state import FinalMASState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage
@@ -49,14 +49,14 @@ class Investigator(BaseAgent):
 
     async def process_state(
         self,
-        state: MASState,
+        state: FinalMASState,
         config: RunnableConfig,
     ) -> dict:
         """
         Decision-Module最重要的部分，进行分析和决策。
 
         Args:
-            state (MASState): 使用的state。需要字段:
+            state (FinalMASState): 使用的state。需要字段:
                 - decision_shared_messages:
                     - Case1: Surveyor之后的shared_messages。
                     - Case2: Analyst之后的shared_messages。
