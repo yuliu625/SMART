@@ -8,6 +8,7 @@ from __future__ import annotations
 from loguru import logger
 
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.agent_nodes.analysis_agents.analyst import Analyst
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
@@ -42,12 +43,14 @@ class SequentialMASGraphBuilder:
         surveyor: Surveyor,
         investigator: Investigator,
         adjudicator: Adjudicator,
+        analyst: Analyst,
         checkpointer: BaseCheckpointSaver | None = None,
     ) -> CompiledStateGraph:
         self._add_nodes(
             surveyor=surveyor,
             investigator=investigator,
             adjudicator=adjudicator,
+            analyst=analyst,
         )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
@@ -59,6 +62,7 @@ class SequentialMASGraphBuilder:
         surveyor: Surveyor,
         investigator: Investigator,
         adjudicator: Adjudicator,
+        analyst: Analyst,
     ):
         """
         注册MAS的nodes。
@@ -70,6 +74,7 @@ class SequentialMASGraphBuilder:
         self.graph_builder.add_node('surveyor', surveyor.process_state)
         self.graph_builder.add_node('investigator', investigator.process_state)
         self.graph_builder.add_node('adjudicator', adjudicator.process_state)
+        self.graph_builder.add_node('analyst', analyst.process_state)
 
     def _add_edges(self):
         """
@@ -77,7 +82,12 @@ class SequentialMASGraphBuilder:
         """
         # 输入的内容由surveyor进行处理。
         self.graph_builder.add_edge(START, 'surveyor')
+        # Investigator根据整体的内容进行分析。
         self.graph_builder.add_edge('surveyor', 'investigator')
+        # self.graph_builder.add_edge('investigator', 'analyst')
+        # self.graph_builder.add_edge('analyst', 'rag')
+        # self.graph_builder.add_edge('rag', 'analyst')
+        # self.graph_builder.add_edge('analyst', 'investigator')
         # Adjudicator读取全部的信息，并做出最终的判断。
         self.graph_builder.add_edge('adjudicator', END)
 
