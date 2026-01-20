@@ -46,16 +46,16 @@ class InvestigatorRequest(BaseModel):
 ## ==== Adjudicator ====
 class AdjudicatorDecision(BaseModel):
     """
-
+    文本中需求提取的决策结果。
     """
     decision: str = Field(
-        description="最终的决定。"
+        description="最终决策的简短总结文本。"
     )
     has_risk: bool = Field(
         description="是否存在风险的判断。"
     )
     confidence: float = Field(
-        description="对于仲裁结果的置信度。"
+        description="对于结论的置信度。"
     )
 
 
