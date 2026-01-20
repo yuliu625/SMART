@@ -14,8 +14,12 @@ from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 from mas.graphs.single_agent_mas_graph_builder import SingleAgentMASGraphBuilder
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
 # sequential mas
+from mas.graphs.sequential_mas_graph_builder import SequentialMASGraphBuilder
+from mas.schemas.sequential_mas_state import SequentialMASState
 # multi agent debate
 # final mas
+from mas.graphs.final_mas_graph_builder import FinalMASGraphBuilder
+from mas.schemas.final_mas_state import FinalMASState
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
