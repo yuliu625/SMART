@@ -46,6 +46,6 @@ def safe_format_message_prompt_template(
     )
     chat_prompt_value = chat_prompt_template.invoke(input=format_kwargs)
     messages = chat_prompt_value.to_messages()
-    # assert all(isinstance(message, BaseMessage) for message in messages)
+    # assert mas(isinstance(message, BaseMessage) for message in messages)
     return messages
 
