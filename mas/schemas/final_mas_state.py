@@ -3,7 +3,6 @@
 """
 
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING
@@ -13,6 +12,9 @@ if TYPE_CHECKING:
 
 
 class FinalMASState(BaseModel):
+    """
+    最终构建的MAS的state。
+    """
     # MAS条件控制。
     # current related, 整个MAS控制相关。
     current_agent_name: str = Field(
