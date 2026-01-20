@@ -3,7 +3,6 @@
 """
 
 from __future__ import annotations
-
 from pydantic import BaseModel, Field
 
 from langchain_core.messages import AnyMessage
