@@ -15,7 +15,7 @@ class AllPromptTemplateFactory(BasePromptTemplateFactory):
         self,
     ):
         super().__init__()
-        self.set_sub_dir('all')
+        self.set_sub_dir('mas')
 
 
 class RAGPromptTemplateFactory(BasePromptTemplateFactory):
