@@ -108,19 +108,37 @@ class MASFactory:
         return graph
 
     @staticmethod
-    def create_sequential_mas(
+    def create_sequential_mas_via_vllm(
 
     ) -> CompiledStateGraph:
         raise NotImplementedError
 
     @staticmethod
-    def create_multi_agent_debate_mas(
+    def create_sequential_mas_via_ollama(
 
     ) -> CompiledStateGraph:
         raise NotImplementedError
 
     @staticmethod
-    def create_final_mas(
+    def create_multi_agent_debate_mas_via_vllm(
+
+    ) -> CompiledStateGraph:
+        raise NotImplementedError
+
+    @staticmethod
+    def create_multi_agent_debate_mas_via_ollama(
+
+    ) -> CompiledStateGraph:
+        raise NotImplementedError
+
+    @staticmethod
+    def create_final_mas_via_vllm(
+
+    ) -> CompiledStateGraph:
+        raise NotImplementedError
+
+    @staticmethod
+    def create_final_mas_via_ollama(
 
     ) -> CompiledStateGraph:
         raise NotImplementedError
