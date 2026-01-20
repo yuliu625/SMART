@@ -10,7 +10,7 @@ from .base_prompt_template_factory import BasePromptTemplateFactory
 # if TYPE_CHECKING:
 
 
-class AllPromptTemplateFactory(BasePromptTemplateFactory):
+class MASPromptTemplateFactory(BasePromptTemplateFactory):
     def __init__(
         self,
     ):
