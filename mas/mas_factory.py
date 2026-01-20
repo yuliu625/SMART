@@ -85,6 +85,7 @@ class MASFactory:
         graph = GraphFactory.create_single_agent_mas_graph(
             adjudicator_main_llm=LocalLLMFactory.create_ollama_llm(
                 model_name=adjudicator_main_llm_model_name,
+                # HARDCODED
                 reasoning=None,
                 temperature=0.7,
                 num_predict=None,
@@ -95,6 +96,7 @@ class MASFactory:
             ).format()),
             adjudicator_formatter_llm=LocalLLMFactory.create_ollama_llm(
                 model_name=adjudicator_formatter_llm_model_name,
+                # HARDCODED
                 reasoning=None,
                 temperature=0.7,
                 num_predict=None,
