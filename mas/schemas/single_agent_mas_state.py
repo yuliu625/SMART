@@ -12,6 +12,13 @@ from typing import TYPE_CHECKING
 
 
 class SingleAgentMASState(BaseModel):
+    """
+    Single agent中使用的state。
+
+    实际等同:
+        - 整个系统运行需要的最小必要字段。
+        - Adjudicator需要的字段。
+    """
     # 共用字段。该实现需要额外处理。
     decision_shared_messages: list[AnyMessage] = Field(
         default_factory=list,
