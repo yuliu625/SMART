@@ -142,7 +142,7 @@ class BaseAgent:
             - 操作分离: 直接获取需要更新的状态，不在这里构建过多逻辑。
 
         Args:
-            state (MASState): Graph中定义的state。之后添加类型标注。
+            state (FinalMASState): Graph中定义的state。之后添加类型标注。
             config (RunnableConfig): runnable设计的config配置。可以不使用，但在复杂图中，可以提供更好的控制。
 
         Returns:
