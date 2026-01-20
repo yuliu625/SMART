@@ -17,7 +17,7 @@ from pathlib import Path
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
+    from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
 
 
 class BasePromptTemplateFactory:
