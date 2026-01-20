@@ -9,6 +9,9 @@ from loguru import logger
 
 from mas.mas_factory import MASFactory
 from mas.utils.graph_visualizer import GraphVisualizer
+from mas.schemas.single_agent_mas_state import SingleAgentMASState
+
+from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
@@ -55,5 +58,18 @@ class TestSingleAgentMAS:
         adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
     ):
-        ...
+        mas = MASFactory.create_single_agent_mas_via_ollama(
+            adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
+            adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
+            adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
+            adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
+        )
+        result = await mas.ainvoke(
+            input=SingleAgentMASState(
+                decision_shared_messages=[
+                    HumanMessage(content="你觉得明天下雨的几率有多大？")
+                ],
+            )
+        )
+        logger.info(f"\nMAS Result: \n{result}")
 
