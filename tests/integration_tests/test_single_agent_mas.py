@@ -10,6 +10,7 @@ from loguru import logger
 from mas.mas_factory import MASFactory
 from mas.utils.graph_visualizer import GraphVisualizer
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.io_methods import IOMethods
 
 from langchain_core.messages import HumanMessage
 
@@ -72,4 +73,38 @@ class TestSingleAgentMAS:
             )
         )
         logger.info(f"\nMAS Result: \n{result}")
+
+    @pytest.mark.parametrize(
+        "adjudicator_main_llm_model_name, adjudicator_main_llm_system_message_template_path, adjudicator_formatter_llm_model_name, adjudicator_formatter_llm_system_message_template_path, markdown_file_path, result_path", [
+        ('qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_main_llm_system_prompt_template.j2',
+         'qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2',
+         r"D:\dataset\smart\tests\test_markdown_file.txt",
+         r"D:\dataset\smart\tests\test_result.json",),
+    ])
+    @pytest.mark.asyncio
+    async def test_single_agent_mas_with_load_and_save(
+        self,
+        adjudicator_main_llm_model_name: str,
+        adjudicator_main_llm_system_message_template_path: str,
+        adjudicator_formatter_llm_model_name: str,
+        adjudicator_formatter_llm_system_message_template_path: str,
+        markdown_file_path: str,
+        result_path: str,
+    ):
+        mas = MASFactory.create_single_agent_mas_via_ollama(
+            adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
+            adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
+            adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
+            adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
+        )
+        state = IOMethods.load_single_agent_mas_state(
+            markdown_file_path=markdown_file_path,
+        )
+        result = await mas.ainvoke(
+            input=state,
+        )
+        logger.info(f"\nMAS Result: \n{result}")
+        IOMethods.save_single_agent_mas_state(state=result, result_path=result_path)
 
