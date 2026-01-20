@@ -17,7 +17,10 @@ from typing import TYPE_CHECKING
 class TestSingleAgentMAS:
     @pytest.mark.parametrize(
         "adjudicator_main_llm_model_name, adjudicator_main_llm_system_message_template_path, adjudicator_formatter_llm_model_name, adjudicator_formatter_llm_system_message_template_path", [
-        ('qwen2.5:1.5b', r'', 'qwen2.5:1.5b', r''),
+        ('qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_main_llm_system_prompt_template.j2',
+         'qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2'),
     ])
     def test_single_agent_mas_structure(
         self,
@@ -36,4 +39,21 @@ class TestSingleAgentMAS:
             graph=mas,
         )
         logger.info(f"\nMermaid Code: \n{mermaid_code}")
+
+    @pytest.mark.parametrize(
+        "adjudicator_main_llm_model_name, adjudicator_main_llm_system_message_template_path, adjudicator_formatter_llm_model_name, adjudicator_formatter_llm_system_message_template_path", [
+        ('qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_main_llm_system_prompt_template.j2',
+         'qwen2.5:1.5b',
+         r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2'),
+    ])
+    @pytest.mark.asyncio
+    async def test_single_agent_mas(
+        self,
+        adjudicator_main_llm_model_name: str,
+        adjudicator_main_llm_system_message_template_path: str,
+        adjudicator_formatter_llm_model_name: str,
+        adjudicator_formatter_llm_system_message_template_path: str,
+    ):
+        ...
 
