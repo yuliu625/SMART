@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class SequentialMasState(BaseModel):
+class SequentialMASState(BaseModel):
     """
     Sequential MAS中使用的state。
 
