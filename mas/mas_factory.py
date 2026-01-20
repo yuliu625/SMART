@@ -77,7 +77,8 @@ class MASFactory:
                     system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
                 ).format(),
             ),
-            adjudicator_structured_output_format=AdjudicatorDecision,  # HARDCODED
+            # HARDCODED
+            adjudicator_structured_output_format=AdjudicatorDecision,
         )
         return graph
 
@@ -117,7 +118,8 @@ class MASFactory:
                     system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
                 ).format(),
             ),
-            adjudicator_structured_output_format=AdjudicatorDecision,  # HARDCODED
+            # HARDCODED
+            adjudicator_structured_output_format=AdjudicatorDecision,
         )
         return graph
 
