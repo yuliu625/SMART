@@ -54,9 +54,12 @@ class MASFactory:
                 max_retries=None,
                 model_configs={},
             ),
-            adjudicator_main_llm_system_message=cast(SystemMessage, PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-                system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
-            ).format()),
+            adjudicator_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
+                ).format(),
+            ),
             adjudicator_formatter_llm=LocalLLMFactory.create_openai_llm(
                 base_url=adjudicator_formatter_llm_base_url,
                 model_name=adjudicator_formatter_llm_model_name,
@@ -68,9 +71,12 @@ class MASFactory:
                 max_retries=None,
                 model_configs={},
             ),
-            adjudicator_formatter_llm_system_message=cast(SystemMessage, PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-                system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
-            ).format()),
+            adjudicator_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
             adjudicator_structured_output_format=AdjudicatorDecision,  # HARDCODED
         )
         return graph
@@ -91,9 +97,12 @@ class MASFactory:
                 num_predict=None,
                 model_configs={},
             ),
-            adjudicator_main_llm_system_message=cast(SystemMessage, PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-                system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
-            ).format()),
+            adjudicator_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
+                ).format(),
+            ),
             adjudicator_formatter_llm=LocalLLMFactory.create_ollama_llm(
                 model_name=adjudicator_formatter_llm_model_name,
                 # HARDCODED
@@ -102,9 +111,12 @@ class MASFactory:
                 num_predict=None,
                 model_configs={},
             ),
-            adjudicator_formatter_llm_system_message=cast(SystemMessage, PromptTemplateLoader.load_system_message_prompt_template_from_j2(
-                system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
-            ).format()),
+            adjudicator_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
             adjudicator_structured_output_format=AdjudicatorDecision,  # HARDCODED
         )
         return graph
