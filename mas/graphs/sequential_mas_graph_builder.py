@@ -44,7 +44,7 @@ class SequentialMASGraphBuilder:
         """
         注册MAS的nodes。
         """
-        # Decision-Module
+        # Decision Module
         surveyor = AgentFactory.create_surveyor()
         investigator = AgentFactory.create_investigator()
         adjudicator = AgentFactory.create_adjudicator()
