@@ -10,8 +10,15 @@ from loguru import logger
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
 from mas.schemas.sequential_mas_state import SequentialMASState
 from mas.schemas.final_mas_state import FinalMASState
+# from rag.loading.load_text import TextLoadingMethods
 
 from pathlib import Path
+import json
+from langchain_core.messages import (
+    messages_to_dict,
+    messages_from_dict,
+)
+from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
@@ -20,15 +27,46 @@ from typing import TYPE_CHECKING
 class IOMethods:
     @staticmethod
     def load_single_agent_mas_state(
-
+        markdown_file_path: str | Path,
     ) -> SingleAgentMASState:
-        ...
+        # 处理路径。
+        markdown_file_path = Path(markdown_file_path)
+        # 读取文本。
+        markdown_text = markdown_file_path.read_text(encoding='utf-8')
+        # 构造state。
+        state = SingleAgentMASState(
+            decision_shared_messages=[
+                HumanMessage(content=markdown_text),
+            ],
+        )
+        logger.trace(f"\nLoaded SingleAgentMASState: \n{state}")
+        return state
 
     @staticmethod
     def save_single_agent_mas_state(
-
+        state: SingleAgentMASState,
+        result_path: str | Path,
     ) -> SingleAgentMASState:
-        ...
+        # 处理路径。
+        result_path = Path(result_path)
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        # 读取结果。
+        result = dict(
+            decision_shared_messages=messages_to_dict(
+                messages=state['decision_shared_messages'],
+            ),
+            final_decision=state['final_decision'].model_dump(),
+        )
+        logger.debug(f"Type of result: {type(result)}")
+        logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
+        logger.trace(f"\nSingleAgentMASState to save: \n{result}")
+        # 执行保存。
+        result_path.write_text(
+            json.dumps(result, ensure_ascii=False, indent=4),
+            encoding='utf-8',
+        )
+        logger.success(f"\nSaved SingleAgentMASState: \n{result}")
+        return state
 
     @staticmethod
     def load_sequential_mas_state(
