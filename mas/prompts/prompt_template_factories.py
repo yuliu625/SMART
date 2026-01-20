@@ -15,7 +15,7 @@ class MASPromptTemplateFactory(BasePromptTemplateFactory):
         self,
     ):
         super().__init__()
-        self.set_sub_dir('mas')
+        self.set_sub_dir('final_mas')
 
 
 class RAGPromptTemplateFactory(BasePromptTemplateFactory):
