@@ -1,6 +1,5 @@
 """
-design patter: single agent。
-
+Design Patter: single agent.
 """
 
 from __future__ import annotations
