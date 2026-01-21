@@ -19,19 +19,27 @@ class SingleAgentMASState(BaseModel):
         - 整个系统运行需要的最小必要字段。
         - Adjudicator需要的字段。
     """
-    # 共用字段。该实现需要额外处理。
+    # MAS条件控制。
+    ## current related, 为兼容性保留。
+    ## 在这个实现中，实际不进行任何执行。
+    current_agent_name: str = Field(
+        default="adjudicator",
+        description="当前应该运行的agent的名字。",
+    )
+    current_message: str = Field(
+        default="",
+        description="当前agent可能会使用的信息。",
+    )
+
+    # Decision Module
+    ## 共用字段。该实现需要额外处理进行初始化以启动系统。
     decision_shared_messages: list[AnyMessage] = Field(
         default_factory=list,
         description="所有decision中的agent共用的messages。在这个实现中，时adjudicator专用。使用需要额外处理。",
     )
-    # Adjudicator
+    ### Adjudicator. 代表最终结果的重要字段。
     final_decision: dict = Field(
         default_factory=dict,
         description="Adjudicator结构化输出的最终决策。",
-    )
-    # 为兼容性保留。实际不进行任何执行。
-    current_message: str = Field(
-        default="",
-        description="调用当前agent的上一个agent传递的信息。",
     )
 
