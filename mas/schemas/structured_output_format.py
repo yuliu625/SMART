@@ -12,12 +12,12 @@ from typing import TYPE_CHECKING, Literal
 
 
 # ====RAG====
-class RAGRewriteResponse(BaseModel):
+class RewrittenQueries(BaseModel):
     """
-
+    用于存储重写后的查询语句的数据类。
     """
     queries: list[str] = Field(
-        description="将原始query进行重写后的多个query。",
+        description="针对原始问题生成的不同角度的检索查询语句列表。",
         min_length=3, max_length=5,  # 对于输出的数量进行限制。
     )
 
