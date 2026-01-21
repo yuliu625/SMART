@@ -8,6 +8,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from langchain_core.messages import AnyMessage
+from langchain_core.documents import Document
 
 from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
@@ -24,19 +25,40 @@ class SequentialMASState(BaseModel):
             RAG::Retriever
             需要的字段。
     """
-    # 共用字段。该实现需要额外处理。
+    # MAS条件控制。
+    ## current related, 整个MAS控制相关。
+    current_agent_name: str = Field(
+        default="adjudicator",
+        description="当前应该运行的agent的名字。",
+    )
+    ## 为兼容性保留。
+    ## 在这个实现中，仅为传递给RAG的初始查询。
+    current_message: str = Field(
+        default="",
+        description="当前agent可能会使用的信息。",
+    )
+
+    # Decision Module
+    ## 共用字段。该实现需要额外处理。
     decision_shared_messages: list[AnyMessage] = Field(
         default_factory=list,
         description="所有decision中的agent共用的messages。在这个实现中，时adjudicator专用。使用需要额外处理。",
     )
-    # Adjudicator
+    ## Adjudicator. 代表最终结果的重要字段。
     final_decision: dict = Field(
         default_factory=dict,
         description="Adjudicator结构化输出的最终决策。",
     )
-    # 为兼容性保留。实际不进行任何执行。
-    current_message: str = Field(
-        default="",
-        description="调用当前agent的上一个agent传递的信息。",
+
+    # RAG
+    ## 检索结果/当前analyst可以进行分析的材料。
+    current_documents: list[Document] = Field(
+        default_factory=list,
+        description="RAG模块返回的结果。",
     )
+    ## RAG运行所需要的query由current_message字段复用。
+    # query: str = Field(
+    #     default="",
+    #     description="RAG模块需要执行的查询。"
+    # )
 
