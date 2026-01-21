@@ -17,6 +17,7 @@ class RewrittenQueries(BaseModel):
     用于存储重写后的查询语句的数据类。
     """
     queries: list[str] = Field(
+        ...,
         description="针对原始问题生成的不同角度的检索查询语句列表。",
         min_length=3, max_length=5,  # 对于输出的数量进行限制。
     )
@@ -25,37 +26,49 @@ class RewrittenQueries(BaseModel):
 # ==== Analysis ====
 class AnalystRequest(BaseModel):
     """
-
+    Analyst下一步的决定。
     """
     agent_name: Literal[
         'investigator', 'rag',
     ] = Field(
-        description="指定下一个运行的agent的名字。",
+        ...,
+        description="指定下一个运行的agent的id。investigator代表完成分析，rag代表需要去查询更多的信息。",
     )
     agent_message: str = Field(
-        description="传递给下一个的agent的信息。",
+        description="传递给下一个的agent的信息。当agent_name=investigator时代表最终的分析结论，当agent_name=rag时代表具体需要的信息。",
     )
 
 
 # ==== Decision ====
 ## ==== Investigator ====
 class InvestigatorRequest(BaseModel):
+    """
+    Investigator下一步的决定。
+    """
     agent_name: Literal[
-        'investigator',
-    ]
+        'analyst', 'adjudicator',
+    ] = Field(
+        ...,
+        description="",
+    )
+    agent_message: str = Field(
+        description="",
+    )
 ## ==== Adjudicator ====
 class AdjudicatorDecision(BaseModel):
     """
     文本中需求提取的决策结果。
     """
     decision: str = Field(
-        description="最终决策的简短总结文本。"
+        description="最终决策的简短总结文本。",
     )
     has_risk: bool = Field(
-        description="是否存在风险的判断。"
+        ...,
+        description="是否存在风险的判断。",
     )
     confidence: float = Field(
-        description="对于结论的置信度。"
+        ...,
+        description="对于结论的置信度。",
     )
 
 
