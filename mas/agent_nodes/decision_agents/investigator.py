@@ -90,9 +90,10 @@ class Investigator(BaseAgent):
             # 这个判断是system层级冗余稳定判断。
             return dict(
                 decision_shared_messages=decision_shared_messages,
-                current_agent_name='adjudicator',  # 这个条件下，该字段是确定和强制的。
                 current_message=investigator_result.agent_request.agent_message,  # 为保持一致返回的字段。
                 remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 为保持一致返回的字段。
+                current_agent_name='adjudicator',  # 这个条件下，该字段是确定和强制的。
+                last_agent_name='investigator',
             )
         else:
             # 正常运行。
@@ -100,9 +101,10 @@ class Investigator(BaseAgent):
             # Case2: 请求analyst，对于某些details要求分析。
             return dict(
                 decision_shared_messages=decision_shared_messages,
-                current_agent_name=investigator_result.structured_output.agent_name,
                 current_message=investigator_result.agent_request.agent_message,
                 remaining_validation_rounds=state.remaining_validation_rounds-1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
+                current_agent_name=investigator_result.structured_output.agent_name,  # analyst | adjudicator
+                last_agent_name='investigator',
             )
 
     # ====主要方法。====
