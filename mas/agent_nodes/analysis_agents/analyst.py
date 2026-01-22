@@ -6,6 +6,7 @@ Analysis-Module的分析控制。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
 from mas.utils.content_annotator import ContentAnnotator
@@ -55,14 +56,35 @@ class Analyst(BaseAgent):
         state: FinalMASState,
         config: RunnableConfig,
     ) -> dict:
+        """
+
+        Args:
+            state (FinalMASState):
+                - remaining_retrieve_rounds
+                - last_agent_name
+                - current_message
+                - current_documents
+                - analysis_process
+                - analysis_process_history
+            config (RunnableConfig): 运行设置。
+
+        Returns:
+            dict: 进行更新的字段，包括:
+                - analysis_process:
+                - analysis_process_history:
+                - current_message:
+                - remain_retrieve_rounds:
+                - current_agent_name:
+                - last_agent_name:
+        """
         # Agent内: 根据last_agent_name，条件处理上一次的消息。
         # assert state.last_agent_name in ('investigator', 'rag')
         last_round_message = self.before_call_analyst(
             remain_retrieve_rounds=state.remaining_retrieve_rounds,
             last_agent_name=cast(Literal['investigator', 'rag'], state.last_agent_name),
             # last_agent_name=state.last_agent_name,
-            current_agent_message=state.current_agent_message,
-            documents=state.documents,
+            current_agent_message=state.current_message,
+            documents=state.current_documents,
         )
         # Agent内: 执行分析。
         analyst_result = await self.read_documents(
@@ -78,7 +100,8 @@ class Analyst(BaseAgent):
             # 已经用完验证次数，需要进行最终决定。
             # 这个判断是system层级冗余稳定判断。
             return dict(
-                analysis_process=analysis_process,
+                analysis_process=[],  # 完成分析，当前分析清空。
+                analysis_process_history=state.analysis_process_history + [analysis_process],  # 完成分析，历史分析过程留档。
                 current_message=analyst_result.structured_output.agent_message,
                 # HARDCODED: max_retrieve_rounds = 5
                 remain_retrieve_rounds=5,  # 重置最大查询次数。
@@ -92,7 +115,8 @@ class Analyst(BaseAgent):
             ## last_agent_name='investigator'
             if analyst_result.structured_output.agent_name == 'investigator':
                 return dict(
-                    analysis_process=analysis_process,
+                    analysis_process=[],  # 完成分析，当前分析清空。
+                    analysis_process_history=state.analysis_process_history + [analysis_process],  # 完成分析，历史分析过程留档。
                     current_message=analyst_result.structured_output.agent_message,
                     # HARDCODED: max_retrieve_rounds = 5
                     remain_retrieve_rounds=5,  # 重置最大查询次数。
@@ -104,7 +128,7 @@ class Analyst(BaseAgent):
             ## last_agent_name='rag'
             else:
                 return dict(
-                    analysis_process=analysis_process,
+                    analysis_process=analysis_process,  # 未完成分析，更新分析步骤。不更新analysis_process_history。
                     current_message=analyst_result.structured_output.agent_message,
                     remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,  # 更新可查询次数。
                     current_agent_name='rag',
