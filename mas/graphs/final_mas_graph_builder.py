@@ -2,13 +2,6 @@
 构建整个MAS的方法。
 """
 
-# from __future__ import annotations
-#
-# from mas.schemas.mas_state import FinalMASState
-# from mas.agent_nodes import (
-#     RagRetrieverFactory,
-# )
-# from mas.agent_nodes import route_verification_request
 # from mas.edges import (
 #     condition_more_information,
 # )
@@ -16,24 +9,15 @@
 #     is_need_verification,
 #     call_analysis_agents,
 # )
-# from mas.agent_nodes.agent_factory import AgentFactory
-#
-# from langgraph.graph import (
-#     StateGraph,
-#     START,
-#     END,
-# )
-#
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
-#     from langgraph.graph.state import CompiledStateGraph
-#     from langgraph.checkpoint.base import BaseCheckpointSaver
-#     from langchain_core.vectorstores import VectorStore
-
 
 from __future__ import annotations
+from loguru import logger
 
 from mas.schemas.final_mas_state import FinalMASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+from mas.agent_nodes.analysis_agents.analyst import Analyst
+from mas.agent_nodes.decision_agents.surveyor import Surveyor
+from mas.agent_nodes.decision_agents.investigator import Investigator
+from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 
 from langgraph.graph import (
     StateGraph,
@@ -68,16 +52,37 @@ class FinalMASGraphBuilder:
         graph = self.graph_builder.compile(checkpointer=checkpointer)
         return graph
 
-    def _add_nodes(self):
+    def _add_nodes(
+        self,
+        surveyor: Surveyor,
+        investigator: Investigator,
+        adjudicator: Adjudicator,
+        analyst: Analyst,
+        rag,
+    ):
         """
         注册MAS的nodes。
         """
+        # Decision Module
+        self.graph_builder.add_node('surveyor', surveyor.process_state)
+        self.graph_builder.add_node('investigator', investigator.process_state)
+        self.graph_builder.add_node('adjudicator', adjudicator.process_state)
+        # Analysis Module
+        self.graph_builder.add_node('analyst', analyst.process_state)
+        # RAG
+        self.graph_builder.add_node('rag', rag.process_state)
 
     def _add_edges(self):
         """
         注册MAS的edges。
         """
-
+        # 输入的内容由surveyor进行处理。
+        self.graph_builder.add_edge(START, 'surveyor')
+        # Investigator根据整体的内容进行分析。
+        self.graph_builder.add_edge('surveyor', 'investigator')
+        raise NotImplementedError
+        # Adjudicator读取全部的信息，并做出最终的判断。
+        self.graph_builder.add_edge('adjudicator', END)
 
 # class FinalMASGraphBuilder:
 #     def __init__(
