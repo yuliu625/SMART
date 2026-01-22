@@ -54,6 +54,17 @@ class SequentialMASState(BaseModel):
         description="Adjudicator结构化输出的最终决策。",
     )
 
+    # Analysis Module
+    ## Analyst
+    analyst_messages: list[AnyMessage] = Field(
+        default_factory=list,
+        description="Analyst获得的信息和分析过程。",
+    )
+    remaining_retrieve_rounds: int = Field(
+        default=5,
+        description="Analyst剩余可以进行查询次数。",
+    )
+
     # RAG
     ## 检索结果/当前analyst可以进行分析的材料。
     current_documents: list[Document] = Field(
