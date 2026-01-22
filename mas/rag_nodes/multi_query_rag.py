@@ -1,7 +1,7 @@
 """
 multi-query retriever。
 
-该实现根据当前MAS的需要重写了process_state方法。
+该实现根据当前MAS的需要重写了process_state方法。(暂时使用继承实现。)
 """
 
 from __future__ import annotations
@@ -18,10 +18,20 @@ if TYPE_CHECKING:
 
 
 class MultiQueryRAG(MultiQueryRetriever):
+    # 为接入当前MAS进行的重写。
     async def process_state(
         self,
-        state,
+        state: FinalMASState,
         config: RunnableConfig,
     ) -> dict:
-        ...
+        # query和current_message共用同一字段以实现统一。
+        ## HACK: 根据需求，未来可进行重构。
+        query = state.current_message
+        result_documents = await self.parallel_search_documents_by_mmr(
+            query=query,
+            search_configs=self._search_configs,
+        )
+        return dict(
+            current_documents=result_documents,
+        )
 
