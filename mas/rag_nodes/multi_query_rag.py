@@ -33,6 +33,7 @@ class MultiQueryRAG(MultiQueryRetriever):
         )
         return dict(
             current_documents=result_documents,
-            current_agent_name='analyst',
+            current_agent_name='analyst',  # 冗余字段，retriever结果一定会返回analyst。
+            last_agent_name='rag',  # Analyst判断的字段。
         )
 
