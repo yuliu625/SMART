@@ -83,6 +83,7 @@ class Surveyor(BaseAgent):
         return dict(
             decision_shared_messages=decision_shared_messages,
             current_agent_name='investigator',  # 并没有发出请求，但是下一个一定是validator。
+            last_agent_name='surveyor',
         )
 
     # ====主要方法。====
