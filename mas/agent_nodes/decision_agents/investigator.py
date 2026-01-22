@@ -161,8 +161,8 @@ class Investigator(BaseAgent):
             # 最后验证提醒。
             last_round_content = (
                 last_round_content
-                + f"\n\n还剩{remaining_validation_rounds}次验证次数。"
-                + "\n\n已经用完调查次数，现在必须做出最终结论交给Adjudicator做出最终结论。"
+                + f"\n还剩{remaining_validation_rounds}次验证次数。"
+                + "\n已经用完调查次数，现在必须做出最终结论交给Adjudicator做出最终决定。"
             )
         else:
             # Case1.1: 初始启动。
@@ -170,8 +170,8 @@ class Investigator(BaseAgent):
             # 一般情况，添加验证次数提示。
             last_round_content = (
                 last_round_content
-                + f"\n\n还剩{remaining_validation_rounds}次验证次数。"
-                + f"你还可以提出一些点进行进一步的调查，或交给Adjudicator做出最终结论。"
+                + f"\n还剩{remaining_validation_rounds}次验证次数。"
+                + f"\n你还可以提出一些点进行调查，或交给Adjudicator做出最终决定。"
             )
         decision_shared_messages_[-1] = HumanMessage(content=last_round_content)
         return decision_shared_messages_
