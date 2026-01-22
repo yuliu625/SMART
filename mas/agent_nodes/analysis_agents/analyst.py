@@ -55,7 +55,7 @@ class Analyst(BaseAgent):
         state: FinalMASState,
         config: RunnableConfig,
     ) -> dict:
-        # 根据last_agent_name，条件处理上一次的消息。
+        # Agent内: 根据last_agent_name，条件处理上一次的消息。
         # assert state.last_agent_name in ('investigator', 'rag')
         last_round_message = self.before_call_analyst(
             remain_retrieve_rounds=state.remaining_retrieve_rounds,
@@ -64,18 +64,24 @@ class Analyst(BaseAgent):
             current_agent_message=state.current_agent_message,
             documents=state.documents,
         )
-        # 执行分析。
-        analyst_message = self.read_documents(
-            analysis_messages=state.analysis_messages + [last_round_message],
+        # Agent内: 执行分析。
+        analyst_result = await self.read_documents(
+            analysis_messages=state.analysis_process + [last_round_message],
         )
-        # 3
+        # 整个MAS: 构建analysis_process。
+        analysis_process = self.after_call_analyst(
+            analyst_message=analyst_result.ai_message,
+            analysis_process=state.analysis_process,
+        )
         # 根据剩余验证轮数调用下一个agent。
         if state.remaining_retrieve_rounds == 0:
             # 已经用完验证次数，需要进行最终决定。
             # 这个判断是system层级冗余稳定判断。
             return dict(
-                # ?...
-                remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,
+                analysis_process=analysis_process,
+                current_message=analyst_result.structured_output.agent_message,
+                # HARDCODED: max_retrieve_rounds = 5
+                remain_retrieve_rounds=5,  # 重置最大查询次数。
                 current_agent_name='investigator',
                 last_agent_name='analyst',
             )
@@ -84,23 +90,25 @@ class Analyst(BaseAgent):
             # Case1: 请求的是investigator，初始化分析。
             ## current_agent_name='analyst', current_documents=[]
             ## last_agent_name='investigator'
-            if state.last_agent_name == 'investigator':
-                ...
+            if analyst_result.structured_output.agent_name == 'investigator':
                 return dict(
-                    # ?...
-                    remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,
-                    current_agent_name='analyst',
-                    last_agent_name='investigator',
+                    analysis_process=analysis_process,
+                    current_message=analyst_result.structured_output.agent_message,
+                    # HARDCODED: max_retrieve_rounds = 5
+                    remain_retrieve_rounds=5,  # 重置最大查询次数。
+                    current_agent_name='investigator',
+                    last_agent_name='analyst',
                 )
             # Case2: 请求rag，读取并分析新的文档内容。
             ## current_agent_name='analyst', current_documents可能为空。
             ## last_agent_name='rag'
             else:
                 return dict(
-                    # ?...
-                    remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,
-                    current_agent_name='analyst',
-                    last_agent_name='rag',
+                    analysis_process=analysis_process,
+                    current_message=analyst_result.structured_output.agent_message,
+                    remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,  # 更新可查询次数。
+                    current_agent_name='rag',
+                    last_agent_name='analyst',
                 )
 
     # ====主要方法。====
