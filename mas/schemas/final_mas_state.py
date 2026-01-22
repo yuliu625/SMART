@@ -21,6 +21,10 @@ class FinalMASState(BaseModel):
         default="adjudicator",
         description="当前应该运行的agent的名字。",
     )
+    last_agent_name: str = Field(
+        default="start",
+        description="上一个agent的名字，用于追寻任务和请求的来源。",
+    )
     current_message: str = Field(
         default="",
         description="当前agent可能会使用的信息。",
