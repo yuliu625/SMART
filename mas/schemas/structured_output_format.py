@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING, Literal
 # if TYPE_CHECKING:
 
 
-# ====RAG====
+# ==== RAG ====
+## ==== Multi-Query Retriever ====
 class RewrittenQueries(BaseModel):
     """
     用于存储重写后的查询语句的数据类。
@@ -24,6 +25,7 @@ class RewrittenQueries(BaseModel):
 
 
 # ==== Analysis ====
+## ==== Analyst ====
 class AnalystRequest(BaseModel):
     """
     Analyst下一步的决定。
@@ -32,10 +34,10 @@ class AnalystRequest(BaseModel):
         'investigator', 'rag',
     ] = Field(
         ...,
-        description="指定下一个运行的agent的id。investigator代表完成分析，rag代表需要去查询更多的信息。",
+        description="指定下一个运行的agent的名字。'investigator'代表完成分析。'rag'代表需要去查询更多的信息。",
     )
     agent_message: str = Field(
-        description="传递给下一个的agent的信息。当agent_name=investigator时代表最终的分析结论，当agent_name=rag时代表具体需要的信息。",
+        description="传递给下一个的agent的信息。当agent_name=='investigator'时代表最终的分析结论总结。当agent_name=='rag'时代表具体需要执行的查询。",
     )
 
 
@@ -49,10 +51,10 @@ class InvestigatorRequest(BaseModel):
         'analyst', 'adjudicator',
     ] = Field(
         ...,
-        description="",
+        description="指定下一个运行的agent的名字。'analyst'代表要求Analyst进行调查。'adjudicator'表示已经完成全部的调查。",
     )
     agent_message: str = Field(
-        description="",
+        description="Investigator要求Analyst进行调查和分析的内容。",
     )
 ## ==== Adjudicator ====
 class AdjudicatorDecision(BaseModel):
