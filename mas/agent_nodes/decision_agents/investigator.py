@@ -5,6 +5,7 @@ Decision-Module部分需要具体设计的Agent。
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
 from mas.utils.content_annotator import ContentAnnotator
@@ -90,7 +91,7 @@ class Investigator(BaseAgent):
             # 这个判断是system层级冗余稳定判断。
             return dict(
                 decision_shared_messages=decision_shared_messages,
-                current_message=investigator_result.agent_request.agent_message,  # 为保持一致返回的字段。
+                # current_message=investigator_result.structured_output.agent_message,  # 为保持一致返回的字段。
                 remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 为保持一致返回的字段。
                 current_agent_name='adjudicator',  # 这个条件下，该字段是确定和强制的。
                 last_agent_name='investigator',
@@ -101,7 +102,7 @@ class Investigator(BaseAgent):
             # Case2: 请求analyst，对于某些details要求分析。
             return dict(
                 decision_shared_messages=decision_shared_messages,
-                current_message=investigator_result.agent_request.agent_message,
+                current_message=investigator_result.structured_output.agent_message,  # 当对analyst时，为调查的内容。
                 remaining_validation_rounds=state.remaining_validation_rounds-1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
                 current_agent_name=investigator_result.structured_output.agent_name,  # analyst | adjudicator
                 last_agent_name='investigator',
