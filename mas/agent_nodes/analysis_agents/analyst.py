@@ -65,7 +65,7 @@ class Analyst(BaseAgent):
             documents=state.documents,
         )
         # 执行分析。
-        analyst_result = self.read_documents(
+        analyst_message = self.read_documents(
             analysis_messages=state.analysis_messages + [last_round_message],
         )
         # 3
@@ -166,13 +166,20 @@ class Analyst(BaseAgent):
     # ==== 工具方法。 ====
     def after_call_analyst(
         self,
-        current_agent_name: Literal['investigator', 'rag'],
+        analyst_message: AIMessage,
+        analysis_process: list[AnyMessage],
     ) -> list[AnyMessage]:
-        # Case1: Analyst已经完成了分析。
-        ## 提交最终的分析结论。
-        # Case2: Analyst需要更多的信息。
-        ## 请求RAG。
-        ...
+        assert isinstance(analyst_message, AIMessage)
+        # 标注身份。
+        analyst_last_message_content = ContentAnnotator.annotate_with_html_comment(
+            tag='analyst',
+            original_text=analyst_message.content,
+        )
+        # 构建analysis_process。
+        analysis_process = analysis_process + [
+            AIMessage(content=analyst_last_message_content)
+        ]
+        return analysis_process
 
     # ==== 工具方法。 ====
     def process_result_documents(
