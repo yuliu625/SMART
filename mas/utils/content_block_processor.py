@@ -1,5 +1,15 @@
 """
-VLM的HumanMessage.content的处理方法。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/agnostic_utils/content_block_processor.py
+
+References:
+
+Synopsis:
+    对content block的处理和转换方法。
+
+Notes:
+    主要场景为:
+        - VLM的HumanMessage.content的处理方法。
 """
 
 from __future__ import annotations
@@ -62,8 +72,8 @@ class ContentBlockProcessor:
         Returns:
             dict: 添加了必要字段的dict。当前content中图片模态的内容。
         """
-        with open(uri, "rb") as image_file:
-            base64_str = base64.b64encode(image_file.read()).decode("utf-8")
+        with open(uri, 'rb') as image_file:
+            base64_str = base64.b64encode(image_file.read()).decode('utf-8')
         return ContentBlockProcessor.get_image_content_block_from_base64(
             base64_str=base64_str,
             image_type=image_type,
@@ -90,29 +100,4 @@ class ContentBlockProcessor:
             'text': text,
         }
         return text_content_dict
-
-    @staticmethod
-    def wrap_message_content_with_label(
-        label: str,
-        original_content: str,
-    ) -> str:
-        """
-        给一段字符串以html注释的方式添加标识。
-
-        可以使用的场景:
-            - MAS中，一个agent会与多个agent交互。以此区别HumanMessage的实际身份。
-            - RAG中，
-
-        Args:
-            label (str): Agent的名称。
-            original_content (str): 原始字符串。
-
-        Returns:
-            str: 包裹了html注释的字符串。
-        """
-        return (
-            f"<!--{label}-start-->\n\n"
-            + original_content
-            + f"\n\n<!--{label}-end-->"
-        )
 
