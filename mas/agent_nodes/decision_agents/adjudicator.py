@@ -99,6 +99,7 @@ class Adjudicator(BaseAgent):
             decision_shared_messages=final_decision_shared_messages,
             final_decision=adjudicator_result.structured_output,
             current_agent_name='end',
+            last_agent_name='adjudicator',
         )
 
     # ====主要方法。====
