@@ -1,5 +1,21 @@
 """
-对文档内容进行标注的方法。
+Sources:
+    https://github.com/yuliu625/Yu-Agent-Development-Toolkit/blob/main/agnostic_utils/content_annotator.py
+
+References:
+    None
+
+Synopsis:
+    对文档内容进行标注的方法。
+
+Notes:
+    对文本内容进行标注的方法。
+
+    该实现:
+        - 无依赖: 仅是字符串处理方法。
+        - 标注格式:
+            - html comment
+            - xml
 """
 
 from __future__ import annotations
@@ -29,9 +45,9 @@ class ContentAnnotator:
             str: 包裹了html注释的字符串。
         """
         return (
-            f"<!--{tag}-start-->\n\n"
+            f"<!--{tag}-start-->\n"
             + original_text
-            + f"\n\n<!--{tag}-end-->"
+            + f"\n<!--{tag}-end-->"
         )
 
     @staticmethod
@@ -40,8 +56,8 @@ class ContentAnnotator:
         original_text: str,
     ) -> str:
         return (
-            f"<{tag}>\n\n"
+            f"<{tag}>\n"
             + original_text
-            + f"\n\n</{tag}>"
+            + f"\n</{tag}>"
         )
 
