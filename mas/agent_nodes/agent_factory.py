@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
@@ -74,9 +75,20 @@ class AgentFactory:
 
     @staticmethod
     def create_analyst(
-
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage,
     ) -> BaseAgent:
-        raise NotImplementedError
+        analyst = Analyst(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+        )
+        return analyst
 
     @staticmethod
     def create_rag_agent(
