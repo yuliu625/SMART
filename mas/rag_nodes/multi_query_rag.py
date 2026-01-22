@@ -33,5 +33,6 @@ class MultiQueryRAG(MultiQueryRetriever):
         )
         return dict(
             current_documents=result_documents,
+            current_agent_name='analyst',
         )
 
