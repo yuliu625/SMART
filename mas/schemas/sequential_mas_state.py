@@ -31,6 +31,10 @@ class SequentialMASState(BaseModel):
         default="adjudicator",
         description="当前应该运行的agent的名字。",
     )
+    last_agent_name: str = Field(
+        default="start",
+        description="上一个agent的名字，用于追寻任务和请求的来源。",
+    )
     ## 为兼容性保留。
     ## 在这个实现中，仅为传递给RAG的初始查询。
     current_message: str = Field(
@@ -42,7 +46,7 @@ class SequentialMASState(BaseModel):
     ## 共用字段。该实现需要额外处理。
     decision_shared_messages: list[AnyMessage] = Field(
         default_factory=list,
-        description="所有decision中的agent共用的messages。在这个实现中，时adjudicator专用。使用需要额外处理。",
+        description="所有decision中的agent共用的messages。在这个实现中，是adjudicator专用。使用需要额外处理。",
     )
     ## Adjudicator. 代表最终结果的重要字段。
     final_decision: dict = Field(
