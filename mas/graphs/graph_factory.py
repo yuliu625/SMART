@@ -14,7 +14,7 @@ from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 ## Analysis Agent
 from mas.agent_nodes.analysis_agents.analyst import Analyst
 # RAG
-from mas.rag_nodes.rag_factory import RAGFactory
+# from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 # MAS
 ## single agent mas
 from mas.graphs.single_agent_mas_graph_builder import SingleAgentMASGraphBuilder
@@ -27,7 +27,7 @@ from mas.schemas.sequential_mas_state import SequentialMASState
 from mas.graphs.final_mas_graph_builder import FinalMASGraphBuilder
 from mas.schemas.final_mas_state import FinalMASState
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from langgraph.graph.state import CompiledStateGraph
     from langchain_core.language_models import BaseChatModel
@@ -60,11 +60,44 @@ class GraphFactory:
 
     @staticmethod
     def create_sequential_mas_graph(
+        # Surveyor
+        surveyor_main_llm: BaseChatModel,
+        surveyor_main_llm_system_message: SystemMessage,
+        # Adjudicator
+        adjudicator_main_llm: BaseChatModel,
+        adjudicator_main_llm_system_message: SystemMessage,
+        adjudicator_formatter_llm: BaseChatModel,
+        adjudicator_formatter_llm_system_message: SystemMessage,
+        adjudicator_structured_output_format: type[BaseModel],
+        # Analyst
         # RAG
         rag,
     ) -> CompiledStateGraph:
         graph_builder = SequentialMASGraphBuilder(state=SequentialMASState)
-        raise NotImplementedError
+        # Surveyor
+        surveyor = AgentFactory.create_surveyor(
+            main_llm=surveyor_main_llm,
+            main_llm_system_message=surveyor_main_llm_system_message,
+        )
+        assert isinstance(surveyor, Surveyor)
+        # Adjudicator
+        adjudicator = AgentFactory.create_adjudicator(
+            main_llm=adjudicator_main_llm,
+            main_llm_system_message=adjudicator_main_llm_system_message,
+            formatter_llm=adjudicator_formatter_llm,
+            schema_pydantic_base_model=adjudicator_structured_output_format,
+            formatter_llm_system_message=adjudicator_formatter_llm_system_message,
+        )
+        assert isinstance(adjudicator, Adjudicator)
+        analyst = AgentFactory.create_information_merger()
+        analyst = cast(Analyst, analyst)
+        graph = graph_builder.build_graph(
+            surveyor=surveyor,
+            adjudicator=adjudicator,
+            analyst=analyst,
+            rag=rag,
+        )
+        return graph
 
     @staticmethod
     def create_multi_agent_debate_mas_graph(
