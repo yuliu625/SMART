@@ -10,14 +10,17 @@ from mas.agent_nodes.agent_factory import AgentFactory
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
-# single agent mas
+# RAG
+from mas.rag_nodes.rag_factory import RAGFactory
+# MAS
+## single agent mas
 from mas.graphs.single_agent_mas_graph_builder import SingleAgentMASGraphBuilder
 from mas.schemas.single_agent_mas_state import SingleAgentMASState
-# sequential mas
+## sequential mas
 from mas.graphs.sequential_mas_graph_builder import SequentialMASGraphBuilder
 from mas.schemas.sequential_mas_state import SequentialMASState
-# multi agent debate
-# final mas
+## multi agent debate
+## final mas
 from mas.graphs.final_mas_graph_builder import FinalMASGraphBuilder
 from mas.schemas.final_mas_state import FinalMASState
 
@@ -54,8 +57,10 @@ class GraphFactory:
 
     @staticmethod
     def create_sequential_mas_graph(
-
+        # RAG
+        rag,
     ) -> CompiledStateGraph:
+        graph_builder = SequentialMASGraphBuilder(state=SequentialMASState)
         raise NotImplementedError
 
     @staticmethod
@@ -66,7 +71,30 @@ class GraphFactory:
 
     @staticmethod
     def create_final_mas_graph(
-
+        # Surveyor
+        surveyor_main_llm: BaseChatModel,
+        surveyor_main_llm_system_message: SystemMessage,
+        # Investigator
+        investigator_main_llm: BaseChatModel,
+        investigator_main_llm_system_message: SystemMessage,
+        investigator_formatter_llm: BaseChatModel,
+        investigator_formatter_llm_system_message: SystemMessage,
+        investigator_structured_output_format: type[BaseModel],
+        # Adjudicator
+        adjudicator_main_llm: BaseChatModel,
+        adjudicator_main_llm_system_message: SystemMessage,
+        adjudicator_formatter_llm: BaseChatModel,
+        adjudicator_formatter_llm_system_message: SystemMessage,
+        adjudicator_structured_output_format: type[BaseModel],
+        # Analyst
+        analyst_main_llm: BaseChatModel,
+        analyst_main_llm_system_message: SystemMessage,
+        analyst_formatter_llm: BaseChatModel,
+        analyst_formatter_llm_system_message: SystemMessage,
+        analyst_structured_output_format: type[BaseModel],
+        # RAG
+        rag,
     ) -> CompiledStateGraph:
+        graph_builder = FinalMASGraphBuilder(state=FinalMASState)
         raise NotImplementedError
 
