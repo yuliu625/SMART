@@ -2,22 +2,23 @@
 构建整个MAS的方法。
 """
 
-# from mas.edges import (
-#     condition_more_information,
-# )
-# from mas.edges import (
-#     is_need_verification,
-#     call_analysis_agents,
-# )
-
 from __future__ import annotations
 from loguru import logger
 
+# State
 from mas.schemas.final_mas_state import FinalMASState # 由于构建graph_builder需要使用到MASState，因此不能仅以类型声明。
+# Nodes
 from mas.agent_nodes.analysis_agents.analyst import Analyst
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
+# Edges
+from mas.edges.analysis_condition_edges import (
+    is_need_more_information,
+)
+from mas.edges.decision_condition_edges import (
+    is_need_validation,
+)
 
 from langgraph.graph import (
     StateGraph,
@@ -45,9 +46,20 @@ class FinalMASGraphBuilder:
 
     def build_graph(
         self,
+        surveyor: Surveyor,
+        investigator: Investigator,
+        adjudicator: Adjudicator,
+        analyst: Analyst,
+        rag,
         checkpointer: BaseCheckpointSaver | None = None,
     ) -> CompiledStateGraph:
-        self._add_nodes()
+        self._add_nodes(
+            surveyor=surveyor,
+            investigator=investigator,
+            adjudicator=adjudicator,
+            analyst=analyst,
+            rag=rag,
+        )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
         return graph
@@ -78,105 +90,32 @@ class FinalMASGraphBuilder:
         """
         # 输入的内容由surveyor进行处理。
         self.graph_builder.add_edge(START, 'surveyor')
-        # Investigator根据整体的内容进行分析。
+        # surveyor的初步结论交给investigator进行分析。
         self.graph_builder.add_edge('surveyor', 'investigator')
-        raise NotImplementedError
+        # investigator根据情况选择给adjudicator提交总结或要求analyst进行分析。
+        self.graph_builder.add_conditional_edges(
+            'investigator',
+            is_need_validation,
+            {
+                'analyst': 'analyst',
+                'adjudicator': 'adjudicator',
+            }
+        )
+        # analyst根据情况选择是否检索信息。
+        self.graph_builder.add_conditional_edges(
+            'analyst',
+            is_need_more_information,
+            {
+                'rag': 'rag',
+                'investigator': 'investigator',
+            }
+        )
+        # RAG返回的结果一定交给analyst进行处理。
+        self.graph_builder.add_edge('rag', 'analyst')
         # Adjudicator读取全部的信息，并做出最终的判断。
         self.graph_builder.add_edge('adjudicator', END)
 
-# class FinalMASGraphBuilder:
-#     def __init__(
-#         self,
-#         vector_store: VectorStore,
-#         pdf_name: str,
-#     ):
-#         # 要进行分析的vector_store和pdf。
-#         self.vector_store = vector_store
-#         self.pdf_name = pdf_name
-#         # 构建状态图。
-#         self.graph_builder = StateGraph(FinalMASState)
-#         # 构建query-engine。
-#         self.rag_retriever_factory = RagRetrieverFactory(vector_store=vector_store, pdf_name=pdf_name)
-#         # 获取相关的agent。
-#         self.agent_factory = AgentFactory()
-#
-#     def build_graph(
-#         self,
-#     ) -> CompiledStateGraph:
-#         """
-#         构建整个图。
-#
-#         注册所有节点，然后再连接。
-#
-#         Returns:
-#             已经编译好的可运行的状态图。
-#         """
-#         # 注册nodes。
-#         self._add_rag_nodes()
-#         self._add_analysis_nodes()
-#         self._add_decision_nodes()
-#         self._add_mas_nodes()
-#         # 构建3个系统内部的edges。
-#         self._add_rag_edges()
-#         self._add_analysis_edges()
-#         self._add_decision_edges()
-#         # 连接3个系统。
-#         self._add_mas_edges()
-#         graph = self.graph_builder.compile()
-#         return graph
-#
-#     def _add_rag_nodes(self):
-#         """
-#         注册RAG模块的节点。
-#         """
-#         # 从工厂中获取对应的RAG系统。
-#         # retriever = self.rag_retriever_factory.get_multi_query_retriever()
-#         # self.graph_builder.add_node('retriever', retriever.run)
-#         control_retriever = self.rag_retriever_factory.get_control_multi_query_retriever()
-#         financial_retriever = self.rag_retriever_factory.get_financial_multi_query_retriever()
-#         strategic_retriever = self.rag_retriever_factory.get_strategic_multi_query_retriever()
-#         self.graph_builder.add_node('control_retriever', control_retriever.run)
-#         self.graph_builder.add_node('financial_retriever', financial_retriever.run)
-#         self.graph_builder.add_node('strategic_retriever', strategic_retriever.run)
-#
-#     def _add_analysis_nodes(self):
-#         """
-#         注册分析模块的agent。
-#         """
-#         # analysis相关的agent
-#         control_document_reader = self.agent_factory.get_control_document_reader()
-#         control_analyst = self.agent_factory.get_control_analyst()
-#         financial_document_reader = self.agent_factory.get_financial_document_reader()
-#         financial_analyst = self.agent_factory.get_financial_analyst()
-#         strategic_document_reader = self.agent_factory.get_strategic_document_reader()
-#         strategic_analyst = self.agent_factory.get_strategic_analyst()
-#         self.graph_builder.add_node('control_document_reader', control_document_reader.run)
-#         self.graph_builder.add_node('control_analyst', control_analyst.run)
-#         self.graph_builder.add_node('financial_document_reader', financial_document_reader.run)
-#         self.graph_builder.add_node('financial_analyst', financial_analyst.run)
-#         self.graph_builder.add_node('strategic_document_reader', strategic_document_reader.run)
-#         self.graph_builder.add_node('strategic_analyst', strategic_analyst.run)
-#
-#     def _add_decision_nodes(self):
-#         """
-#         注册决策模块的agent。
-#         """
-#         # decision相关的agent
-#         recognizer = self.agent_factory.get_recognizer()
-#         validator = self.agent_factory.get_validator()
-#         arbiter = self.agent_factory.get_arbiter()
-#         self.graph_builder.add_node('recognizer', recognizer.run)
-#         self.graph_builder.add_node('validator', validator.run)
-#         self.graph_builder.add_node('arbiter', arbiter.run)
-#
-#     def _add_mas_nodes(self):
-#         """
-#         注册整个MAS剩余的agent。
-#
-#         这里是路由相关的agent。
-#         """
-#         self.graph_builder.add_node('verification_requests_router', route_verification_request)
-#
+
 #     def _add_analysis_edges(self):
 #         """
 #         连接分析内部模块。
@@ -257,4 +196,4 @@ class FinalMASGraphBuilder:
 #         )
 #         # # arbiter进行最终仲裁，完成全部分析。
 #         self.graph_builder.add_edge('arbiter', END)
-#
+
