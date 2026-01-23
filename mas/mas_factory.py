@@ -10,7 +10,6 @@
 from __future__ import annotations
 from loguru import logger
 
-from mas.agent_nodes.decision_agents.investigator import Investigator
 # Graphs
 from mas.graphs.graph_factory import GraphFactory
 # Schemas  暂时不进行封装。
@@ -133,9 +132,82 @@ class MASFactory:
 
     @staticmethod
     def create_sequential_mas_via_vllm(
-
+        # Surveyor
+        surveyor_main_llm_base_url: str,
+        surveyor_main_llm_model_name: str,
+        surveyor_main_llm_system_message_template_path: str,
+        # Investigator
+        # Adjudicator
+        adjudicator_main_llm_base_url: str,
+        adjudicator_main_llm_model_name: str,
+        adjudicator_main_llm_system_message_template_path: str,
+        adjudicator_formatter_llm_base_url: str,
+        adjudicator_formatter_llm_model_name: str,
+        adjudicator_formatter_llm_system_message_template_path: str,
+        # Analyst
+        # RAG
+        rag,
     ) -> CompiledStateGraph:
-        raise NotImplementedError
+        graph = GraphFactory.create_sequential_mas_graph(
+            # Surveyor
+            surveyor_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=surveyor_main_llm_base_url,
+                model_name=surveyor_main_llm_model_name,
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=None,
+                model_configs={},
+            ),
+            surveyor_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=surveyor_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            # Adjudicator
+            adjudicator_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=adjudicator_main_llm_base_url,
+                model_name=adjudicator_main_llm_model_name,
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=None,
+                model_configs={},
+            ),
+            adjudicator_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            adjudicator_formatter_llm=LocalLLMFactory.create_openai_llm(
+                base_url=adjudicator_formatter_llm_base_url,
+                model_name=adjudicator_formatter_llm_model_name,
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=None,
+                model_configs={},
+            ),
+            adjudicator_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
+            # HARDCODED
+            adjudicator_structured_output_format=AdjudicatorDecision,
+            # RAG
+            rag=rag,
+        )
+        return graph
 
     @staticmethod
     def create_sequential_mas_via_ollama(
