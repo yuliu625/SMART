@@ -7,7 +7,7 @@ design pattern: 基于固定序列流。
 from __future__ import annotations
 from loguru import logger
 
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.schemas.sequential_mas_state import SequentialMASState
 from mas.agent_nodes.analysis_agents.analyst import Analyst
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
@@ -32,7 +32,7 @@ class SequentialMASGraphBuilder:
     """
     def __init__(
         self,
-        state: type[SingleAgentMASState],
+        state: type[SequentialMASState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
