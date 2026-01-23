@@ -62,6 +62,7 @@ class FinalMASGraphBuilder:
         )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
+        logger.info(f"Built final MAS graph.")
         return graph
 
     def _add_nodes(
@@ -99,7 +100,7 @@ class FinalMASGraphBuilder:
             {
                 'analyst': 'analyst',
                 'adjudicator': 'adjudicator',
-            }
+            },
         )
         # analyst根据情况选择是否检索信息。
         self.graph_builder.add_conditional_edges(
@@ -108,7 +109,7 @@ class FinalMASGraphBuilder:
             {
                 'rag': 'rag',
                 'investigator': 'investigator',
-            }
+            },
         )
         # RAG返回的结果一定交给analyst进行处理。
         self.graph_builder.add_edge('rag', 'analyst')
