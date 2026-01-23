@@ -5,10 +5,11 @@
 from __future__ import annotations
 from pydantic import BaseModel, Field
 
+from langchain_core.documents import Document
+from langchain_core.messages import AnyMessage
+
 from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from langchain_core.documents import Document
-    from langchain_core.messages import AnyMessage
+# if TYPE_CHECKING:
 
 
 class FinalMASState(BaseModel):
