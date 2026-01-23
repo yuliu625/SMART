@@ -31,7 +31,15 @@ class InformationMerger:
             current_agent_message=state.current_message,
             documents=state.current_documents,
         )
-        return dict()
+        decision_shared_messages = self.submit_rag_results(
+            rag_result=rag_result,
+            decision_shared_messages=state.decision_shared_messages,
+        )
+        return dict(
+            decision_shared_messages=decision_shared_messages,
+            current_agent_name='adjudicator',
+            last_agent_name='analyst',
+        )
 
     def process_rag_results(
         self,
@@ -51,6 +59,10 @@ class InformationMerger:
     def submit_rag_results(
         self,
         rag_result: HumanMessage,
-    ) -> HumanMessage:
-        ...
+        decision_shared_messages: list[AnyMessage],
+    ) -> list[AnyMessage]:
+        assert len(decision_shared_messages) == 1
+        assert isinstance(decision_shared_messages[0], HumanMessage)
+        all_content = decision_shared_messages[0].content + rag_result.content
+        return [HumanMessage(content=all_content)]
 
