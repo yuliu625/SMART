@@ -83,7 +83,7 @@ class Analyst(BaseAgent):
             remain_retrieve_rounds=state.remaining_retrieve_rounds,
             last_agent_name=cast(Literal['investigator', 'rag'], state.last_agent_name),
             # last_agent_name=state.last_agent_name,
-            current_agent_message=state.current_message,
+            current_message=state.current_message,
             documents=state.current_documents,
         )
         # Agent内: 执行分析。
@@ -153,7 +153,7 @@ class Analyst(BaseAgent):
         self,
         remain_retrieve_rounds: int,
         last_agent_name: Literal['investigator', 'rag'],
-        current_agent_message: str,
+        current_message: str,
         documents: list[Document],
     ) -> HumanMessage:
         # Case1: RAG返回给Analyst新的信息。
@@ -163,7 +163,7 @@ class Analyst(BaseAgent):
             document_content = DocumentMerger.merge_text_documents(
                 text_documents=documents,
             )
-            document_content = f"Query: \n {current_agent_message}\n Result: \n{document_content}"
+            document_content = f"Query: \n {current_message}\n Result: \n{document_content}"
             rag_message_content = ContentAnnotator.annotate_with_html_comment(
                 tag='rag',
                 original_text=document_content,
@@ -191,7 +191,7 @@ class Analyst(BaseAgent):
             ## assert len(documents) == 0
             investigator_message_content = ContentAnnotator.annotate_with_html_comment(
                 tag='investigator',
-                original_text=current_agent_message,
+                original_text=current_message,
             )
             return HumanMessage(content=investigator_message_content)
 
