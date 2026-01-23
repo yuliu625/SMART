@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from langchain_core.messages import SystemMessage
 
 
-class RagFactory:
+class RAGFactory:
     @staticmethod
     def create_simple_rag_via_ollama(
         # Vector Store
