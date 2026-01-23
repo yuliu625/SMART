@@ -106,7 +106,7 @@ class ChromaRAGBuilder:
         # Vector Store
         vector_store_persist_directory: str | Path,
         # Embedding Model
-        embedding_model_name: str,
+        embedding_model_model_name: str,
         embedding_model_num_ctx: int | None,
         embedding_model_repeat_penalty: float | None,
         embedding_model_temperature: float | None,
@@ -121,7 +121,7 @@ class ChromaRAGBuilder:
         vector_store = ChromaVectorStoreBuilder.load_vector_store(
             persist_directory=vector_store_persist_directory,
             embedding_function=EmbeddingModelFactory.create_ollama_embedding_model(
-                model_name=embedding_model_name,
+                model_name=embedding_model_model_name,
                 num_ctx=embedding_model_num_ctx,
                 repeat_penalty=embedding_model_repeat_penalty,
                 temperature=embedding_model_temperature,
