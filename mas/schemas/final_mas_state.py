@@ -52,11 +52,6 @@ class FinalMASState(BaseModel):
         default=10,
         description="Investigator剩余可进行验证的次数。",
     )
-    ## Investigator要求analysis模块要进行重新分析的{agent: content}。
-    # is_need_verification: bool = Field(
-    #     default=False,
-    #     description="Investigator决定是否需要Analyst进一步分析。",
-    # )
 
     # Analysis Module
     analysis_process_history: list[list[AnyMessage]] = Field(
@@ -72,10 +67,6 @@ class FinalMASState(BaseModel):
         default=5,
         description="Analyst剩余可以进行查询次数。",
     )
-    # is_more_information: bool = Field(
-    #     default=False,
-    #     description="Analyst选择是否需要进一步的分析。",
-    # )
     # query_result_history: list[Document] = Field(
     #     default_factory=list,
     #     description="历史查询的结果，返回新查询结果是用于去重。",
