@@ -7,9 +7,12 @@ from loguru import logger
 
 # Agent
 from mas.agent_nodes.agent_factory import AgentFactory
+## Decision Agents
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
+## Analysis Agent
+from mas.agent_nodes.analysis_agents.analyst import Analyst
 # RAG
 from mas.rag_nodes.rag_factory import RAGFactory
 # MAS
@@ -96,5 +99,45 @@ class GraphFactory:
         rag,
     ) -> CompiledStateGraph:
         graph_builder = FinalMASGraphBuilder(state=FinalMASState)
-        raise NotImplementedError
+        # Surveyor
+        surveyor = AgentFactory.create_surveyor(
+            main_llm=surveyor_main_llm,
+            main_llm_system_message=surveyor_main_llm_system_message,
+        )
+        assert isinstance(surveyor, Surveyor)
+        # Investigator
+        investigator = AgentFactory.create_investigator(
+            main_llm=investigator_main_llm,
+            main_llm_system_message=investigator_main_llm_system_message,
+            formatter_llm=investigator_formatter_llm,
+            schema_pydantic_base_model=investigator_structured_output_format,
+            formatter_llm_system_message=investigator_formatter_llm_system_message,
+        )
+        assert isinstance(investigator, Investigator)
+        # Adjudicator
+        adjudicator = AgentFactory.create_adjudicator(
+            main_llm=adjudicator_main_llm,
+            main_llm_system_message=adjudicator_main_llm_system_message,
+            formatter_llm=adjudicator_formatter_llm,
+            schema_pydantic_base_model=adjudicator_structured_output_format,
+            formatter_llm_system_message=adjudicator_formatter_llm_system_message,
+        )
+        assert isinstance(adjudicator, Adjudicator)
+        # Analyst
+        analyst = AgentFactory.create_analyst(
+            main_llm=analyst_main_llm,
+            main_llm_system_message=analyst_main_llm_system_message,
+            formatter_llm=analyst_formatter_llm,
+            schema_pydantic_base_model=analyst_structured_output_format,
+            formatter_llm_system_message=analyst_formatter_llm_system_message,
+        )
+        assert isinstance(analyst, Analyst)
+        graph = graph_builder.build_graph(
+            surveyor=surveyor,
+            investigator=investigator,
+            adjudicator=adjudicator,
+            analyst=analyst,
+            rag=rag,
+        )
+        return graph
 
