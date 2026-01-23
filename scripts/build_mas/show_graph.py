@@ -28,11 +28,30 @@ def show_single_agent_mas_graph():
     mermaid_code = GraphVisualizer.get_mermaid_code(
         graph=mas,
     )
-    logger.info(f"\nMermaid Code: \n{mermaid_code}")
+    logger.info(f"\nDesign Patter: Single Agent\nMermaid Code: \n{mermaid_code}")
 
 
 def show_sequential_mas_graph():
-    ...
+    mas = MASFactory.create_sequential_mas_via_ollama(
+        # surveyor
+        surveyor_main_llm_model_name='qwen2.5:1.5b',
+        surveyor_main_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\surveyor_main_llm_system_prompt_template.j2',
+        # adjudicator
+        adjudicator_main_llm_model_name='qwen2.5:1.5b',
+        adjudicator_main_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_main_llm_system_prompt_template.j2',
+        adjudicator_formatter_llm_model_name='qwen2.5:1.5b',
+        adjudicator_formatter_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_formatter_llm_system_prompt_template.j2',
+        rag=RagFactory.create_simple_rag_via_ollama(
+            vector_store_persist_directory=r"D:\dataset\smart\tests\t_vector_store",
+            embedding_model_model_name='nomic-embed-text',
+            embedding_model_num_ctx=8192,
+            search_configs={},
+        )
+    )
+    mermaid_code = GraphVisualizer.get_mermaid_code(
+        graph=mas,
+    )
+    logger.info(f"\nDesign Pattern: Sequential Workflow\nMermaid Code: \n{mermaid_code}")
 
 
 def show_final_mas_graph():
@@ -66,7 +85,7 @@ def show_final_mas_graph():
     mermaid_code = GraphVisualizer.get_mermaid_code(
         graph=mas,
     )
-    logger.info(f"\nMermaid Code: \n{mermaid_code}")
+    logger.info(f"Design Pattern: MAS\nMermaid Code: \n{mermaid_code}")
 
 
 def main(
@@ -77,5 +96,6 @@ def main(
 
 if __name__ == '__main__':
     # show_single_agent_mas_graph()
-    show_final_mas_graph()
+    show_sequential_mas_graph()
+    # show_final_mas_graph()
 
