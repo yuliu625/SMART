@@ -6,7 +6,7 @@ from __future__ import annotations
 from loguru import logger
 
 from mas.mas_factory import MASFactory
-from mas.rag_factory import RagFactory
+from mas.rag_factory import RAGFactory
 # from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 from mas.utils.graph_visualizer import GraphVisualizer
 # from rag.storing.chroma_vector_store_builder import ChromaVectorStoreBuilder
@@ -41,7 +41,7 @@ def show_sequential_mas_graph():
         adjudicator_main_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_main_llm_system_prompt_template.j2',
         adjudicator_formatter_llm_model_name='qwen2.5:1.5b',
         adjudicator_formatter_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_formatter_llm_system_prompt_template.j2',
-        rag=RagFactory.create_simple_rag_via_ollama(
+        rag=RAGFactory.create_simple_rag_via_ollama(
             vector_store_persist_directory=r"D:\dataset\smart\tests\t_vector_store",
             embedding_model_model_name='nomic-embed-text',
             embedding_model_num_ctx=8192,
@@ -75,7 +75,7 @@ def show_final_mas_graph():
         analyst_main_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\analyst_main_llm_system_prompt_template.j2',
         analyst_formatter_llm_model_name='qwen2.5:1.5b',
         analyst_formatter_llm_system_message_template_path=r'D:\document\code\paper\SMART\mas\prompts\final_mas\analyst_formatter_llm_system_prompt_template.j2',
-        rag=RagFactory.create_simple_rag_via_ollama(
+        rag=RAGFactory.create_simple_rag_via_ollama(
             vector_store_persist_directory=r"D:\dataset\smart\tests\t_vector_store",
             embedding_model_model_name='nomic-embed-text',
             embedding_model_num_ctx=8192,
