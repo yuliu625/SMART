@@ -9,7 +9,7 @@ from mas.mas_factory import MASFactory
 from mas.rag_factory import RagFactory
 # from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 from mas.utils.graph_visualizer import GraphVisualizer
-from rag.storing.chroma_vector_store_builder import ChromaVectorStoreBuilder
+# from rag.storing.chroma_vector_store_builder import ChromaVectorStoreBuilder
 # from rag.embedding.embedding_model_factory import EmbeddingModelFactory
 
 from typing import TYPE_CHECKING
