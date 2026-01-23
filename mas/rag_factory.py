@@ -10,7 +10,7 @@ from __future__ import annotations
 from loguru import logger
 
 # RAG
-from rag_nodes.chroma_rag_builder import ChromaRAGBuilder
+from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 # 依赖MAS相关工具
 from mas.models.local_llm_factory import LocalLLMFactory
 from mas.prompts.prompt_template_loader import PromptTemplateLoader
