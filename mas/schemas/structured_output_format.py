@@ -19,8 +19,8 @@ class RewrittenQueries(BaseModel):
     """
     queries: list[str] = Field(
         ...,
-        description="针对原始问题生成的不同角度的检索查询语句列表。",
         min_length=3, max_length=5,  # 对于输出的数量进行限制。
+        description="针对原始问题生成的不同角度的检索查询语句列表。",
     )
 
 
@@ -34,10 +34,10 @@ class AnalystRequest(BaseModel):
         'investigator', 'rag',
     ] = Field(
         ...,
-        description="指定下一个运行的agent的名字。'investigator'代表完成分析。'rag'代表需要去查询更多的信息。",
+        description="指定下一个运行的agent的名字。investigator 代表完成分析。rag 代表需要去查询更多的信息。",
     )
     agent_message: str = Field(
-        description="传递给下一个的agent的信息。当agent_name=='investigator'时代表最终的分析结论总结。当agent_name=='rag'时代表具体需要执行的查询。",
+        description="传递给下一个的agent的信息。当 agent_name==investigator 时代表最终的分析结论总结。当 agent_name==rag 时代表具体需要执行的查询。",
     )
 
 
@@ -51,7 +51,7 @@ class InvestigatorRequest(BaseModel):
         'analyst', 'adjudicator',
     ] = Field(
         ...,
-        description="指定下一个运行的agent的名字。'analyst'代表要求Analyst进行调查。'adjudicator'表示已经完成全部的调查。",
+        description="指定下一个运行的agent的名字。analyst 代表要求Analyst进行调查。adjudicator 表示已经完成全部的调查。",
     )
     agent_message: str = Field(
         description="Investigator要求Analyst进行调查和分析的内容。",
@@ -61,21 +61,16 @@ class AdjudicatorDecision(BaseModel):
     """
     文本中需求提取的决策结果。
     """
-    decision: str = Field(
-        description="最终决策的简短总结文本。",
-    )
     has_risk: bool = Field(
         ...,
         description="是否存在风险的判断。",
     )
+    decision: str = Field(
+        description="最终决策的简短总结文本。",
+    )
     confidence: float = Field(
         ...,
+        ge=0.0, le=1.0,
         description="对于结论的置信度。",
     )
-
-
-# confidence
-class ConfidenceOutput(BaseModel):
-    content: str
-    confidence: float
 
