@@ -28,6 +28,7 @@ from langgraph.graph import (
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
+    from mas.agent_nodes.base_agent import BaseAgent
     from langgraph.graph.state import CompiledStateGraph
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
