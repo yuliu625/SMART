@@ -5,12 +5,15 @@
 from __future__ import annotations
 from loguru import logger
 
+# Decision
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.investigator import Investigator
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
+# Analysis
 from mas.agent_nodes.analysis_agents.analyst import Analyst
+from mas.agent_nodes.analysis_agents.information_merger import InformationMerger
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 if TYPE_CHECKING:
     from mas.agent_nodes.base_agent import BaseAgent
     from langchain_core.language_models import BaseChatModel
@@ -89,6 +92,15 @@ class AgentFactory:
             formatter_llm_system_message=formatter_llm_system_message,
         )
         return analyst
+
+    @staticmethod
+    def create_information_merger(
+
+    ) -> BaseAgent:
+        information_merger = InformationMerger()
+        # HACK: 我知道是这个样子，但是设计protocol会复杂化问题。下面这个对象有支持正确运行的方法。
+        # information_merger = cast(BaseAgent, information_merger)
+        return information_merger
 
     @staticmethod
     def create_rag_agent(
