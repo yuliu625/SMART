@@ -21,7 +21,7 @@ def is_need_validation(
         state:
 
     Returns:
-
+        Literal['analyst', 'adjudicator']: 下一个agent的名字。
     """
     current_agent_name = state.current_agent_name
     # assert current_agent_name in ('analyst', 'adjudicator')
