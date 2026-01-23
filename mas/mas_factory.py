@@ -139,9 +139,69 @@ class MASFactory:
 
     @staticmethod
     def create_sequential_mas_via_ollama(
-
+        # Surveyor
+        surveyor_main_llm_model_name: str,
+        surveyor_main_llm_system_message_template_path: str,
+        # Adjudicator
+        adjudicator_main_llm_model_name: str,
+        adjudicator_main_llm_system_message_template_path: str,
+        adjudicator_formatter_llm_model_name: str,
+        adjudicator_formatter_llm_system_message_template_path: str,
+        # Analyst
+        # RAG
+        rag,
     ) -> CompiledStateGraph:
-        raise NotImplementedError
+        mas = GraphFactory.create_sequential_mas_graph(
+            # Surveyor
+            surveyor_main_llm=LocalLLMFactory.create_ollama_llm(
+                model_name=surveyor_main_llm_model_name,
+                # HARDCODED
+                reasoning=None,
+                temperature=0.7,
+                num_predict=None,
+                model_configs={},
+            ),
+            surveyor_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=surveyor_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            # Adjudicator
+            adjudicator_main_llm=LocalLLMFactory.create_ollama_llm(
+                model_name=adjudicator_main_llm_model_name,
+                # HARDCODED
+                reasoning=None,
+                temperature=0.7,
+                num_predict=None,
+                model_configs={},
+            ),
+            adjudicator_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            adjudicator_formatter_llm=LocalLLMFactory.create_ollama_llm(
+                model_name=adjudicator_formatter_llm_model_name,
+                # HARDCODED
+                reasoning=None,
+                temperature=0.7,
+                num_predict=None,
+                model_configs={},
+            ),
+            adjudicator_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
+            # HARDCODED
+            adjudicator_structured_output_format=AdjudicatorDecision,
+            # RAG
+            rag=rag,
+        )
+        return mas
 
     @staticmethod
     def create_multi_agent_debate_mas_via_vllm(
