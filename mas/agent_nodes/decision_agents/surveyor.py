@@ -9,7 +9,7 @@ from __future__ import annotations
 from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
 from mas.utils.content_annotator import ContentAnnotator
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -75,11 +75,11 @@ class Surveyor(BaseAgent):
         )
         # 获得共享的memory。
         decision_shared_messages = self.initiate_decision_shared_messages(
-            surveyor_message=recognizer_response.ai_message,  # 这里的response只需要ai_message。
+            surveyor_message=recognizer_response.ai_message,  # 这里的response只需要surveyor的ai_message。
         )
         assert isinstance(decision_shared_messages, list)
         assert len(decision_shared_messages) == 1
-        assert isinstance(decision_shared_messages[0], AIMessage)
+        assert isinstance(decision_shared_messages[0], HumanMessage)  # 这里需要是HumanMessage才可以启动后续的Investigator。
         return dict(
             decision_shared_messages=decision_shared_messages,
             current_agent_name='investigator',  # 并没有发出请求，但是下一个一定是validator。
