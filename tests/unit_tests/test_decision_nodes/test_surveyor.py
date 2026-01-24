@@ -72,6 +72,7 @@ class TestSurveyor:
         surveyor: Surveyor,
         state: FinalMASState,
     ):
+        logger.trace(f"\nTest State: \n{state}")
         result = await surveyor.process_state(
             state=state,
             config=None,
@@ -89,6 +90,7 @@ class TestSurveyor:
         surveyor: Surveyor,
         state: SequentialMASState,
     ):
+        logger.trace(f"\nTest State: \n{state}")
         result = await surveyor.process_state(
             state=state,
             config=None,
