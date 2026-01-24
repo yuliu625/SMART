@@ -28,7 +28,7 @@ class TestVectorStorePipeline:
         markdown_file_path = Path(markdown_file_path)
         result_path = Path(result_path)
         if not result_path.exists():
-            result_path.mkdir(parents=True, exist_ok=True)
+            # result_path.mkdir(parents=True, exist_ok=True)
             ChromaVectorStorePipeline.make_vector_store_via_ollama(
                 markdown_file_path=markdown_file_path,
                 headers_to_split_on=[
