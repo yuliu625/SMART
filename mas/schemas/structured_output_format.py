@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING, Literal
 ## ==== Multi-Query Retriever ====
 class RewrittenQueries(BaseModel):
     """
-    用于存储重写后的查询语句的数据类。
+    重写后的查询。
     """
     queries: list[str] = Field(
         ...,
@@ -28,16 +28,16 @@ class RewrittenQueries(BaseModel):
 ## ==== Analyst ====
 class AnalystRequest(BaseModel):
     """
-    Analyst下一步的决定。
+    解析Analyst的决策意图。
     """
     agent_name: Literal[
         'investigator', 'rag',
     ] = Field(
         ...,
-        description="指定下一个运行的agent的名字。investigator 代表完成分析。rag 代表需要去查询更多的信息。",
+        description="rag: 仍需检索数据; investigator: 分析完毕提交最终结果。",
     )
     agent_message: str = Field(
-        description="传递给下一个的agent的信息。当 agent_name==investigator 时代表最终的分析结论总结。当 agent_name==rag 时代表具体需要执行的查询。",
+        description="若是rag，仅填入关键词；若是investigator，填入完整分析报告。",
     )
 
 
@@ -45,21 +45,21 @@ class AnalystRequest(BaseModel):
 ## ==== Investigator ====
 class InvestigatorRequest(BaseModel):
     """
-    Investigator下一步的决定。
+    解析Investigator的决策意图。
     """
     agent_name: Literal[
         'analyst', 'adjudicator',
     ] = Field(
         ...,
-        description="指定下一个运行的agent的名字。analyst 代表要求Analyst进行调查。adjudicator 表示已经完成全部的调查。",
+        description="analyst: 要求Analyst进行调查; adjudicator: 完成全部的调查提交最终结果。",
     )
     agent_message: str = Field(
-        description="Investigator要求Analyst进行调查和分析的内容。",
+        description="若是analyst，填入要进行调查和分析的内容；若是adjudicator，提交完整的总结。",
     )
 ## ==== Adjudicator ====
 class AdjudicatorDecision(BaseModel):
     """
-    文本中需求提取的决策结果。
+    解析Adjudicator的最终决策结果。
     """
     has_risk: bool = Field(
         ...,
