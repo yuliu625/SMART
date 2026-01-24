@@ -19,7 +19,7 @@ class FinalMASState(BaseModel):
     # MAS条件控制。
     ## current related, 整个MAS控制相关。
     current_agent_name: str = Field(
-        default="adjudicator",
+        default="surveyor",
         description="当前应该运行的agent的名字。",
     )
     last_agent_name: str = Field(
@@ -67,11 +67,7 @@ class FinalMASState(BaseModel):
         default=5,
         description="Analyst剩余可以进行查询次数。",
     )
-    # query_result_history: list[Document] = Field(
-    #     default_factory=list,
-    #     description="历史查询的结果，返回新查询结果是用于去重。",
-    # )
-    # analysis agents
+    ## Document Reader
     # document_reader_chat_history: list[AnyMessage] = Field(
     #     default_factory=list,
     #     description="文档阅读的历史",
@@ -87,5 +83,9 @@ class FinalMASState(BaseModel):
     # query: str = Field(
     #     default="",
     #     description="RAG模块需要执行的查询。"
+    # )
+    # query_result_history: list[Document] = Field(
+    #     default_factory=list,
+    #     description="历史查询的结果，返回新查询结果是用于去重。",
     # )
 
