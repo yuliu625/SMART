@@ -79,22 +79,25 @@ class Analyst(BaseAgent):
         """
         # Agent内: 根据last_agent_name，条件处理上一次的消息。
         # assert state.last_agent_name in ('investigator', 'rag')
-        last_round_message = self.before_call_analyst(
+        analysis_process = self.before_call_analyst(
             remain_retrieve_rounds=state.remaining_retrieve_rounds,
             last_agent_name=cast(Literal['investigator', 'rag'], state.last_agent_name),
             # last_agent_name=state.last_agent_name,
             current_message=state.current_message,
             documents=state.current_documents,
+            analysis_process=state.analysis_process,
         )
+        logger.trace(f"\nAnalysis Process: \n{analysis_process}")
         # Agent内: 执行分析。
-        analyst_result = await self.read_documents(
-            analysis_messages=state.analysis_process + [last_round_message],
+        analyst_result = await self.read_instruction_or_documents(
+            analysis_process=analysis_process,
         )
         # 整个MAS: 构建analysis_process。
         analysis_process = self.after_call_analyst(
             analyst_message=analyst_result.ai_message,
-            analysis_process=state.analysis_process,
+            analysis_process=analysis_process,
         )
+        logger.trace(f"\nAnalysis Process: \n{analysis_process}")
         # 根据剩余验证轮数调用下一个agent。
         if state.remaining_retrieve_rounds == 0:
             # 已经用完验证次数，需要进行最终决定。
@@ -136,15 +139,15 @@ class Analyst(BaseAgent):
                 )
 
     # ====主要方法。====
-    async def read_documents(
+    async def read_instruction_or_documents(
         self,
-        analysis_messages: list[AnyMessage],
+        analysis_process: list[AnyMessage],
     ) -> BaseAgentResponse:
         # 获取llm响应。
         response = await self.a_call_llm_with_retry(
             messages=[
                 self.main_llm_system_message,
-            ] + analysis_messages,
+            ] + analysis_process,
         )
         return response
 
@@ -152,10 +155,11 @@ class Analyst(BaseAgent):
     def before_call_analyst(
         self,
         remain_retrieve_rounds: int,
-        last_agent_name: Literal['investigator', 'rag'],
+        last_agent_name: Literal['investigator', 'rag'],  # graph执行依据。
         current_message: str,
-        documents: list[Document],
-    ) -> HumanMessage:
+        documents: list[Document],  # 根据条件，有情况下为空，实际不处理。
+        analysis_process: list[AnyMessage],  # 为和Investigator保持一致的签名。
+    ) -> list[AnyMessage]:
         # Case1: RAG返回给Analyst新的信息。
         ## 这种情况下，current_agent_message的内容是query。
         if last_agent_name == 'rag':
@@ -182,7 +186,8 @@ class Analyst(BaseAgent):
                     + f"\n还剩{remain_retrieve_rounds}次查询次数。"
                     + f"\n你还可以提出一些点进行查询，或者做出分析总结交给Investigator进行进一步调查。"
                 )
-            return HumanMessage(content=rag_message_content)
+            analysis_process = analysis_process + [HumanMessage(content=rag_message_content)]
+            return analysis_process
         # Case2: Investigator向Analyst提出需要分析的内容。
         ## 这种情况下remain_retrieve_rounds比不为1。
         else: # last_agent_name == 'investigator':
@@ -193,7 +198,8 @@ class Analyst(BaseAgent):
                 tag='investigator',
                 original_text=current_message,
             )
-            return HumanMessage(content=investigator_message_content)
+            analysis_process = analysis_process + [HumanMessage(content=investigator_message_content)]
+            return analysis_process
 
     # ==== 工具方法。 ====
     def after_call_analyst(
