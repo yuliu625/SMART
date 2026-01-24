@@ -48,6 +48,10 @@ class SequentialMASState(BaseModel):
         default_factory=list,
         description="所有decision中的agent共用的messages。在这个实现中，是adjudicator专用。使用需要额外处理。",
     )
+    ## Surveyor. 启动。
+    original_pdf_text: str = Field(
+        description="原始的pdf文档的text。专门用一个字段是为了避免和current_message出现问题。",
+    )
     ## Adjudicator. 代表最终结果的重要字段。
     final_decision: dict = Field(
         default_factory=dict,
@@ -55,15 +59,8 @@ class SequentialMASState(BaseModel):
     )
 
     # Analysis Module
+    ## Information Merger不需要额外字段。
     ## Analyst
-    # analyst_messages: list[AnyMessage] = Field(
-    #     default_factory=list,
-    #     description="Analyst获得的信息和分析过程。",
-    # )
-    # remaining_retrieve_rounds: int = Field(
-    #     default=5,
-    #     description="Analyst剩余可以进行查询次数。",
-    # )
 
     # RAG
     ## 检索结果/当前analyst可以进行分析的材料。
