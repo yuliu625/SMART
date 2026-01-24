@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 import pytest
-import asyncio
 from loguru import logger
 
 from mas.mas_factory import MASFactory
@@ -26,7 +25,7 @@ class TestSingleAgentMAS:
          'qwen2.5:1.5b',
          r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2'),
     ])
-    def test_single_agent_mas_structure(
+    def test_single_agent_structure(
         self,
         adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
@@ -52,7 +51,7 @@ class TestSingleAgentMAS:
          r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2'),
     ])
     @pytest.mark.asyncio
-    async def test_single_agent_mas(
+    async def test_single_agent(
         self,
         adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
@@ -80,11 +79,11 @@ class TestSingleAgentMAS:
          r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_main_llm_system_prompt_template.j2',
          'qwen2.5:1.5b',
          r'D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2',
-         r"D:\dataset\smart\tests\test_markdown_file.txt",
-         r"D:\dataset\smart\tests\test_result.json",),
+         r"D:\dataset\smart\tests\docling_1\000004.md",
+         r"D:\dataset\smart\tests\single_agent_000004.json",),
     ])
     @pytest.mark.asyncio
-    async def test_single_agent_mas_with_load_and_save(
+    async def test_single_agent_with_load_and_save(
         self,
         adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
