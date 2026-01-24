@@ -83,7 +83,7 @@ class Investigator(BaseAgent):
         # 整个MAS: 构建shared_messages。
         decision_shared_messages = self.after_call_investigator(
             investigator_message=investigator_result.ai_message,
-            decision_shared_messages=investigator_result.decision_shared_messages,
+            decision_shared_messages=decision_shared_messages,
         )
         # 根据剩余验证轮数调用下一个agent。
         if state.remaining_validation_rounds == 0:
