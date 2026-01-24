@@ -7,10 +7,7 @@ from loguru import logger
 
 from mas.mas_factory import MASFactory
 from mas.rag_factory import RAGFactory
-# from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 from mas.utils.graph_visualizer import GraphVisualizer
-# from rag.storing.chroma_vector_store_builder import ChromaVectorStoreBuilder
-# from rag.embedding.embedding_model_factory import EmbeddingModelFactory
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -88,14 +85,12 @@ def show_final_mas_graph():
     logger.info(f"Design Pattern: MAS\nMermaid Code: \n{mermaid_code}")
 
 
-def main(
-
-):
-    ...
+def main():
+    show_single_agent_mas_graph()
+    show_sequential_mas_graph()
+    show_final_mas_graph()
 
 
 if __name__ == '__main__':
-    # show_single_agent_mas_graph()
-    show_sequential_mas_graph()
-    # show_final_mas_graph()
+    main()
 
