@@ -1,5 +1,7 @@
 """
 测试adjudicator。
+
+该测试几乎等同integration tests中的single agent test。
 """
 
 from __future__ import annotations
