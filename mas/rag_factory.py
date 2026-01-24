@@ -139,6 +139,61 @@ class RAGFactory:
         )
         return rag
 
+    # ==== 本地测试使用。 ====
+    @staticmethod
+    def create_multi_query_rag_via_ollama_base_on_ollama_llm(
+        # Vector Store
+        vector_store_persist_directory: str | Path,
+        # Embedding Model
+        embedding_model_model_name: str,
+        embedding_model_num_ctx: int | None,
+        # Retriever
+        search_configs: dict,
+        # LLM
+        llm_model_name: str,
+        llm_system_message_template_path: str,
+        # structured_output_format: type[BaseModel],
+    ):
+        structured_llm = LocalLLMFactory.create_ollama_llm(
+            model_name=llm_model_name,
+            # HARDCODED
+            reasoning=None,
+            temperature=0.7,
+            num_predict=None,
+            model_configs={},
+        ).with_structured_output(
+            # HARDCODED
+            schema=RewrittenQueries,
+        ).with_retry(
+            # HARDCODED
+            stop_after_attempt=3,
+        )
+        rag = ChromaRAGBuilder.build_multi_query_rag_via_ollama(
+            vector_store_persist_directory=vector_store_persist_directory,
+            embedding_model_model_name=embedding_model_model_name,
+            embedding_model_num_ctx=embedding_model_num_ctx,
+            # HARDCODED
+            embedding_model_repeat_penalty=None,
+            embedding_model_temperature=None,
+            embedding_model_stop_tokens=None,
+            embedding_model_top_k=None,
+            embedding_model_top_p=None,
+
+            search_configs=search_configs,
+            # LLM
+            structured_llm=cast(
+                'BaseChatModel',
+                structured_llm,
+            ),
+            structured_llm_system_message=cast(
+                'SystemMessage',
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=llm_system_message_template_path,
+                ).format(),
+            ),
+        )
+        return rag
+
     @staticmethod
     def create_multi_query_rag_via_huggingface(
         # Vector Store
