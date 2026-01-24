@@ -11,6 +11,8 @@ from mas.agent_nodes.base_agent import BaseAgent, BaseAgentResponse
 from mas.utils.content_annotator import ContentAnnotator
 from mas.utils.document_merger import DocumentMerger
 
+from langchain_core.messages import HumanMessage
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from mas.schemas.sequential_mas_state import SequentialMASState
@@ -49,7 +51,7 @@ class InformationMerger:
         document_content = DocumentMerger.merge_text_documents(
             text_documents=documents,
         )
-        document_content = f"Query: \n {current_agent_message}\n Result: \n{document_content}"
+        document_content = f"Query: \n {current_agent_message}\n RAG Results: \n{document_content}"
         rag_message_content = ContentAnnotator.annotate_with_html_comment(
             tag='rag',
             original_text=document_content,
@@ -63,6 +65,6 @@ class InformationMerger:
     ) -> list[AnyMessage]:
         assert len(decision_shared_messages) == 1
         assert isinstance(decision_shared_messages[0], HumanMessage)
-        all_content = decision_shared_messages[0].content + rag_result.content
+        all_content = decision_shared_messages[0].content + '\n' + rag_result.content
         return [HumanMessage(content=all_content)]
 
