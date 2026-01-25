@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class SequentialMASRunner:
+class SequentialWorkflowRunner:
     @staticmethod
     async def run_via_vllm(
         # IO
