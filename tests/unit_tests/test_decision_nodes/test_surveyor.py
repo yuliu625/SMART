@@ -9,7 +9,7 @@ from loguru import logger
 # from mas.agent_nodes.agent_factory import AgentFactory
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.schemas.final_mas_state import FinalMASState
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 # from mas.models.local_llm_factory import LocalLLMFactory
 from mas.prompts.prompt_template_loader import PromptTemplateLoader
 
@@ -38,8 +38,8 @@ def make_test_surveyor() -> Surveyor:
     return surveyor
 
 
-def make_test_sequential_workflow_state() -> SequentialMASState:
-    state = SequentialMASState(
+def make_test_sequential_workflow_state() -> SequentialWorkflowState:
+    state = SequentialWorkflowState(
         current_agent_name='surveyor',
         last_agent_name='start',
         original_pdf_text=Path(
@@ -88,7 +88,7 @@ class TestSurveyor:
     async def test_surveyor_as_node_in_final_mas(
         self,
         surveyor: Surveyor,
-        state: SequentialMASState,
+        state: SequentialWorkflowState,
     ):
         logger.trace(f"\nTest State: \n{state}")
         result = await surveyor.process_state(
