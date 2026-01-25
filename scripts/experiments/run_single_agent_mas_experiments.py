@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 # ==== 批量运行预测试。 ====
-async def run_ollama_test(
+async def test_run_ollama(
     markdown_files_dir: str | Path,
     result_dir: str | Path,
 ):
@@ -23,9 +23,9 @@ async def run_ollama_test(
         markdown_files_dir=markdown_files_dir,
         result_dir=result_dir,
         adjudicator_main_llm_model_name=r'qwen2.5:1.5b',
-        adjudicator_main_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_main_llm_system_prompt_template.j2",
+        adjudicator_main_llm_system_message_template_path=r"/mas/prompts/single_agent\adjudicator_main_llm_system_prompt_template.j2",
         adjudicator_formatter_llm_model_name=r'qwen2.5:1.5b',
-        adjudicator_formatter_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\single_agent_mas\adjudicator_formatter_llm_system_prompt_template.j2",
+        adjudicator_formatter_llm_system_message_template_path=r"/mas/prompts/single_agent\adjudicator_formatter_llm_system_prompt_template.j2",
     )
 
 
@@ -41,10 +41,10 @@ async def run_qwen_25_7b_instruct_1m(
         # MAS configurations
         adjudicator_main_llm_base_url=r'http://localhost:12345/v1/chat/completions',
         adjudicator_main_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
-        adjudicator_main_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent_mas/adjudicator_main_llm_system_prompt_template.j2',
+        adjudicator_main_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_main_llm_system_prompt_template.j2',
         adjudicator_formatter_llm_base_url=r'http://localhost:12345/v1/chat/completions',
         adjudicator_formatter_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
-        adjudicator_formatter_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent_mas/adjudicator_formatter_llm_system_prompt_template.j2',
+        adjudicator_formatter_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_formatter_llm_system_prompt_template.j2',
     )
 
 
