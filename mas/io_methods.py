@@ -118,13 +118,46 @@ class IOMethods:
 
     @staticmethod
     def load_final_mas_state(
-
+        markdown_file_path: str | Path,
     ) -> FinalMASState:
-        raise NotImplementedError
+        # 处理路径。
+        markdown_file_path = Path(markdown_file_path)
+        # 读取文本。
+        markdown_text = markdown_file_path.read_text(encoding='utf-8')
+        # 构造state。
+        final_mas_state = FinalMASState(
+            original_pdf_text=markdown_text,
+        )
+        logger.trace(f"\nLoaded FinalMASState: \n{final_mas_state}")
+        return final_mas_state
 
     @staticmethod
     def save_final_mas_state(
-
+        state: FinalMASState,
+        result_path: str | Path,
     ) -> FinalMASState:
-        raise NotImplementedError
+        # 处理路径。
+        result_path = Path(result_path)
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        # 读取结果。
+        result = dict(
+            analysis_process_history=[
+                messages_to_dict(messages=analysis_process,)
+                for analysis_process in state['analysis_process_history']
+            ],
+            decision_shared_messages=messages_to_dict(
+                messages=state['decision_shared_messages'],
+            ),
+            final_decision=state['final_decision'].model_dump(),
+        )
+        # logger.debug(f"Type of result: {type(result)}")
+        # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
+        logger.trace(f"\nFinalMASState to save: \n{result}")
+        # 执行保存。
+        result_path.write_text(
+            json.dumps(result, ensure_ascii=False, indent=4),
+            encoding='utf-8',
+        )
+        logger.success(f"\nSaved FinalMASState: \n{result}")
+        return state
 
