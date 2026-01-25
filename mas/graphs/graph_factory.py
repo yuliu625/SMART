@@ -17,11 +17,11 @@ from mas.agent_nodes.analysis_agents.analyst import Analyst
 # from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 # MAS
 ## single agent mas
-from mas.graphs.single_agent_mas_graph_builder import SingleAgentMASGraphBuilder
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.graphs.single_agent_mas_graph_builder import SingleAgentGraphBuilder
+from mas.schemas.single_agent_state import SingleAgentState
 ## sequential mas
-from mas.graphs.sequential_mas_graph_builder import SequentialMASGraphBuilder
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.graphs.sequential_mas_graph_builder import SequentialWorkflowGraphBuilder
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 ## multi agent debate
 ## final mas
 from mas.graphs.final_mas_graph_builder import FinalMASGraphBuilder
@@ -37,14 +37,14 @@ if TYPE_CHECKING:
 
 class GraphFactory:
     @staticmethod
-    def create_single_agent_mas_graph(
+    def create_single_agent_graph(
         adjudicator_main_llm: BaseChatModel,
         adjudicator_main_llm_system_message: SystemMessage,
         adjudicator_formatter_llm: BaseChatModel,
         adjudicator_formatter_llm_system_message: SystemMessage,
         adjudicator_structured_output_format: type[BaseModel],
     ) -> CompiledStateGraph:
-        graph_builder = SingleAgentMASGraphBuilder(state=SingleAgentMASState)
+        graph_builder = SingleAgentGraphBuilder(state=SingleAgentState)
         adjudicator = AgentFactory.create_adjudicator(
             main_llm=adjudicator_main_llm,
             main_llm_system_message=adjudicator_main_llm_system_message,
@@ -59,7 +59,7 @@ class GraphFactory:
         return graph
 
     @staticmethod
-    def create_sequential_mas_graph(
+    def create_sequential_workflow_graph(
         # Surveyor
         surveyor_main_llm: BaseChatModel,
         surveyor_main_llm_system_message: SystemMessage,
@@ -73,7 +73,7 @@ class GraphFactory:
         # RAG
         rag,
     ) -> CompiledStateGraph:
-        graph_builder = SequentialMASGraphBuilder(state=SequentialMASState)
+        graph_builder = SequentialWorkflowGraphBuilder(state=SequentialWorkflowState)
         # Surveyor
         surveyor = AgentFactory.create_surveyor(
             main_llm=surveyor_main_llm,
