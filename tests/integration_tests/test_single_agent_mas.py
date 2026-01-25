@@ -8,7 +8,7 @@ from loguru import logger
 
 from mas.mas_factory import MASFactory
 from mas.utils.graph_visualizer import GraphVisualizer
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.schemas.single_agent_state import SingleAgentState
 from mas.io_methods import IOMethods
 
 from langchain_core.messages import HumanMessage
@@ -32,7 +32,7 @@ class TestSingleAgentMAS:
         adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
     ):
-        mas = MASFactory.create_single_agent_mas_via_ollama(
+        mas = MASFactory.create_single_agent_via_ollama(
             adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
             adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
             adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
@@ -58,14 +58,14 @@ class TestSingleAgentMAS:
         adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
     ):
-        mas = MASFactory.create_single_agent_mas_via_ollama(
+        mas = MASFactory.create_single_agent_via_ollama(
             adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
             adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
             adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
             adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
         )
         result = await mas.ainvoke(
-            input=SingleAgentMASState(
+            input=SingleAgentState(
                 decision_shared_messages=[
                     HumanMessage(content="你觉得明天下雨的几率有多大？")
                 ],
@@ -92,7 +92,7 @@ class TestSingleAgentMAS:
         markdown_file_path: str,
         result_path: str,
     ):
-        mas = MASFactory.create_single_agent_mas_via_ollama(
+        mas = MASFactory.create_single_agent_via_ollama(
             adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
             adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
             adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
