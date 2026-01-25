@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class SingleAgentMASState(BaseModel):
+class SingleAgentState(BaseModel):
     """
     Single agent中使用的state。
 
