@@ -37,7 +37,7 @@ class SingleAgentMASRunner:
             result_file_path = result_dir / f"{markdown_file_path.stem}.json"
             if not result_file_path.exists():
                 # build MAS
-                mas = MASFactory.create_single_agent_mas_via_vllm(
+                mas = MASFactory.create_single_agent_via_vllm(
                     adjudicator_main_llm_base_url=adjudicator_main_llm_base_url,
                     adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
                     adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
@@ -77,7 +77,7 @@ class SingleAgentMASRunner:
             result_file_path = result_dir / f"{markdown_file_path.stem}.json"
             if not result_file_path.exists():
                 # build MAS
-                mas = MASFactory.create_single_agent_mas_via_ollama(
+                mas = MASFactory.create_single_agent_via_ollama(
                     adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
                     adjudicator_main_llm_system_message_template_path=adjudicator_main_llm_system_message_template_path,
                     adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
