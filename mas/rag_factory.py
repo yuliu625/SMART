@@ -195,7 +195,7 @@ class RAGFactory:
         return rag
 
     @staticmethod
-    def create_multi_query_rag_via_huggingface(
+    def create_multi_query_rag_via_huggingface_base_on_vllm_llm(
         # Vector Store
         vector_store_persist_directory: str | Path,
         # Embedding Model
