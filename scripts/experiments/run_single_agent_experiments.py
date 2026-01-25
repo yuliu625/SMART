@@ -39,11 +39,29 @@ async def run_qwen_25_7b_instruct_1m(
         markdown_files_dir=markdown_files_dir,
         result_dir=result_dir,
         # MAS configurations
-        adjudicator_main_llm_base_url=r'http://localhost:12345/v1/chat/completions',
+        adjudicator_main_llm_base_url=r'http://127.0.0.1:8976/v1/chat/completions',
         adjudicator_main_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
         adjudicator_main_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_main_llm_system_prompt_template.j2',
-        adjudicator_formatter_llm_base_url=r'http://localhost:12345/v1/chat/completions',
+        adjudicator_formatter_llm_base_url=r'http://127.0.0.1:8976/v1/chat/completions',
         adjudicator_formatter_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
+        adjudicator_formatter_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_formatter_llm_system_prompt_template.j2',
+    )
+
+
+async def run_qwen_25_14b_instruct_1m(
+    markdown_files_dir: str | Path,
+    result_dir: str | Path,
+) -> None:
+    await SingleAgentRunner.run_via_vllm(
+        # IO
+        markdown_files_dir=markdown_files_dir,
+        result_dir=result_dir,
+        # MAS configurations
+        adjudicator_main_llm_base_url=r'http://127.0.0.1:8977/v1/chat/completions',
+        adjudicator_main_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-14B-Instruct-1M',
+        adjudicator_main_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_main_llm_system_prompt_template.j2',
+        adjudicator_formatter_llm_base_url=r'http://127.0.0.1:8977/v1/chat/completions',
+        adjudicator_formatter_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-14B-Instruct-1M',
         adjudicator_formatter_llm_system_message_template_path=r'/home/liuyu/workspace/code/smart/mas/prompts/single_agent/adjudicator_formatter_llm_system_prompt_template.j2',
     )
 
