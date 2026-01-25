@@ -1,5 +1,5 @@
 """
-Design Patter: single agent.
+Design Pattern: single agent.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ async def test_run_ollama(
 async def run_qwen_25_7b_instruct_1m(
     markdown_files_dir: str | Path,
     result_dir: str | Path,
-):
+) -> None:
     await SingleAgentRunner.run_via_vllm(
         # IO
         markdown_files_dir=markdown_files_dir,
