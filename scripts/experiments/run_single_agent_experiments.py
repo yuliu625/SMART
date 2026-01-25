@@ -6,7 +6,7 @@ from __future__ import annotations
 import asyncio
 from loguru import logger
 
-from mas_runner.single_agent_mas_runner import SingleAgentMASRunner
+from mas_runner.single_agent_runner import SingleAgentRunner
 
 from pathlib import Path
 
@@ -19,7 +19,7 @@ async def test_run_ollama(
     result_dir: str | Path,
 ):
     # 仅测试使用。
-    await SingleAgentMASRunner.run_via_ollama(
+    await SingleAgentRunner.run_via_ollama(
         markdown_files_dir=markdown_files_dir,
         result_dir=result_dir,
         adjudicator_main_llm_model_name=r'qwen2.5:1.5b',
@@ -34,7 +34,7 @@ async def run_qwen_25_7b_instruct_1m(
     markdown_files_dir: str | Path,
     result_dir: str | Path,
 ):
-    await SingleAgentMASRunner.run_via_vllm(
+    await SingleAgentRunner.run_via_vllm(
         # IO
         markdown_files_dir=markdown_files_dir,
         result_dir=result_dir,
