@@ -116,7 +116,7 @@ class SequentialWorkflowRunner:
         raise NotImplementedError
 
     @staticmethod
-    async def run_via_vllm_with_multi_query_rag(
+    async def run_via_vllm_with_huggingface_multi_query_rag(
         # IO
         markdown_files_dir: str | Path,
         general_query_path: str | Path,
