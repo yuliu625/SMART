@@ -9,7 +9,7 @@ from loguru import logger
 from mas.mas_factory import MASFactory
 from mas.rag_factory import RAGFactory
 from mas.utils.graph_visualizer import GraphVisualizer
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 from mas.io_methods import IOMethods
 
 from typing import TYPE_CHECKING
@@ -72,7 +72,7 @@ class TestSequentialMASState:
         # RAG
         rag,
     ):
-        mas = MASFactory.create_sequential_mas_via_ollama(
+        mas = MASFactory.create_sequential_workflow_via_ollama(
             surveyor_main_llm_model_name=surveyor_main_llm_model_name,
             surveyor_main_llm_system_message_template_path=surveyor_main_llm_system_message_template_path,
             adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
@@ -126,7 +126,7 @@ class TestSequentialMASState:
         general_query_path: str,
         result_path: str,
     ):
-        mas = MASFactory.create_sequential_mas_via_ollama(
+        mas = MASFactory.create_sequential_workflow_via_ollama(
             surveyor_main_llm_model_name=surveyor_main_llm_model_name,
             surveyor_main_llm_system_message_template_path=surveyor_main_llm_system_message_template_path,
             adjudicator_main_llm_model_name=adjudicator_main_llm_model_name,
@@ -135,7 +135,7 @@ class TestSequentialMASState:
             adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
             rag=rag,
         )
-        state = IOMethods.load_sequential_mas_state(
+        state = IOMethods.load_sequential_workflow_state(
             markdown_file_path=markdown_file_path,
             general_query_path=general_query_path,
         )
@@ -143,5 +143,5 @@ class TestSequentialMASState:
             input=state,
         )
         logger.info(f"\nMAS Result: \n{result}")
-        IOMethods.save_sequential_mas_state(state=result, result_path=result_path)
+        IOMethods.save_sequential_workflow_state(state=result, result_path=result_path)
 
