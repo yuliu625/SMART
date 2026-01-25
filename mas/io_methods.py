@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING
 
 class IOMethods:
     @staticmethod
-    def load_single_agent_mas_state(
+    def load_single_agent_state(
         markdown_file_path: str | Path,
     ) -> SingleAgentState:
         # 处理路径。
@@ -44,7 +44,7 @@ class IOMethods:
         return single_agent_state
 
     @staticmethod
-    def save_single_agent_mas_state(
+    def save_single_agent_state(
         state: SingleAgentState,
         result_path: str | Path,
     ) -> SingleAgentState:
