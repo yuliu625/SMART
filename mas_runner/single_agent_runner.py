@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class SingleAgentMASRunner:
+class SingleAgentRunner:
     @staticmethod
     async def run_via_vllm(
         # IO
@@ -45,13 +45,13 @@ class SingleAgentMASRunner:
                     adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
                     adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
                 )
-                state = IOMethods.load_single_agent_mas_state(
+                state = IOMethods.load_single_agent_state(
                     markdown_file_path=markdown_file_path,
                 )
                 result = await mas.ainvoke(
                     input=state,
                 )
-                IOMethods.save_single_agent_mas_state(
+                IOMethods.save_single_agent_state(
                     state=result,
                     result_path=result_file_path,
                 )
@@ -83,13 +83,13 @@ class SingleAgentMASRunner:
                     adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
                     adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
                 )
-                state = IOMethods.load_single_agent_mas_state(
+                state = IOMethods.load_single_agent_state(
                     markdown_file_path=markdown_file_path,
                 )
                 result = await mas.ainvoke(
                     input=state,
                 )
-                IOMethods.save_single_agent_mas_state(
+                IOMethods.save_single_agent_state(
                     state=result,
                     result_path=result_file_path,
                 )
