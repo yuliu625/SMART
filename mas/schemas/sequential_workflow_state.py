@@ -1,7 +1,7 @@
 """
 Sequential Workflow State
 
-State definition of sequential mas.
+State definition of sequential workflow.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class SequentialMASState(BaseModel):
+class SequentialWorkflowState(BaseModel):
     """
     Sequential MAS中使用的state。
 
