@@ -6,7 +6,7 @@ from __future__ import annotations
 from loguru import logger
 
 # State
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
+from mas.schemas.single_agent_state import SingleAgentState
 # Nodes
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 # from mas.agent_nodes.agent_factory import AgentFactory
@@ -24,13 +24,13 @@ if TYPE_CHECKING:
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
-class SingleAgentMASGraphBuilder:
+class SingleAgentGraphBuilder:
     """
     计算图的构造器。
     """
     def __init__(
         self,
-        state: type[SingleAgentMASState],
+        state: type[SingleAgentState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
