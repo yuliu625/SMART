@@ -17,10 +17,10 @@ from mas.agent_nodes.analysis_agents.analyst import Analyst
 # from mas.rag_nodes.chroma_rag_builder import ChromaRAGBuilder
 # MAS
 ## single agent mas
-from mas.graphs.single_agent_mas_graph_builder import SingleAgentGraphBuilder
+from mas.graphs.single_agent_graph_builder import SingleAgentGraphBuilder
 from mas.schemas.single_agent_state import SingleAgentState
 ## sequential mas
-from mas.graphs.sequential_mas_graph_builder import SequentialWorkflowGraphBuilder
+from mas.graphs.sequential_workflow_graph_builder import SequentialWorkflowGraphBuilder
 from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 ## multi agent debate
 ## final mas
