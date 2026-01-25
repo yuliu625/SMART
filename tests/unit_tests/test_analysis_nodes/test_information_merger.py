@@ -7,7 +7,7 @@ import pytest
 from loguru import logger
 
 from mas.agent_nodes.analysis_agents.information_merger import InformationMerger
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.documents import Document
@@ -22,8 +22,8 @@ def make_test_information_merger() -> InformationMerger:
     return information_merger
 
 
-def make_test_sequential_workflow_state() -> SequentialMASState:
-    state = SequentialMASState(
+def make_test_sequential_workflow_state() -> SequentialWorkflowState:
+    state = SequentialWorkflowState(
         original_pdf_text=Path(
             r"D:\dataset\smart\tests\docling_1\000004.md"
         ).read_text(encoding='utf-8'),
@@ -52,7 +52,7 @@ class TestInformationMerger:
     async def test_information_merger_as_node_in_final_mas(
         self,
         information_merger: InformationMerger,
-        state: SequentialMASState,
+        state: SequentialWorkflowState,
     ):
         logger.trace(f"\nTest State: \n{state}")
         result = await information_merger.process_state(
