@@ -13,8 +13,8 @@ from loguru import logger
 # Graphs
 from mas.graphs.graph_factory import GraphFactory
 # Schemas  暂时不进行封装。
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.single_agent_state import SingleAgentState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 from mas.schemas.final_mas_state import FinalMASState
 # Structured Output  暂时不进行封装。
 from mas.schemas.structured_output_format import (
@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 
 class MASFactory:
     @staticmethod
-    def create_single_agent_mas_via_vllm(
+    def create_single_agent_via_vllm(
         adjudicator_main_llm_base_url: str,
         adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
@@ -49,7 +49,7 @@ class MASFactory:
         adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
     ) -> CompiledStateGraph:
-        graph = GraphFactory.create_single_agent_mas_graph(
+        graph = GraphFactory.create_single_agent_graph(
             adjudicator_main_llm=LocalLLMFactory.create_openai_llm(
                 base_url=adjudicator_main_llm_base_url,
                 model_name=adjudicator_main_llm_model_name,
@@ -90,13 +90,13 @@ class MASFactory:
         return graph
 
     @staticmethod
-    def create_single_agent_mas_via_ollama(
+    def create_single_agent_via_ollama(
         adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
         adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
     ) -> CompiledStateGraph:
-        graph = GraphFactory.create_single_agent_mas_graph(
+        graph = GraphFactory.create_single_agent_graph(
             adjudicator_main_llm=LocalLLMFactory.create_ollama_llm(
                 model_name=adjudicator_main_llm_model_name,
                 # HARDCODED
@@ -131,7 +131,7 @@ class MASFactory:
         return graph
 
     @staticmethod
-    def create_sequential_mas_via_vllm(
+    def create_sequential_workflow_via_vllm(
         # Surveyor
         surveyor_main_llm_base_url: str,
         surveyor_main_llm_model_name: str,
@@ -148,7 +148,7 @@ class MASFactory:
         # RAG
         rag,
     ) -> CompiledStateGraph:
-        graph = GraphFactory.create_sequential_mas_graph(
+        graph = GraphFactory.create_sequential_workflow_graph(
             # Surveyor
             surveyor_main_llm=LocalLLMFactory.create_openai_llm(
                 base_url=surveyor_main_llm_base_url,
@@ -210,7 +210,7 @@ class MASFactory:
         return graph
 
     @staticmethod
-    def create_sequential_mas_via_ollama(
+    def create_sequential_workflow_via_ollama(
         # Surveyor
         surveyor_main_llm_model_name: str,
         surveyor_main_llm_system_message_template_path: str,
@@ -223,7 +223,7 @@ class MASFactory:
         # RAG
         rag,
     ) -> CompiledStateGraph:
-        mas = GraphFactory.create_sequential_mas_graph(
+        mas = GraphFactory.create_sequential_workflow_graph(
             # Surveyor
             surveyor_main_llm=LocalLLMFactory.create_ollama_llm(
                 model_name=surveyor_main_llm_model_name,
