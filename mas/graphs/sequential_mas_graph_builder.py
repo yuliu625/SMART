@@ -8,7 +8,7 @@ from __future__ import annotations
 from loguru import logger
 
 # State
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 # Nodes
 from mas.agent_nodes.analysis_agents.analyst import Analyst
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
@@ -27,13 +27,13 @@ if TYPE_CHECKING:
     from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
-class SequentialMASGraphBuilder:
+class SequentialWorkflowGraphBuilder:
     """
     计算图的构造器。
     """
     def __init__(
         self,
-        state: type[SequentialMASState],
+        state: type[SequentialWorkflowState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
