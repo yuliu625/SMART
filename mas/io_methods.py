@@ -7,8 +7,8 @@
 from __future__ import annotations
 from loguru import logger
 
-from mas.schemas.single_agent_mas_state import SingleAgentMASState
-from mas.schemas.sequential_mas_state import SequentialMASState
+from mas.schemas.single_agent_state import SingleAgentState
+from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 from mas.schemas.final_mas_state import FinalMASState
 # from rag.loading.load_text import TextLoadingMethods
 from mas.prompts.prompt_template_loader import PromptTemplateLoader
@@ -29,13 +29,13 @@ class IOMethods:
     @staticmethod
     def load_single_agent_mas_state(
         markdown_file_path: str | Path,
-    ) -> SingleAgentMASState:
+    ) -> SingleAgentState:
         # 处理路径。
         markdown_file_path = Path(markdown_file_path)
         # 读取文本。
         markdown_text = markdown_file_path.read_text(encoding='utf-8')
         # 构造state。
-        single_agent_state = SingleAgentMASState(
+        single_agent_state = SingleAgentState(
             decision_shared_messages=[
                 HumanMessage(content=markdown_text),
             ],
@@ -45,9 +45,9 @@ class IOMethods:
 
     @staticmethod
     def save_single_agent_mas_state(
-        state: SingleAgentMASState,
+        state: SingleAgentState,
         result_path: str | Path,
-    ) -> SingleAgentMASState:
+    ) -> SingleAgentState:
         # 处理路径。
         result_path = Path(result_path)
         result_path.parent.mkdir(parents=True, exist_ok=True)
@@ -70,10 +70,10 @@ class IOMethods:
         return state
 
     @staticmethod
-    def load_sequential_mas_state(
+    def load_sequential_workflow_state(
         markdown_file_path: str | Path,
         general_query_path: str | Path,
-    ) -> SequentialMASState:
+    ) -> SequentialWorkflowState:
         # 处理路径。
         markdown_file_path = Path(markdown_file_path)
         general_query_path = Path(general_query_path)
@@ -83,7 +83,7 @@ class IOMethods:
             human_message_prompt_template_path=general_query_path,
         ).format().content
         # 构造state。
-        sequential_workflow_state = SequentialMASState(
+        sequential_workflow_state = SequentialWorkflowState(
             original_pdf_text=markdown_text,
             current_message=query_text,
         )
@@ -91,10 +91,10 @@ class IOMethods:
         return sequential_workflow_state
 
     @staticmethod
-    def save_sequential_mas_state(
-        state: SequentialMASState,
+    def save_sequential_workflow_state(
+        state: SequentialWorkflowState,
         result_path: str | Path,
-    ) -> SequentialMASState:
+    ) -> SequentialWorkflowState:
         # 处理路径。
         result_path = Path(result_path)
         result_path.parent.mkdir(parents=True, exist_ok=True)
