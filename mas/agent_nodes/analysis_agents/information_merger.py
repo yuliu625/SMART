@@ -15,7 +15,7 @@ from langchain_core.messages import HumanMessage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mas.schemas.sequential_mas_state import SequentialMASState
+    from mas.schemas.sequential_workflow_state import SequentialWorkflowState
     from langchain_core.runnables import RunnableConfig
     from langchain_core.language_models import BaseChatModel
     from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 class InformationMerger:
     async def process_state(
         self,
-        state: SequentialMASState,
+        state: SequentialWorkflowState,
         config: RunnableConfig,
     ) -> dict:
         rag_result = self.process_rag_results(
