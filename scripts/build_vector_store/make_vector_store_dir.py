@@ -1,5 +1,10 @@
 """
 预构建vector_store进行缓存。
+
+约定:
+    - 自动搜索原始文件，并进行构建。
+    - 构建仅一次完成，不应后续加载重复构造。
+        - 因此: 所有构建都是增量式运行的。
 """
 
 from __future__ import annotations
@@ -38,6 +43,10 @@ def incremental_make_vector_store_dir_via_nomic(
                 ollama_embedding_model_context_length=8192,
                 vector_store_path=result_path,
             )
+
+
+def incremental_make_vector_store_dir_via_bge():
+    ...
 
 
 def main() -> None:
