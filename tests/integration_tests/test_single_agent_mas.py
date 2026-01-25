@@ -98,12 +98,12 @@ class TestSingleAgentMAS:
             adjudicator_formatter_llm_model_name=adjudicator_formatter_llm_model_name,
             adjudicator_formatter_llm_system_message_template_path=adjudicator_formatter_llm_system_message_template_path,
         )
-        state = IOMethods.load_single_agent_mas_state(
+        state = IOMethods.load_single_agent_state(
             markdown_file_path=markdown_file_path,
         )
         result = await mas.ainvoke(
             input=state,
         )
         logger.info(f"\nMAS Result: \n{result}")
-        IOMethods.save_single_agent_mas_state(state=result, result_path=result_path)
+        IOMethods.save_single_agent_state(state=result, result_path=result_path)
 
