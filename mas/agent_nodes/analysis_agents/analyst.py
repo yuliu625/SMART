@@ -99,12 +99,19 @@ class Analyst(BaseAgent):
         )
         logger.trace(f"\nAnalysis Process: \n{analysis_process}")
         # 根据剩余验证轮数调用下一个agent。
-        if state.remaining_retrieve_rounds == 0:
+        if state.remaining_retrieve_rounds == 1:
             # 已经用完验证次数，需要进行最终决定。
             # 这个判断是system层级冗余稳定判断。
+            logger.debug(f"Used out retrieve rounds.")
+            logger.trace(f"Decision Shared Messages: {state.decision_shared_messages}")
+            logger.trace(f"Analysis Process: {state.analysis_process}")
             return dict(
                 analysis_process=[],  # 完成分析，当前分析清空。
                 analysis_process_history=state.analysis_process_history + [analysis_process],  # 完成分析，历史分析过程留档。
+                decision_shared_messages=self.submit_results_to_investigator(
+                    analyst_message=analyst_result.ai_message,
+                    decision_shared_messages=state.decision_shared_messages,
+                ),
                 current_message=analyst_result.structured_output.agent_message,
                 # HARDCODED: max_retrieve_rounds = 5
                 remain_retrieve_rounds=5,  # 重置最大查询次数。
@@ -117,9 +124,16 @@ class Analyst(BaseAgent):
             ## current_agent_name='analyst', current_documents=[]
             ## last_agent_name='investigator'
             if analyst_result.structured_output.agent_name == 'investigator':
+                logger.debug(f"Submit to investigator.")
+                logger.trace(f"Decision Shared Messages: {state.decision_shared_messages}")
+                logger.trace(f"Analysis Process: {state.analysis_process}")
                 return dict(
                     analysis_process=[],  # 完成分析，当前分析清空。
                     analysis_process_history=state.analysis_process_history + [analysis_process],  # 完成分析，历史分析过程留档。
+                    decision_shared_messages=self.submit_results_to_investigator(
+                        analyst_message=analyst_result.ai_message,
+                        decision_shared_messages=state.decision_shared_messages,
+                    ),
                     current_message=analyst_result.structured_output.agent_message,
                     # HARDCODED: max_retrieve_rounds = 5
                     remain_retrieve_rounds=5,  # 重置最大查询次数。
@@ -130,6 +144,7 @@ class Analyst(BaseAgent):
             ## current_agent_name='analyst', current_documents可能为空。
             ## last_agent_name='rag'
             else:
+                logger.debug(f"Use RAG.")
                 return dict(
                     analysis_process=analysis_process,  # 未完成分析，更新分析步骤。不更新analysis_process_history。
                     current_message=analyst_result.structured_output.agent_message,
@@ -215,9 +230,28 @@ class Analyst(BaseAgent):
         )
         # 构建analysis_process。
         analysis_process = analysis_process + [
-            AIMessage(content=analyst_last_message_content)
+            AIMessage(content=analyst_last_message_content),
         ]
         return analysis_process
+
+    # ==== 工具方法。 ====
+    def submit_results_to_investigator(
+        self,
+        analyst_message: AIMessage,
+        decision_shared_messages: list[AnyMessage],
+    ) -> list[AnyMessage]:
+        assert isinstance(analyst_message, AIMessage)
+        assert isinstance(decision_shared_messages[-1], AIMessage)
+        # 标注身份。
+        analyst_last_message_content = ContentAnnotator.annotate_with_html_comment(
+            tag='analyst',
+            original_text=analyst_message.content,
+        )
+        # 构建decision_shared_messages。
+        decision_shared_messages = decision_shared_messages + [
+            HumanMessage(content=analyst_last_message_content),
+        ]
+        return decision_shared_messages
 
     # ==== 工具方法。 ====
     def process_result_documents(
