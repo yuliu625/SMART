@@ -22,6 +22,7 @@ def default_incremental_batch_convert_pdf_via_deepseek_ocr(
     result_dir: str | Path,
 ) -> None:
     # 路径处理。
+    pdf_dir = Path(pdf_dir)
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
     # 以所有的pdf文件为目标。
@@ -43,6 +44,7 @@ def default_incremental_batch_convert_pdf_via_deepseek_ocr_with_images(
     result_dir: str | Path,
 ) -> None:
     # 路径处理。
+    pdf_dir = Path(pdf_dir)
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
     # 以所有的pdf文件为目标。
