@@ -58,7 +58,7 @@ class TestSequentialMASState:
          make_test_multi_query_rag(),
          ),
     ])
-    def test_sequential_mas_structure(
+    def test_sequential_workflow_structure(
         self,
         # Surveyor
         surveyor_main_llm_model_name: str,
@@ -109,7 +109,7 @@ class TestSequentialMASState:
         #  ),
     ])
     @pytest.mark.asyncio
-    async def test_sequential_mas_with_load_and_save(
+    async def test_sequential_workflow_with_load_and_save(
         self,
         # Surveyor
         surveyor_main_llm_model_name: str,
