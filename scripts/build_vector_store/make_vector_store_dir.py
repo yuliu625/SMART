@@ -109,7 +109,6 @@ def incremental_make_vector_store_dir_via_jina(
     markdown_files_dir: str | Path,
     result_dir: str | Path,
 ) -> None:
-    raise NotImplementedError
     # 路径处理。
     markdown_files_dir = Path(markdown_files_dir)
     result_dir = Path(result_dir)
@@ -129,8 +128,8 @@ def incremental_make_vector_store_dir_via_jina(
                 ],
                 hugging_face_embedding_model_model_name_or_path=r"/home/liuyu/liuyu_nfs_data/model/jinaai/jina-embeddings-v4",
                 hugging_face_embedding_model_model_kwargs=dict(trust_remote_code=True),
-                hugging_face_embedding_model_encode_kwargs=dict(),
-                hugging_face_embedding_model_query_encode_kwargs=dict(),
+                hugging_face_embedding_model_encode_kwargs=dict(task='retrieval', prompt_name='passage'),
+                hugging_face_embedding_model_query_encode_kwargs=dict(taks='retrieval', prompt_name='query'),
                 hugging_face_embedding_model_is_multi_process=False,
                 vector_store_path=result_path,
             )
