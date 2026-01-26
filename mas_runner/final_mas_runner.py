@@ -67,7 +67,7 @@ class FinalMASRunner:
             vector_store_path = vector_store_dir / f"{markdown_file_path.stem}"
             if not vector_store_path.exists():
                 logger.error(f"Vector store {vector_store_path} does not exist")
-                return
+                continue
             if not result_file_path.exists():
                 # build rag
                 rag = RAGFactory.create_simple_rag_via_huggingface(
@@ -195,7 +195,7 @@ class FinalMASRunner:
             vector_store_path = vector_store_dir / f"{markdown_file_path.stem}"
             if not vector_store_path.exists():
                 logger.error(f"Vector store {vector_store_path} does not exist")
-                return
+                continue
             if not result_file_path.exists():
                 # build rag
                 rag = RAGFactory.create_multi_query_rag_via_huggingface_base_on_vllm_llm(
