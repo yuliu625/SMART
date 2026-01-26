@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-def default_batch_conver_pdf_via_docling(
+def default_batch_convert_pdf_via_docling(
     pdf_dir: str | Path,
     result_dir: str | Path,
 ) -> None:
@@ -43,7 +43,7 @@ def default_batch_conver_pdf_via_docling(
     )
 
 
-def default_incremental_batch_conver_pdf_via_docling(
+def default_incremental_batch_convert_pdf_via_docling(
     pdf_dir: str | Path,
     result_dir: str | Path,
 ) -> None:
@@ -75,7 +75,7 @@ def default_incremental_batch_conver_pdf_via_docling(
     )
 
 
-def default_incremental_batch_conver_pdf_via_docling_with_images(
+def default_incremental_batch_convert_pdf_via_docling_with_images(
     pdf_dir: str | Path,
     result_dir: str | Path,
 ) -> None:
@@ -122,11 +122,15 @@ if __name__ == '__main__':
     #     pdf_dir=pdf_dir_,
     #     result_dir=result_dir_,
     # )
-    default_incremental_batch_conver_pdf_via_docling(
+    default_incremental_batch_convert_pdf_via_docling(
         pdf_dir=pdf_dir_,
         result_dir=result_dir_,
     )
     ## 有图片。
-    pdf_dir_ = r""
-    result_dir_ = r""
+    pdf_dir_ = r"/home/liuyu/liuyu_nfs_data/pdf_dataset/raw_pdf_sample_1"
+    result_dir_ = r"/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2"
+    default_incremental_batch_convert_pdf_via_docling_with_images(
+        pdf_dir=pdf_dir_,
+        result_dir=result_dir_,
+    )
 
