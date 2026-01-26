@@ -103,7 +103,7 @@ class Investigator(BaseAgent):
             return dict(
                 decision_shared_messages=decision_shared_messages,
                 current_message=investigator_result.structured_output.agent_message,  # 当对analyst时，为调查的内容。
-                remaining_validation_rounds=state.remaining_validation_rounds-1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
+                remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
                 current_agent_name=investigator_result.structured_output.agent_name,  # analyst | adjudicator
                 last_agent_name='investigator',
             )
@@ -153,6 +153,8 @@ class Investigator(BaseAgent):
         # 最后一轮message是:
         # Case1: Surveyor以HumanMessage进行的初始启动。
         # Case2: Analyst提交的分析结论。
+        logger.debug(f"decision_shared_messages: {decision_shared_messages_}")
+        logger.debug(f"Type of decision_shared_messages: {type(decision_shared_messages_[-1])}")
         assert isinstance(decision_shared_messages_[-1], HumanMessage)
         # 提取最后一轮的message。
         last_round_content = decision_shared_messages_[-1].content
