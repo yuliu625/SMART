@@ -25,7 +25,7 @@ def calculate_csmar_market_type_distribution(
     Returns:
 
     """
-    market_type_distribution = df['MarketType'].value_counts(normalize=is_normalize)
+    market_type_distribution = df['Markettype'].value_counts(normalize=is_normalize)
     logger.trace(f"Market Type Distribution: \n", market_type_distribution)
     return market_type_distribution
 
