@@ -168,26 +168,50 @@ def main() -> None:
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
         result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_1',
     )
+    ### docling2
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_nomic,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_2',
+    )
+    ### vlm1
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_nomic,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_1',
+    )
 
     # bge
     ## markdown1
     ### pymupdf1
     incremental_make_vector_store_dir(
-        process_function=incremental_make_vector_store_dir_via_nomic,
+        process_function=incremental_make_vector_store_dir_via_bge,
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
         result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_1',
     )
     ### pymupdf2
     incremental_make_vector_store_dir(
-        process_function=incremental_make_vector_store_dir_via_nomic,
+        process_function=incremental_make_vector_store_dir_via_bge,
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
         result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_2',
     )
     ### docling1
     incremental_make_vector_store_dir(
-        process_function=incremental_make_vector_store_dir_via_nomic,
+        process_function=incremental_make_vector_store_dir_via_bge,
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
         result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_1',
+    )
+    ### docling2
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_bge,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_2',
+    )
+    ### vlm1
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_bge,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_1',
     )
 
     # jina
@@ -209,6 +233,18 @@ def main() -> None:
         process_function=incremental_make_vector_store_dir_via_jina,
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
         result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/docling_1',
+    )
+    ### docling2
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_jina,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/docling_2',
+    )
+    ### vlm1
+    incremental_make_vector_store_dir(
+        process_function=incremental_make_vector_store_dir_via_jina,
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/vlm_1',
     )
 
 
