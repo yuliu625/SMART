@@ -1,5 +1,5 @@
 """
-
+构造基本文本特征分布图。
 """
 
 from __future__ import annotations
