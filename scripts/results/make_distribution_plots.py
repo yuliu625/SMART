@@ -30,18 +30,19 @@ from typing import TYPE_CHECKING
 
 
 def make_categorical_distribution_plots(
-    # st_companies_path: str | Path,
-    # matching_sample_path: str | Path,
+    st_companies_path: str | Path,
+    matching_sample_path: str | Path,
+    result_path: str | Path,
 ) -> None:
     st_companies_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=st_companies_path,
     )
     st_companies_series = calculate_csmar_categorical_distribution(
         df=st_companies_df ,
         is_normalize=False,
     )
     matching_sample_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=matching_sample_path,
     )
     matching_sample_series = calculate_csmar_categorical_distribution(
         df=matching_sample_df,
@@ -51,24 +52,25 @@ def make_categorical_distribution_plots(
         st_companies_series=st_companies_series,
         matching_sample_series=matching_sample_series,
     ).write_image(
-        './categorical_distribution.png',
+        result_path,
         scale=2,
     )
 
 
 def make_market_type_distribution_plots(
-    # st_companies_path: str | Path,
-    # matching_sample_path: str | Path,
+    st_companies_path: str | Path,
+    matching_sample_path: str | Path,
+    result_path: str | Path,
 ) -> None:
     st_companies_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=st_companies_path,
     )
     st_companies_series = calculate_csmar_market_type_distribution(
         df=st_companies_df ,
         is_normalize=False,
     )
     matching_sample_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=matching_sample_path,
     )
     matching_sample_series = calculate_csmar_market_type_distribution(
         df=matching_sample_df,
@@ -78,34 +80,35 @@ def make_market_type_distribution_plots(
         st_companies_series=st_companies_series,
         matching_sample_series=matching_sample_series,
     ).write_image(
-        './market_type_distribution.png',
+        result_path,
         scale=2,
     )
 
 
 def make_ownership_type_distribution_plots(
-    # st_companies_path: str | Path,
-    # matching_sample_path: str | Path,
+    st_companies_path: str | Path,
+    matching_sample_path: str | Path,
+    result_path: str | Path,
 ) -> None:
     st_companies_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=st_companies_path,
     )
-    st_companies_series = calculate_csmar_market_type_distribution(
+    st_companies_series = calculate_csmar_ownership_type_distribution(
         df=st_companies_df ,
         is_normalize=False,
     )
     matching_sample_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
+        processed_csmar_trd_co_xlsx_file_path=matching_sample_path,
     )
-    matching_sample_series = calculate_csmar_market_type_distribution(
+    matching_sample_series = calculate_csmar_ownership_type_distribution(
         df=matching_sample_df,
         is_normalize=False,
     )
-    MarketTypeDistributionPlots.make_market_type_distribution_plot(
+    OwnershipTypeDistributionPlots.make_ownership_type_distribution_plot(
         st_companies_series=st_companies_series,
         matching_sample_series=matching_sample_series,
     ).write_image(
-        './market_type_distribution.png',
+        result_path,
         scale=2,
     )
 
@@ -115,5 +118,21 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    make_market_type_distribution_plots()
+    st_companies_path_ = r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+    matching_sample_path_ = r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
+    make_categorical_distribution_plots(
+        st_companies_path=st_companies_path_,
+        matching_sample_path=matching_sample_path_,
+        result_path=r"./categorical_distribution_plot.png",
+    )
+    make_market_type_distribution_plots(
+        st_companies_path=st_companies_path_,
+        matching_sample_path=matching_sample_path_,
+        result_path=r"./market_type_distribution_plot.png",
+    )
+    make_ownership_type_distribution_plots(
+        st_companies_path=st_companies_path_,
+        matching_sample_path=matching_sample_path_,
+        result_path=r"./ownership_type_distribution_plot.png",
+    )
 
