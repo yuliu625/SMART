@@ -29,8 +29,8 @@ def convert_pdf_via_deepseek_ocr(
         include_metadata=False,  # 不添加该工具的默认信息。
         # HARDCODED
         dpi=200,
-        workers=64,
-        analyze_figures=True,
+        workers=1,
+        analyze_figures=False,
     )
     # 执行处理。
     result = processor.process_file(
@@ -64,8 +64,8 @@ def convert_pdf_via_deepseek_ocr_with_images(
         include_metadata=False,  # 不添加该工具的默认信息。
         # HARDCODED
         dpi=200,
-        workers=64,
-        analyze_figures=True,
+        workers=1,
+        analyze_figures=False,
     )
     # 执行处理。
     result = processor.process_file(
