@@ -1,5 +1,7 @@
 """
 通过pymupdf构建的markdown数据集。
+
+以下方法暂时未构建增量式处理机制，一般仅基于规则的CPU的任务不会出错，也不会花很多时间。
 """
 
 from __future__ import annotations
@@ -73,17 +75,13 @@ def main(
 if __name__ == '__main__':
     # 最基础的转换。
     ## 无图片。
-    pdf_dir_ = r""
-    result_dir_ = r""
     batch_convert_pdf_via_pymupdf4llm(
-        pdf_dir=pdf_dir_,
-        result_dir=result_dir_,
+        pdf_dir=r"/home/liuyu/liuyu_nfs_data/pdf_dataset/raw_pdf_sample_1",
+        result_dir=r"/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1",
     )
     ## 有图片。
-    pdf_dir_ = r""
-    result_dir_ = r""
     batch_convert_pdf_via_pymupdf4llm_with_images(
-        pdf_dir=pdf_dir_,
-        result_dir=result_dir_,
+        pdf_dir=r"/home/liuyu/liuyu_nfs_data/pdf_dataset/raw_pdf_sample_1",
+        result_dir=r"/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2",
     )
 
