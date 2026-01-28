@@ -36,6 +36,14 @@ class ConfidenceDistributionPlots:
             title='Confidence Distribution: Correct vs Incorrect',
             yaxis_title='Confidence Score',
             xaxis_title='Prediction Result',
+            legend=dict(
+                orientation="h",  # 水平排列
+                yanchor="bottom",
+                y=1.02,  # 放在绘图区上方（1.0是顶端）
+                xanchor="right",
+                x=1  # 对齐到右侧
+            ),
+            margin=dict(t=100)
         )
         return figure
 
