@@ -51,30 +51,35 @@ def main(
         f"{result_dir}/confusion_matrix.png",
         scale=2,
     )
+    logger.success(f"Saved Confusion Matrix.")
     ConfidenceDistributionPlots.make_confidence_distribution_plot(
         df=df.copy(),
     ).write_image(
         f"{result_dir}/confidence_distribution.png",
         scale=2,
     )
+    logger.success(f"Saved Confidence Distribution.")
     PrecisionRecallCurvePlots.make_precision_recall_curve_plot(
         df=df.copy(),
     ).write_image(
         f"{result_dir}/precision_recall_curve.png",
         scale=2,
     )
+    logger.success(f"Saved Precision Recall Curve.")
     ReliabilityDiagram.make_reliability_diagram(
         df=df.copy(),
     ).write_image(
         f"{result_dir}/reliability_diagram.png",
         scale=2,
     )
+    logger.success(f"Saved Reliability Diagram.")
     CriticalCaseAnalysis.make_critical_case_analysis(
         df=df.copy(),
     ).write_image(
         f"{result_dir}/critical_case_analysis.png",
         scale=2,
     )
+    logger.success(f"Saved Critical Case Analysis.")
 
 
 if __name__ == '__main__':
