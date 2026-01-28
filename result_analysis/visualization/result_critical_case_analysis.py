@@ -35,7 +35,7 @@ class CriticalCaseAnalysis:
             y='confidence',
             color='case_type',
             symbol='case_type',
-            hover_data=['id', 'label', 'has_risk'],
+            hover_data=['Stkcd', 'label', 'has_risk'],
             color_discrete_map={
                 'Correct': '#636EFA',
                 'False Alarm (Type I)': '#EF553B',  # 红色警告
@@ -48,6 +48,14 @@ class CriticalCaseAnalysis:
         figure.update_layout(
             xaxis_title='Sample Index',
             yaxis_title='System Confidence',
+            legend=dict(
+                orientation="h",  # 水平排列
+                yanchor="bottom",
+                y=1.02,  # 放在绘图区上方（1.0是顶端）
+                xanchor="right",
+                x=1  # 对齐到右侧
+            ),
+            margin=dict(t=100),
         )
         return figure
 
