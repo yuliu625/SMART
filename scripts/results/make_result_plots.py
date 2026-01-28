@@ -31,14 +31,59 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-
-def main():
-    ...
+def main(
+    st_companies_path: str | Path,
+    matching_sample_path: str | Path,
+    target_dir: str | Path,
+    result_dir: str | Path,
+):
+    target_dir = Path(target_dir)
+    result_dir = Path(result_dir)
+    result_dir.mkdir(parents=True, exist_ok=True)
+    df = QuantativeResultsMaker.make_quantative_results_df(
+        st_companies_path=st_companies_path,
+        matching_sample_path=matching_sample_path,
+        target_dir=target_dir,
+    )
+    ConfusionMatrixPlots.make_confusion_matrix_plot(
+        df=df.copy(),
+    ).write_image(
+        f"{result_dir}/confusion_matrix.png",
+        scale=2,
+    )
+    ConfidenceDistributionPlots.make_confidence_distribution_plot(
+        df=df.copy(),
+    ).write_image(
+        f"{result_dir}/confidence_distribution.png",
+        scale=2,
+    )
+    PrecisionRecallCurvePlots.make_precision_recall_curve_plot(
+        df=df.copy(),
+    ).write_image(
+        f"{result_dir}/precision_recall_curve.png",
+        scale=2,
+    )
+    ReliabilityDiagram.make_reliability_diagram(
+        df=df.copy(),
+    ).write_image(
+        f"{result_dir}/reliability_diagram.png",
+        scale=2,
+    )
+    CriticalCaseAnalysis.make_critical_case_analysis(
+        df=df.copy(),
+    ).write_image(
+        f"{result_dir}/critical_case_analysis.png",
+        scale=2,
+    )
 
 
 if __name__ == '__main__':
     st_companies_path_ = r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
     matching_sample_path_ = r"D:\dataset\smart\original_data\csmar\matching_sample_1_in_2024.xlsx"
-    main()
-    ...
+    main(
+        st_companies_path=st_companies_path_,
+        matching_sample_path=matching_sample_path_,
+        target_dir=r"D:\dataset\smart\experimental_results\qwen_25_7b_instruct\markdown_1\docling_1",
+        result_dir=r"./",
+    )
 
