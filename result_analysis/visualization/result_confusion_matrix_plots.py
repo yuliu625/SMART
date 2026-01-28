@@ -17,16 +17,16 @@ from typing import TYPE_CHECKING
 class ConfusionMatrixPlots:
     @staticmethod
     def make_confusion_matrix_plot(
-        final_df: pd.DataFrame,
+        df: pd.DataFrame,
     ) -> go.Figure:
         # 使用sklearn进行计算confusion matrix。
         confusion_matrix_result = confusion_matrix(
-            final_df['label'],
-            final_df['has_risk'],
+            df['label'],
+            df['has_risk'],
         )
         figure = go.Figure(
             data=go.Heatmap(
-                data=confusion_matrix_result,
+                z=confusion_matrix_result,
                 x=['Predicted False', 'Predicted True'],
                 y=['Actual False', 'Actual True'],
                 colorscale='Blues',
