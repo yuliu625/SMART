@@ -62,6 +62,7 @@ class FinalMASRunner:
         result_dir.mkdir(parents=True, exist_ok=True)
         markdown_files_dir = Path(markdown_files_dir)
         markdown_file_path_list = list(markdown_files_dir.glob('*.md'))
+        vector_store_dir = Path(vector_store_dir)
         for markdown_file_path in markdown_file_path_list:
             result_file_path = result_dir / f"{markdown_file_path.stem}.json"
             vector_store_path = vector_store_dir / f"{markdown_file_path.stem}"
@@ -190,6 +191,7 @@ class FinalMASRunner:
         result_dir.mkdir(parents=True, exist_ok=True)
         markdown_files_dir = Path(markdown_files_dir)
         markdown_file_path_list = list(markdown_files_dir.glob('*.md'))
+        vector_store_dir = Path(vector_store_dir)
         for markdown_file_path in markdown_file_path_list:
             result_file_path = result_dir / f"{markdown_file_path.stem}.json"
             vector_store_path = vector_store_dir / f"{markdown_file_path.stem}"
