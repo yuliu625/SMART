@@ -46,7 +46,7 @@ class SingleAgentGraphBuilder:
         )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
-        logger.info(f"Built single agent MAS graph.")
+        logger.info(f"Built single agent graph.")
         return graph
 
     def _add_nodes(
