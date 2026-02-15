@@ -375,81 +375,196 @@ async def run_qwen_25_7b_instruct_1m_with_jina(
 
 
 async def main():
+    # qwen2.5-7b-instruct
     # markdown1
     # nomic
     ## pymupdf1
-    await run_qwen_25_7b_instruct_1m_with_nomic(
+    await run_qwen_25_7b_instruct_with_nomic(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/pymupdf_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/pymupdf_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/nomic/markdown_1/pymupdf_1',
     )
     ## pymupdf2
-    await run_qwen_25_7b_instruct_1m_with_nomic(
+    await run_qwen_25_7b_instruct_with_nomic(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/pymupdf_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/pymupdf_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/nomic/markdown_1/pymupdf_2',
     )
     ## docling1
-    await run_qwen_25_7b_instruct_1m_with_nomic(
+    await run_qwen_25_7b_instruct_with_nomic(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/docling_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/nomic/markdown_1/docling_1',
     )
     ## docling2
-    await run_qwen_25_7b_instruct_1m_with_nomic(
+    await run_qwen_25_7b_instruct_with_nomic(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/nomic/markdown_1/docling_2',
     )
     ## vlm1
-    await run_qwen_25_7b_instruct_1m_with_nomic(
-        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
-        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/vlm_1',
-    )
+    # await run_qwen_25_7b_instruct_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_1',
+    # )
     ## vlm2
-    await run_qwen_25_7b_instruct_1m_with_nomic(
-        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
-        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/vlm_2',
-    )
+    # await run_qwen_25_7b_instruct_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_2',
+    # )
     # bge
     ## pymupdf1
-    await run_qwen_25_7b_instruct_1m_with_bge(
+    await run_qwen_25_7b_instruct_with_bge(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/pymupdf_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/bge/markdown_1/pymupdf_1',
     )
     ## pymupdf2
-    await run_qwen_25_7b_instruct_1m_with_bge(
+    await run_qwen_25_7b_instruct_with_bge(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/pymupdf_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/bge/markdown_1/pymupdf_2',
     )
     ## docling1
-    await run_qwen_25_7b_instruct_1m_with_bge(
+    await run_qwen_25_7b_instruct_with_bge(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/docling_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/bge/markdown_1/docling_1',
     )
     ## docling2
-    await run_qwen_25_7b_instruct_1m_with_bge(
+    await run_qwen_25_7b_instruct_with_bge(
         markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
         vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/bge/markdown_1/docling_2',
     )
     ## vlm1
-    await run_qwen_25_7b_instruct_1m_with_bge(
-        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
-        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_1',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/vlm_1',
-    )
+    # await run_qwen_25_7b_instruct_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_1',
+    # )
     ## vlm2
-    await run_qwen_25_7b_instruct_1m_with_bge(
-        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
-        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_2',
-        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results/markdown_1/vlm_2',
+    # await run_qwen_25_7b_instruct_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_2',
+    # )
+    # jina
+    ## pymupdf1
+    await run_qwen_25_7b_instruct_with_jina(
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
+        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/pymupdf_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/jina/markdown_1/pymupdf_1',
     )
+    ## pymupdf2
+    await run_qwen_25_7b_instruct_with_jina(
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
+        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/pymupdf_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/jina/markdown_1/pymupdf_2',
+    )
+    ## docling1
+    await run_qwen_25_7b_instruct_with_jina(
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
+        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/docling_1',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/jina/markdown_1/docling_1',
+    )
+    ## docling2
+    await run_qwen_25_7b_instruct_with_jina(
+        markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+        vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/docling_2',
+        result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/jina/markdown_1/docling_2',
+    )
+    ## vlm1
+    # await run_qwen_25_7b_instruct_with_jina(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jian/markdown_1/vlm_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_1',
+    # )
+    ## vlm2
+    # await run_qwen_25_7b_instruct_with_jina(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/jina/markdown_1/vlm_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct/markdown_1/vlm_2',
+    # )
+
+    # qwen2.5-7b-instruct-1m
+    # markdown1
+    # nomic
+    ## pymupdf1
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/pymupdf_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/pymupdf_1',
+    # )
+    # ## pymupdf2
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/pymupdf_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/pymupdf_2',
+    # )
+    # ## docling1
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/docling_1',
+    # )
+    # ## docling2
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/docling_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/docling_2',
+    # )
+    # ## vlm1
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/vlm_1',
+    # )
+    # ## vlm2
+    # await run_qwen_25_7b_instruct_1m_with_nomic(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/nomic/markdown_1/vlm_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/nomic/markdown_1/vlm_2',
+    # )
+    # # bge
+    # ## pymupdf1
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/pymupdf_1',
+    # )
+    # ## pymupdf2
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/pymupdf_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/pymupdf_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/pymupdf_2',
+    # )
+    # ## docling1
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/docling_1',
+    # )
+    # ## docling2
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/docling_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/docling_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/docling_2',
+    # )
+    # ## vlm1
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_1',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_1',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/vlm_1',
+    # )
+    # ## vlm2
+    # await run_qwen_25_7b_instruct_1m_with_bge(
+    #     markdown_files_dir=r'/home/liuyu/liuyu_nfs_data/pdf_dataset/markdown_1/vlm_2',
+    #     vector_store_dir=r'/home/liuyu/liuyu_nfs_data/smart_vector_store/bge/markdown_1/vlm_2',
+    #     result_dir=r'/home/liuyu/liuyu_nfs_data/smart_results_sequential_workflow/qwen_25_7b_instruct_1m/bge/markdown_1/vlm_2',
+    # )
 
 
 if __name__ == '__main__':
