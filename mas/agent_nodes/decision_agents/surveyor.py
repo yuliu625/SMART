@@ -61,7 +61,7 @@ class Surveyor(BaseAgent):
         由于surveyor为初始化运行且仅运行一次，surveyor不专门设置chat-history，由surveyor完成全部的初始化。
 
         Args:
-            state (DecisionState): 使用的state。需要字段:
+            state (FinalMASState): 使用的state。需要字段:
                 - original_pdf_text: 原始文档的文本信息。
             config (RunnableConfig): 运行设置。
 
