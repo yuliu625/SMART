@@ -1,4 +1,6 @@
 """
+Design Patter: MAS
+
 构建整个MAS的方法。
 """
 
