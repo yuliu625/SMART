@@ -38,7 +38,7 @@ def make_categorical_distribution_plots(
         processed_csmar_trd_co_xlsx_file_path=st_companies_path,
     )
     st_companies_series = calculate_csmar_categorical_distribution(
-        df=st_companies_df ,
+        df=st_companies_df,
         is_normalize=False,
     )
     matching_sample_df = read_processed_xlsx_from_csmar_trd_co(
@@ -48,6 +48,8 @@ def make_categorical_distribution_plots(
         df=matching_sample_df,
         is_normalize=False,
     )
+    # print(st_companies_series)
+    # print(matching_sample_series)
     CategoricalDistributionPlots.make_categorical_distribution_plot(
         st_companies_series=st_companies_series,
         matching_sample_series=matching_sample_series,
