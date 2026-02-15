@@ -55,7 +55,7 @@ class SequentialWorkflowGraphBuilder:
         )
         self._add_edges()
         graph = self.graph_builder.compile(checkpointer=checkpointer)
-        logger.info(f"Built sequential MAS graph.")
+        logger.info(f"Built sequential workflow graph.")
         return graph
 
     def _add_nodes(
