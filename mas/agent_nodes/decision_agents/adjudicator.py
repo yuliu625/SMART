@@ -70,7 +70,7 @@ class Adjudicator(BaseAgent):
         整个MAS的终点，将全部的decision_shared_messages交给Arbiter进行分析和做出最终决策。
 
         Args:
-            state (DecisionState): 使用的state。需要字段:
+            state (FinalMASState): 使用的state。需要字段:
                 - decision_shared_messages: 在adjudicator之前全部的分析。
             config (RunnableConfig): 运行设置。
 
