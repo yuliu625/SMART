@@ -88,7 +88,7 @@ if __name__ == '__main__':
     main(
         st_companies_path=st_companies_path_,
         matching_sample_path=matching_sample_path_,
-        target_dir=r"D:\dataset\smart\experimental_results\qwen_25_7b_instruct\markdown_1\docling_1",
+        target_dir=r"D:\dataset\smart\experimental_results\mas\qwen_25_7b_instruct\nomic\markdown_1\docling_1",
         result_dir=r"./",
     )
 
