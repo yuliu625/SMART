@@ -58,3 +58,14 @@ def upload_files_and_save_results(
     logger.success(f"Saved result to {result_path}")
     return result
 
+
+def list_uploaded_files() -> list[dict]:
+    # HARDCODED
+    base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    api_key = os.getenv("DASHSCOPE_API_KEY")
+    result = OpenAIFileManager.list_files(
+        base_url=base_url,
+        api_key=api_key,
+    )
+    return result
+
