@@ -1,9 +1,9 @@
 """
-构造rag的工厂。
+构造 rag 的工厂。
 
-配合mas_factory使用。
+配合 mas_factory 使用。
 
-避免繁琐设置，这里直接约定用LLM时，仅使用vllm。
+避免繁琐设置，这里直接约定用 LLM 时，仅使用 vllm 。
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from langchain_core.messages import SystemMessage
 
 
-class RAGFactory:
+class ChromaRAGFactory:
     @staticmethod
     def create_simple_rag_via_ollama(
         # Vector Store
