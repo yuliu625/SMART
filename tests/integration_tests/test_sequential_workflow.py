@@ -7,7 +7,7 @@ import pytest
 from loguru import logger
 
 from mas.mas_factory import MASFactory
-from mas.rag_factory import RAGFactory
+from mas.chroma_rag_factory import ChromaRAGFactory
 from mas.utils.graph_visualizer import GraphVisualizer
 from mas.schemas.sequential_workflow_state import SequentialWorkflowState
 from mas.io_methods import IOMethods
@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 
 
 def make_test_simple_rag():
-    rag = RAGFactory.create_simple_rag_via_ollama(
+    rag = ChromaRAGFactory.create_simple_rag_via_ollama(
         vector_store_persist_directory=r"D:\dataset\smart\tests\000004",
         embedding_model_model_name='nomic-embed-text',
         embedding_model_num_ctx=8192,
@@ -27,7 +27,7 @@ def make_test_simple_rag():
 
 
 def make_test_multi_query_rag():
-    rag = RAGFactory.create_multi_query_rag_via_ollama_base_on_ollama_llm(
+    rag = ChromaRAGFactory.create_multi_query_rag_via_ollama_base_on_ollama_llm(
         vector_store_persist_directory=r"D:\dataset\smart\tests\000004",
         embedding_model_model_name='nomic-embed-text',
         embedding_model_num_ctx=8192,
