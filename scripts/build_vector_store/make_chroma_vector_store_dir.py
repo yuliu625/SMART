@@ -10,7 +10,7 @@
 from __future__ import annotations
 from loguru import logger
 
-from rag.vector_store_pipeline import ChromaVectorStorePipeline
+from rag.chroma_vector_store_pipeline import ChromaVectorStorePipeline
 
 from pathlib import Path
 
