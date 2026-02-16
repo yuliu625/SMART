@@ -6,14 +6,31 @@
 
 
 model_list:
-  - model_name: str  # received model name
-    litellm_params:  # all params for litellm
-      model: str  # model name for litellm
-      api_base: str  # base url
-      api_key: os.environ/API_KEY  # os.getenv('API_KEY')
-      rpm: int  # [OPTIONAL] rate limit
-      tpm: int  # [OPTIONAL] rate limit
-      api_version: ''
+  - model_name: 'surveyor-llm'
+    litellm_params:
+      model: ollama/qwen2.5:0.5b
+      api_base: http://localhost:11434
+      api_key: none
+  - model_name: 'investigator-llm'
+    litellm_params:
+      model: ollama/qwen2.5:0.5b
+      api_base: http://localhost:11434
+      api_key: none
+  - model_name: 'adjudicator-llm'
+    litellm_params:
+      model: ollama/qwen2.5:0.5b
+      api_base: http://localhost:11434
+      api_key: none
+  - model_name: 'analyst-llm'
+    litellm_params:
+      model: ollama/qwen2.5:0.5b
+      api_base: http://localhost:11434
+      api_key: none
+  - model_name: 'formatter-llm'
+    litellm_params:
+      model: ollama/qwen2.5:0.5b
+      api_base: http://localhost:11434
+      api_key: none
 
   # if for default model
 #  - model_name: "*"
@@ -22,8 +39,8 @@ model_list:
 
 
 litellm_settings:
-  num_retries: int  # retry call model_name
-  request_timeout: int  # Timeout error
+  num_retries: 5  # retry call model_name
+  request_timeout: 120  # Timeout error
 #  allowed_fails: int  # cooldown
 #  drop_params: True
 #  success_callback: ['']
