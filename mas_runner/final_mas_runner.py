@@ -11,7 +11,7 @@ from __future__ import annotations
 from loguru import logger
 
 from mas.mas_factory import MASFactory
-from mas.rag_factory import RAGFactory
+from mas.chroma_rag_factory import ChromaRAGFactory
 from mas.io_methods import IOMethods
 
 from pathlib import Path
@@ -71,7 +71,7 @@ class FinalMASRunner:
                 continue
             if not result_file_path.exists():
                 # build rag
-                rag = RAGFactory.create_simple_rag_via_huggingface(
+                rag = ChromaRAGFactory.create_simple_rag_via_huggingface(
                     vector_store_persist_directory=vector_store_dir,
                     embedding_model_model_name_or_path=embedding_model_model_name_or_path,
                     embedding_model_model_kwargs=embedding_model_model_kwargs,
@@ -200,7 +200,7 @@ class FinalMASRunner:
                 continue
             if not result_file_path.exists():
                 # build rag
-                rag = RAGFactory.create_multi_query_rag_via_huggingface_base_on_vllm_llm(
+                rag = ChromaRAGFactory.create_multi_query_rag_via_huggingface_base_on_vllm_llm(
                     vector_store_persist_directory=vector_store_dir,
                     embedding_model_model_name_or_path=embedding_model_model_name_or_path,
                     embedding_model_model_kwargs=embedding_model_model_kwargs,
