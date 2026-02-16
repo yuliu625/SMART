@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 class QwenLongReader:
     @staticmethod
-    def read_file(
+    def read_file_and_save_result(
         file_id: str,
         system_message_content: str,
         human_message_content: str,
