@@ -25,17 +25,25 @@ from typing import TYPE_CHECKING
 
 
 def make_all_in_one_table(
-    all_companies_path: str | Path,
+    st_companies_path: str | Path,
+    not_st_sample_path: str | Path,
+    # all_companies_path: str | Path,
     total_assets_path: str | Path,
     pdf_dir: str | Path,
     markdown_dir: str | Path,
     result_path: str | Path,
 ):
-    # treatment group and control group df
-    all_companies_df = read_processed_xlsx_from_csmar_trd_co(
-        processed_csmar_trd_co_xlsx_file_path=all_companies_path,
+    st_companies_df = read_processed_xlsx_from_csmar_trd_co(
+        processed_csmar_trd_co_xlsx_file_path=st_companies_path,
     )
-    all_companies_df = all_companies_df[['Stkcd', 'Nnindnme', 'Markettype', 'OWNERSHIPTYPE']]
+    not_st_companies_df = read_processed_xlsx_from_csmar_trd_co(
+        processed_csmar_trd_co_xlsx_file_path=not_st_sample_path,
+    )
+    ## processing
+    st_companies_df['is_risk'] = True
+    not_st_companies_df['is_risk'] = False
+    all_companies_df = pd.concat([st_companies_df, not_st_companies_df], ignore_index=True)
+    all_companies_df = all_companies_df[['Stkcd', 'Nnindnme', 'Markettype', 'OWNERSHIPTYPE', 'is_risk']]
     logger.debug(f"\nAll companies df: \n{all_companies_df}")
     # total assets df
     total_assets_df = pd.read_excel(
@@ -76,12 +84,15 @@ def make_all_in_one_table(
 
 
 if __name__ == '__main__':
-    all_companies_path_ = r"D:\dataset\smart\original_data\csmar\all_companies_in_2024.xlsx"
+    # all_companies_path_ = r"D:\dataset\smart\original_data\csmar\all_companies_in_2024.xlsx"
+    st_companies_path_ = r"D:\dataset\smart\original_data\csmar\st_companies_in_2024.xlsx"
+    not_st_companies_path_ = r"D:\dataset\smart\original_data\csmar\not_st_companies_in_2024.xlsx"
     total_assets_path_ = r"D:\dataset\smart\original_data\csmar\total_assets_in_2024.xlsx"
     pdf_dir_ = r"D:\dataset\smart\experimental_datasets\sample_1"
     markdown_dir_ = r"D:\dataset\smart\data_pipeline_cache\markdown_1\docling_1"
     make_all_in_one_table(
-        all_companies_path=all_companies_path_,
+        st_companies_path=st_companies_path_,
+        not_st_sample_path=not_st_companies_path_,
         total_assets_path=total_assets_path_,
         pdf_dir=pdf_dir_,
         markdown_dir=markdown_dir_,
