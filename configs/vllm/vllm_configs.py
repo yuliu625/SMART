@@ -44,12 +44,12 @@ dict(
     model_name_or_path=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct',
     host='127.0.0.1',
     port=8972,
-    gpu_memory_utilization=0.1,
-    tensor_parallel_size=4,
-    max_model_len=1010000,
-    max_num_batched_tokens=131072,
+    gpu_memory_utilization=0.2,
+    tensor_parallel_size=1,
+    max_model_len=32768,
+    # max_num_batched_tokens=131072,
     max_num_seqs=1,
-    lora_modules=None,
+    # lora_modules=None,
 )
 # Qwen/Qwen2.5-14B-Instruct
 # http://127.0.0.1:8973/v1/chat/completions
@@ -72,10 +72,10 @@ dict(
     model_name_or_path=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-32B-Instruct',
     host='127.0.0.1',
     port=8974,
-    gpu_memory_utilization=0.1,
-    tensor_parallel_size=4,
-    max_model_len=1010000,
-    max_num_batched_tokens=131072,
+    gpu_memory_utilization=0.9,
+    tensor_parallel_size=1,
+    max_model_len=65536,
+    # max_num_batched_tokens=131072,
     max_num_seqs=1,
     lora_modules=None,
 )
