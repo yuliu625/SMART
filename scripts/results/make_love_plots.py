@@ -38,6 +38,7 @@ def make_love_plot(
         pval=True, smd=True,
     )
     logger.debug(f"\ntable_before: \n{table_before.tabulate(tablefmt='github')}")
+    logger.info(f"Table Before LaTeX Code: \n{table_before.tabulate(tablefmt='latex')}")
     table_after = TableOne(
         all_in_one_df,
         columns=['A001000000',],
@@ -46,6 +47,7 @@ def make_love_plot(
         pval=True, smd=True,
     )
     logger.debug(f"\ntable_after: \n{table_after.tabulate(tablefmt='github')}")
+    logger.info(f"\nTable After LaTeX Code: \n{table_after.tabulate(tablefmt='latex')}")
     LovePlots.make_love_plot(
         table_before=table_before,
         table_after=table_after,
@@ -53,6 +55,7 @@ def make_love_plot(
         result_path,
         scale=2,
     )
+    logger.success(f"Saved {result_path}")
 
 
 if __name__ == '__main__':
