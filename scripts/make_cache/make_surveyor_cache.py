@@ -25,11 +25,14 @@ def make_surveyor_human_message_content_cache(
     result_dir: str | Path,
 ) -> None:
     # process path
+    file_objects_path = Path(file_objects_path)
     target_dir = Path(target_dir)
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
     # load file objects
-    file_objects = json.loads(file_objects_path)
+    file_objects = json.loads(
+        file_objects_path.read_text(encoding='utf-8'),
+    )
     file_id_to_file_name_mapping = OpenAIFileIdAndNameMappingMethods.collect_file_id_to_name_mapping(
         file_objects=file_objects,
     )
