@@ -37,10 +37,15 @@ def make_surveyor_human_message_content_cache(
         file_objects=file_objects,
     )
     for file_id, file_name in file_id_to_file_name_mapping.items():
-        target_file_path = target_dir / f"{file_name}.json"
+        target_file_path = target_dir / f"{file_id}.json"
         result_file_path = result_dir / Path(file_name).with_suffix('.txt')
+        # logger.debug(f"target_file_path: {target_file_path}")
+        # logger.debug(f"result_file_path: {result_file_path}")
+        if not target_file_path.exists():
+            logger.error(f"Target file {target_file_path} does not exist.")
+            continue
         completion = json.loads(
-            target_file_path.read_text(encoding='utf-8')
+            target_file_path.read_text(encoding='utf-8'),
         )
         content = OpenAICompletionParser.extract_content(
             completion=completion,
