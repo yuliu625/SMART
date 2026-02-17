@@ -26,10 +26,13 @@ def incremental_make_reading_results(
     result_dir: str,
 ) -> None:
     # process path
+    file_objects_path = Path(file_objects_path)
     result_dir = Path(result_dir)
     result_dir.mkdir(parents=True, exist_ok=True)
     # load file objects
-    file_objects = json.loads(file_objects_path)
+    file_objects = json.loads(
+        file_objects_path.read_text(encoding='utf-8'),
+    )
     file_ids = OpenAIFileIdAndNameMappingMethods.collect_all_file_id(
         file_objects=file_objects,
     )
