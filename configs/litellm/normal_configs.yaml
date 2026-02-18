@@ -49,7 +49,9 @@ model_list:
 
 
 litellm_settings:
+  routing_strategy: "latency-based-routing"
   num_retries: 5  # retry call model_name
+  retry_after_detection: True
   request_timeout: 120  # Timeout error
 #  allowed_fails: int  # cooldown
 #  drop_params: True
