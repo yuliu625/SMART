@@ -104,9 +104,9 @@ async def incremental_make_benchmark_results(
     # build structured llm
     llm = ChatOpenAI(
         # HARDCODED
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        model='qwen-max',
-        api_key=os.getenv("DASHSCOPE_API_KEY"),
+        base_url="http://127.0.0.1:4000",
+        model='formatter-llm',
+        api_key='none',
     )
     structured_llm = build_structured_llm(
         llm=llm,
