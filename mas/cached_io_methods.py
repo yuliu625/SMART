@@ -31,7 +31,6 @@ class CachedIOMethods:
     def load_cached_single_agent_state(
         surveyor_cache_path: str | Path,
     ) -> SingleAgentState:
-        raise NotImplementedError("独立方法实现。")
         # 处理路径。
         surveyor_cache_path = Path(surveyor_cache_path)
         # 读取文本。
@@ -50,16 +49,15 @@ class CachedIOMethods:
         state: SingleAgentState,
         result_path: str | Path,
     ) -> SingleAgentState:
-        raise NotImplementedError("独立方法实现。")
         # 处理路径。
         result_path = Path(result_path)
         result_path.parent.mkdir(parents=True, exist_ok=True)
         # 读取结果。
         result = dict(
             decision_shared_messages=messages_to_dict(
-                messages=state['decision_shared_messages'],
+                messages=state.decision_shared_messages#['decision_shared_messages'],
             ),
-            final_decision=state['final_decision'].model_dump(),
+            final_decision=state.final_decision#['final_decision'],#.model_dump(),
         )
         # logger.debug(f"Type of result: {type(result)}")
         # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
@@ -114,7 +112,7 @@ class CachedIOMethods:
             decision_shared_messages=messages_to_dict(
                 messages=state['decision_shared_messages'],
             ),
-            final_decision=state['final_decision'].model_dump(),
+            final_decision=state['final_decision'],#.model_dump(),
         )
         # logger.debug(f"Type of result: {type(result)}")
         # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
@@ -167,7 +165,7 @@ class CachedIOMethods:
             decision_shared_messages=messages_to_dict(
                 messages=state['decision_shared_messages'],
             ),
-            final_decision=state['final_decision'].model_dump(),
+            final_decision=state['final_decision'],#.model_dump(),
         )
         # logger.debug(f"Type of result: {type(result)}")
         # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
