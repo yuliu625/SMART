@@ -28,7 +28,7 @@ class RewrittenQueries(BaseModel):
 ## ==== Analyst ====
 class AnalystRequest(BaseModel):
     """
-    解析Analyst的决策意图。
+    解析 Analyst 的决策意图。
     """
     agent_name: Literal[
         'investigator', 'rag',
@@ -45,7 +45,7 @@ class AnalystRequest(BaseModel):
 ## ==== Investigator ====
 class InvestigatorRequest(BaseModel):
     """
-    解析Investigator的决策意图。
+    解析 Investigator 的决策意图。
     """
     agent_name: Literal[
         'analyst', 'adjudicator',
@@ -59,11 +59,11 @@ class InvestigatorRequest(BaseModel):
 ## ==== Adjudicator ====
 class AdjudicatorDecision(BaseModel):
     """
-    解析Adjudicator的最终决策结果。
+    解析 Adjudicator 的最终决策结果。
     """
     has_risk: bool = Field(
         ...,
-        description="是否存在风险的判断。",
+        description="目标公司是否存在风险的判断。",
     )
     decision: str = Field(
         description="最终决策的简短总结文本。",
