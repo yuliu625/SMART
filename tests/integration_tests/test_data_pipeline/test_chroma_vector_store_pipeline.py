@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 # if TYPE_CHECKING:
 
 
-class TestVectorStorePipeline:
+class TestChromaVectorStorePipeline:
     @pytest.mark.parametrize(
         "markdown_file_path, result_path", [
         (r"D:\dataset\smart\tests\docling_1\000004.md",
