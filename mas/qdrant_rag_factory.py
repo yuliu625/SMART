@@ -25,6 +25,16 @@ if TYPE_CHECKING:
     from langchain_core.messages import SystemMessage
 
 
-class QdrantRagFactory:
-    ...
+class QdrantRAGFactory:
+    @staticmethod
+    def create_simple_rag(
+
+    ):
+        ...
+
+    @staticmethod
+    def create_multi_query_rag(
+
+    ):
+        ...
 
