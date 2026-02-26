@@ -19,8 +19,8 @@ from __future__ import annotations
 from loguru import logger
 
 # 当前包的具体化定义。
-from mas.rag_nodes.simple_rag import SimpleRAG
-from mas.rag_nodes.multi_query_rag import MultiQueryRAG
+from mas.rag_nodes.chroma_rag_nodes.simple_rag import SimpleRAG
+from mas.rag_nodes.chroma_rag_nodes.multi_query_rag import MultiQueryRAG
 # RAG包的导入。
 from rag.embedding.embedding_model_factory import EmbeddingModelFactory
 from rag.storing.chroma_vector_store_builder import ChromaVectorStoreBuilder
