@@ -5,10 +5,9 @@
 """
 
 from __future__ import annotations
-from loguru import logger
 
 # rag包中的定义。
-from rag.langgraph_retrievers.simple_retriever import SimpleRetriever
+from rag.langgraph_retrievers.chroma_retrievers.simple_retriever import SimpleRetriever
 # 正常导入。
 from mas.schemas.final_mas_state import FinalMASState
 
