@@ -1,0 +1,4 @@
+"""
+Document object processing methods.
+"""
+
