@@ -5,6 +5,7 @@
 """
 
 from __future__ import annotations
+from loguru import logger
 
 # rag包中的定义。
 from rag.langgraph_retrievers.chroma_retrievers.simple_retriever import SimpleRetriever
