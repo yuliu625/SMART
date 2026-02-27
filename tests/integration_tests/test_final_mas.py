@@ -33,7 +33,7 @@ def make_test_multi_query_rag():
         embedding_model_num_ctx=8192,
         search_configs={},
         llm_model_name='qwen2.5:1.5b',
-        llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\rag\rewritter_system_prompt_template.j2",
+        llm_system_message_template_path=r"/mas/prompts/rag/rewriter_system_prompt_template.j2",
     )
     return rag
 
