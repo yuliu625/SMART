@@ -90,7 +90,7 @@ async def run_qwen_25_7b_instruct_with_nomic(
         embedding_model_query_encode_kwargs=dict(prompt='search_query: '),
         rag_llm_base_url=r'http://127.0.0.1:8972/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
@@ -172,7 +172,7 @@ async def run_qwen_25_7b_instruct_with_bge(
         embedding_model_query_encode_kwargs=dict(),
         rag_llm_base_url=r'http://127.0.0.1:8972/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
@@ -254,7 +254,7 @@ async def run_qwen_25_7b_instruct_with_jina(
         embedding_model_query_encode_kwargs=dict(),
         rag_llm_base_url=r'http://127.0.0.1:8972/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
@@ -336,7 +336,7 @@ async def run_qwen_25_7b_instruct_1m_with_nomic(
         embedding_model_query_encode_kwargs=dict(prompt='search_query: '),
         rag_llm_base_url=r'http://127.0.0.1:8976/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
@@ -418,7 +418,7 @@ async def run_qwen_25_7b_instruct_1m_with_bge(
         embedding_model_query_encode_kwargs=dict(),
         rag_llm_base_url=r'http://127.0.0.1:8976/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
@@ -500,7 +500,7 @@ async def run_qwen_25_7b_instruct_1m_with_jina(
         embedding_model_query_encode_kwargs=dict(),
         rag_llm_base_url=r'http://127.0.0.1:8976/v1',
         rag_llm_model_name=r'/home/liuyu/liuyu_nfs_data/model/Qwen/Qwen2.5-7B-Instruct-1M',
-        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewritter_system_prompt_template.j2",
+        rag_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart/mas/prompts/rag/rewriter_system_prompt_template.j2",
         # Retriever
         search_configs=dict(),
     )
