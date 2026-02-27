@@ -38,7 +38,7 @@ def get_common_sequential_workflow_configs() -> dict:
 def get_common_simple_rag_configs() -> dict:
     simple_rag_configs = dict(
         collection_name='default',
-        embedding_model_name_or_path=r"D:\model\BAAI\bge-m3",
+        embedding_model_name_or_path=r"/home/liuyu/liuyu_nfs_data/model/BAAI/bge-m3",
         batch_size=1,
     )
     return simple_rag_configs
@@ -47,7 +47,7 @@ def get_common_simple_rag_configs() -> dict:
 def get_common_multi_query_rag_configs() -> dict:
     multi_query_rag_configs = dict(
         collection_name='default',
-        embedding_model_name_or_path=r"D:\model\BAAI\bge-m3",
+        embedding_model_name_or_path=r"/home/liuyu/liuyu_nfs_data/model/BAAI/bge-m3",
         batch_size=1,
         # llm_base_url='http://127.0.0.1:4000',
         rewriter_llm_model_name='formatter-llm',
