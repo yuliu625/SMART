@@ -112,7 +112,7 @@ class CachedIOMethods:
             decision_shared_messages=messages_to_dict(
                 messages=state['decision_shared_messages'],
             ),
-            final_decision=state['final_decision'],#.model_dump(),
+            final_decision=state['final_decision'].model_dump(),
         )
         # logger.debug(f"Type of result: {type(result)}")
         # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
@@ -165,7 +165,7 @@ class CachedIOMethods:
             decision_shared_messages=messages_to_dict(
                 messages=state['decision_shared_messages'],
             ),
-            final_decision=state['final_decision'],#.model_dump(),
+            final_decision=state['final_decision'].model_dump(),
         )
         # logger.debug(f"Type of result: {type(result)}")
         # logger.debug(f"Type of final_decision: {type(result['final_decision'])}")
