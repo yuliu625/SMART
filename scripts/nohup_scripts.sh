@@ -18,9 +18,3 @@ nohup python run_single_agent_experiments.py >./single_agent.log 2>&1 &
 nohup python run_sequential_workflow_experiments.py >./sequential_workflow.log 2>&1 &
 nohup python run_final_mas_experiments.py >./final_mas.log 2>&1 &
 
-# new experiments
-conda activate smart_env
-cd /home/liuyu/workspace/code/smart_
-python run_cached_sequential_workflow_experiments.py
-python run_cached_final_mas_experiments.py
-
