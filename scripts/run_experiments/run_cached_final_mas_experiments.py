@@ -18,8 +18,8 @@ from typing import TYPE_CHECKING
 
 def get_common_io_configs() -> dict:
     io_configs = dict(
-        surveyor_cache_dir=r"",
-        vector_store_dir=r"",
+        surveyor_cache_dir=r"/home/liuyu/liuyu_nfs_data/smart_cache/surveyor_cache",
+        vector_store_dir=r"/home/liuyu/liuyu_nfs_data/smart_bge_m3_vector_store",
     )
     return io_configs
 
@@ -27,13 +27,13 @@ def get_common_io_configs() -> dict:
 def get_common_final_mas_configs() -> dict:
     mas_configs = dict(
         llm_base_url='http://127.0.0.1:4000',
-        surveyor_main_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\surveyor_main_llm_system_prompt_template.j2",
-        investigator_main_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\investigator_main_llm_system_prompt_template.j2",
-        investigator_formatter_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\investigator_formatter_llm_system_prompt_template.j2",
-        adjudicator_main_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_main_llm_system_prompt_template.j2",
-        adjudicator_formatter_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\adjudicator_formatter_llm_system_prompt_template.j2",
-        analyst_main_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\analyst_main_llm_system_prompt_template.j2",
-        analyst_formatter_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\final_mas\analyst_formatter_llm_system_prompt_template.j2",
+        surveyor_main_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/surveyor_main_llm_system_prompt_template.j2",
+        investigator_main_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/investigator_main_llm_system_prompt_template.j2",
+        investigator_formatter_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/investigator_formatter_llm_system_prompt_template.j2",
+        adjudicator_main_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/adjudicator_main_llm_system_prompt_template.j2",
+        adjudicator_formatter_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/adjudicator_formatter_llm_system_prompt_template.j2",
+        analyst_main_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/analyst_main_llm_system_prompt_template.j2",
+        analyst_formatter_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/final_mas/analyst_formatter_llm_system_prompt_template.j2",
     )
     return mas_configs
 
@@ -54,7 +54,7 @@ def get_common_multi_query_rag_configs() -> dict:
         batch_size=8,
         # llm_base_url='http://127.0.0.1:4000',
         rewriter_llm_model_name='formatter-llm',
-        rewriter_llm_system_message_template_path=r"D:\document\code\paper\SMART\mas\prompts\rag\rewriter_system_prompt_template.j2",
+        rewriter_llm_system_message_template_path=r"/home/liuyu/workspace/code/smart_/mas/prompts/rag/rewriter_system_prompt_template.j2",
     )
     return multi_query_rag_configs
 
@@ -172,24 +172,24 @@ async def main() -> None:
     # hybrid
     ## simple rag
     await run_hybrid_search_and_simple_rag_experiments(
-        max_concurrent=2,
-        result_dir=r"",
+        max_concurrent=10,
+        result_dir=r"/home/liuyu/liuyu_nfs_data/new_smart_mas_simple_rag/hybrid",
     )
     ## multi-query rag
     await run_hybrid_search_and_multi_query_rag_experiments(
-        max_concurrent=2,
-        result_dir=r"",
+        max_concurrent=10,
+        result_dir=r"/home/liuyu/liuyu_nfs_data/new_smart_mas_multi_query_rag/hybrid",
     )
     # all
     ## simple rag
     await run_all_search_and_simple_rag_experiments(
-        max_concurrent=2,
-        result_dir=r"",
+        max_concurrent=10,
+        result_dir=r"/home/liuyu/liuyu_nfs_data/new_smart_mas_simple_rag/all",
     )
     ## multi-query rag
     await run_all_search_and_multi_query_rag_experiments(
-        max_concurrent=2,
-        result_dir=r"",
+        max_concurrent=10,
+        result_dir=r"/home/liuyu/liuyu_nfs_data/new_smart_mas_multi_query_rag/all",
     )
 
 
