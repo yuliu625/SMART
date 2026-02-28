@@ -127,7 +127,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             surveyor_main_llm_system_message=cast(
@@ -146,7 +146,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             adjudicator_main_llm_system_message=cast(
@@ -164,7 +164,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             adjudicator_formatter_llm_system_message=cast(
@@ -222,7 +222,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             surveyor_main_llm_system_message=cast(
@@ -241,7 +241,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             investigator_main_llm_system_message=cast(
@@ -259,7 +259,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             investigator_formatter_llm_system_message=cast(
@@ -280,7 +280,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             adjudicator_main_llm_system_message=cast(
@@ -298,7 +298,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             adjudicator_formatter_llm_system_message=cast(
@@ -319,7 +319,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             analyst_main_llm_system_message=cast(
@@ -337,7 +337,7 @@ class CachedMASFactory:
                 max_tokens=None,
                 logprobs=None,
                 use_responses_api=None,
-                max_retries=None,
+                max_retries=3,
                 model_configs={},
             ),
             analyst_formatter_llm_system_message=cast(
