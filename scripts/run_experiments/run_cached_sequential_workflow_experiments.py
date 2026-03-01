@@ -103,7 +103,6 @@ async def run_sparse_search_experiments(
         **get_common_io_configs(),
         **get_common_sequential_workflow_configs(),
         **get_common_simple_rag_configs(),
-        **search_configs,
         search_configs=search_configs,
     )
     logger.success(f"Sparse Search Simple RAG Complete")
