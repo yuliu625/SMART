@@ -13,6 +13,10 @@ from mas.agent_nodes.analysis_agents.opponent import Opponent
 from mas.agent_nodes.decision_agents.surveyor import Surveyor
 from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 # Edges
+from mas.edges.multi_agent_condition_edges import (
+    is_need_transfer_to_opponent,
+    is_need_transfer_to_proponent,
+)
 
 from langgraph.graph import (
     StateGraph,
@@ -37,7 +41,7 @@ class MultiAgentDebateGraphBuilder:
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
         # 注册需要的工具。
-        raise NotImplementedError
+        raise NotImplementedError("权衡是否需要引入 RAG ?")
 
     def build_graph(
         self,
@@ -79,7 +83,6 @@ class MultiAgentDebateGraphBuilder:
         # RAG
         self.graph_builder.add_node('rag', rag.process_state)
 
-
     def _add_edges(self):
         """
         注册 MAS 的 edges 。
@@ -90,9 +93,23 @@ class MultiAgentDebateGraphBuilder:
         ## 首先约定由 proponent 开始。
         self.graph_builder.add_edge('surveyor', 'proponent')
         ## proponent 根据情况选择选择 rag opponent adjudicator 。
-
+        self.graph_builder.add_conditional_edges(
+            'proponent',
+            is_need_transfer_to_opponent,
+            {
+                'opponent': 'rag',  # HACK: 转移控制权给对方前，进行检索。
+                'adjudicator': 'adjudicator',
+            },
+        )
         ## opponent 根据情况选择选择 rag proponent adjudicator 。
-
+        self.graph_builder.add_conditional_edges(
+            'opponent',
+            is_need_transfer_to_proponent,
+            {
+                'proponent': 'rag',  # HACK: 转移控制权给对方前，进行检索。
+                'adjudicator': 'adjudicator',
+            },
+        )
         # RAG 返回的结果一定交给 proponent 或 opponent 进行处理。
         self.graph_builder.add_edge('rag', 'proponent')
         self.graph_builder.add_edge('rag', 'opponent')
