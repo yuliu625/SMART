@@ -1,5 +1,5 @@
 """
-仅单独agent的graph。
+for single agent graph state.
 """
 
 from __future__ import annotations
@@ -13,11 +13,11 @@ from typing import TYPE_CHECKING
 
 class SingleAgentState(BaseModel):
     """
-    Single agent中使用的state。
+    Single agent 中使用的 state 。
 
     实际等同:
         - 整个系统运行需要的最小必要字段。
-        - Adjudicator需要的字段。
+        - Adjudicator 需要的字段。
     """
     # MAS条件控制。
     ## current related, 为兼容性保留。
