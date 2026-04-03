@@ -1,8 +1,8 @@
 """
-进行详细分析的Agent。
+进行详细分析的 Agent 。
 
-Analysis-Module的分析控制。
-基于context-engineering，切换各种专家agent。
+Analysis-Module 的分析控制。
+基于 context-engineering ，切换各种专家 agent 。
 """
 
 from __future__ import annotations
@@ -26,18 +26,18 @@ if TYPE_CHECKING:
 
 class Analyst(BaseAgent):
     """
-    执行具体分析的analyst。
+    执行具体分析的 analyst 。
     """
     def __init__(
         self,
         main_llm: BaseChatModel,
         main_llm_system_message: SystemMessage,
-        # formatter相关，对于这个agent可以以不是必需的方法来实现。
+        # formatter 相关。
         formatter_llm: BaseChatModel,
         schema_pydantic_base_model: type[BaseModel],
         formatter_llm_system_message: SystemMessage,
     ):
-        # 需要显式做出最终决策的agent。
+        # 需要显式做出最终决策的 agent 。
         super().__init__(
             main_llm=main_llm,
             main_llm_system_message=main_llm_system_message,
@@ -77,7 +77,7 @@ class Analyst(BaseAgent):
                 - current_agent_name:
                 - last_agent_name:
         """
-        # Agent内: 根据last_agent_name，条件处理上一次的消息。
+        # Agent 内: 根据 last_agent_name ，条件处理上一次的消息。
         # assert state.last_agent_name in ('investigator', 'rag')
         analysis_process = self.before_call_analyst(
             remain_retrieve_rounds=state.remaining_retrieve_rounds,
@@ -88,20 +88,20 @@ class Analyst(BaseAgent):
             analysis_process=state.analysis_process,
         )
         logger.trace(f"\nAnalysis Process: \n{analysis_process}")
-        # Agent内: 执行分析。
+        # Agent 内: 执行分析。
         analyst_result = await self.read_instruction_or_documents(
             analysis_process=analysis_process,
         )
-        # 整个MAS: 构建analysis_process。
+        # 整个 MAS : 构建 analysis_process 。
         analysis_process = self.after_call_analyst(
             analyst_message=analyst_result.ai_message,
             analysis_process=analysis_process,
         )
         logger.trace(f"\nAnalysis Process: \n{analysis_process}")
-        # 根据剩余验证轮数调用下一个agent。
+        # 根据剩余验证轮数调用下一个 agent 。
         if state.remaining_retrieve_rounds == 1:
             # 已经用完验证次数，需要进行最终决定。
-            # 这个判断是system层级冗余稳定判断。
+            # 这个判断是 system 层级冗余稳定判断。
             logger.debug(f"Used out retrieve rounds.")
             logger.trace(f"Decision Shared Messages: {state.decision_shared_messages}")
             logger.trace(f"Analysis Process: {state.analysis_process}")
@@ -120,7 +120,7 @@ class Analyst(BaseAgent):
             )
         else:
             # 正常运行。
-            # Case1: 请求的是investigator，初始化分析。
+            # Case1: 请求的是 investigator ，初始化分析。
             ## current_agent_name='analyst', current_documents=[]
             ## last_agent_name='investigator'
             if analyst_result.structured_output.agent_name == 'investigator':
@@ -140,13 +140,13 @@ class Analyst(BaseAgent):
                     current_agent_name='investigator',
                     last_agent_name='analyst',
                 )
-            # Case2: 请求rag，读取并分析新的文档内容。
-            ## current_agent_name='analyst', current_documents可能为空。
+            # Case2: 请求 rag ，读取并分析新的文档内容。
+            ## current_agent_name='analyst', current_documents 可能为空。
             ## last_agent_name='rag'
             else:
                 logger.debug(f"Use RAG.")
                 return dict(
-                    analysis_process=analysis_process,  # 未完成分析，更新分析步骤。不更新analysis_process_history。
+                    analysis_process=analysis_process,  # 未完成分析，更新分析步骤。不更新 analysis_process_history 。
                     current_message=analyst_result.structured_output.agent_message,
                     remain_retrieve_rounds=state.remaining_retrieve_rounds - 1,  # 更新可查询次数。
                     current_agent_name='rag',
@@ -158,7 +158,7 @@ class Analyst(BaseAgent):
         self,
         analysis_process: list[AnyMessage],
     ) -> BaseAgentResponse:
-        # 获取llm响应。
+        # 获取 llm 响应。
         response = await self.a_call_llm_with_retry(
             messages=[
                 self.main_llm_system_message,
@@ -170,13 +170,13 @@ class Analyst(BaseAgent):
     def before_call_analyst(
         self,
         remain_retrieve_rounds: int,
-        last_agent_name: Literal['investigator', 'rag'],  # graph执行依据。
+        last_agent_name: Literal['investigator', 'rag'],  # graph 执行依据。
         current_message: str,
         documents: list[Document],  # 根据条件，有情况下为空，实际不处理。
-        analysis_process: list[AnyMessage],  # 为和Investigator保持一致的签名。
+        analysis_process: list[AnyMessage],  # 为和 Investigator 保持一致的签名。
     ) -> list[AnyMessage]:
-        # Case1: RAG返回给Analyst新的信息。
-        ## 这种情况下，current_agent_message的内容是query。
+        # Case1: RAG 返回给 Analyst 新的信息。
+        ## 这种情况下，current_agent_message 的内容是 query 。
         if last_agent_name == 'rag':
             # 整合新的文档。
             document_content = DocumentMerger.merge_text_documents(
@@ -203,11 +203,11 @@ class Analyst(BaseAgent):
                 )
             analysis_process = analysis_process + [HumanMessage(content=rag_message_content)]
             return analysis_process
-        # Case2: Investigator向Analyst提出需要分析的内容。
-        ## 这种情况下remain_retrieve_rounds比不为1。
+        # Case2: Investigator 向 Analyst 提出需要分析的内容。
+        ## 这种情况下 remain_retrieve_rounds 比不为 1 。
         else: # last_agent_name == 'investigator':
-            # 初始化analyst的信息，并进行分析。
-            ## 使用current_agent_message，不使用documents。
+            # 初始化 analyst 的信息，并进行分析。
+            ## 使用 current_agent_message，不使用 documents 。
             ## assert len(documents) == 0
             investigator_message_content = ContentAnnotator.annotate_with_html_comment(
                 tag='investigator',
@@ -228,7 +228,7 @@ class Analyst(BaseAgent):
             tag='analyst',
             original_text=analyst_message.content,
         )
-        # 构建analysis_process。
+        # 构建 analysis_process 。
         analysis_process = analysis_process + [
             AIMessage(content=analyst_last_message_content),
         ]
@@ -247,7 +247,7 @@ class Analyst(BaseAgent):
             tag='analyst',
             original_text=analyst_message.content,
         )
-        # 构建decision_shared_messages。
+        # 构建 decision_shared_messages 。
         decision_shared_messages = decision_shared_messages + [
             HumanMessage(content=analyst_last_message_content),
         ]
