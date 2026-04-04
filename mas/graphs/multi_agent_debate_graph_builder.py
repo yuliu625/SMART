@@ -1,5 +1,7 @@
 """
 Design Pattern: multi-agent debate
+
+fixed rounds and independent judge
 """
 
 from __future__ import annotations
@@ -16,6 +18,8 @@ from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 from mas.edges.multi_agent_condition_edges import (
     is_need_transfer_to_opponent,
     is_need_transfer_to_proponent,
+    check_next_agent,
+    is_debate_end,
 )
 
 from langgraph.graph import (
@@ -32,7 +36,7 @@ if TYPE_CHECKING:
 
 class MultiAgentDebateGraphBuilder:
     """
-    计算图的构造器。
+    multi-agent debate graph
     """
     def __init__(
         self,
@@ -40,8 +44,6 @@ class MultiAgentDebateGraphBuilder:
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
-        # 注册需要的工具。
-        raise NotImplementedError("权衡是否需要引入 RAG ?")
 
     def build_graph(
         self,
@@ -81,7 +83,9 @@ class MultiAgentDebateGraphBuilder:
         self.graph_builder.add_node('proponent', proponent.process_state)
         self.graph_builder.add_node('opponent', opponent.process_state)
         # RAG
-        self.graph_builder.add_node('rag', rag.process_state)
+        ## 符合函数式编程的 node ，注册 2 次无副作用。
+        self.graph_builder.add_node('proponent_rag', rag.process_state)
+        self.graph_builder.add_node('opponent_rag', rag.process_state)
 
     def _add_edges(self):
         """
@@ -90,29 +94,23 @@ class MultiAgentDebateGraphBuilder:
         # 输入的内容由 surveyor 进行处理。
         self.graph_builder.add_edge(START, 'surveyor')
         # Proponent 和 opponent 交替进行分析和判断。
-        ## 首先约定由 proponent 开始。
-        self.graph_builder.add_edge('surveyor', 'proponent')
-        ## proponent 根据情况选择选择 rag opponent adjudicator 。
-        self.graph_builder.add_conditional_edges(
-            'proponent',
-            is_need_transfer_to_opponent,
-            {
-                'opponent': 'rag',  # HACK: 转移控制权给对方前，进行检索。
-                'adjudicator': 'adjudicator',
-            },
-        )
-        ## opponent 根据情况选择选择 rag proponent adjudicator 。
+        ## 首先约定由 proponent_rag 开始。
+        self.graph_builder.add_edge('surveyor', 'proponent_rag')
+        ## 实验用 proponent
+        # 根据情况选择选择 rag opponent adjudicator 。
+        self.graph_builder.add_edge('proponent_rag', 'proponent')
+        ## 实验用 opponent
+        self.graph_builder.add_edge('proponent', 'opponent_rag')
+        self.graph_builder.add_edge('opponent_rag', 'opponent')
+        ## 判断 debate 是否终止。
         self.graph_builder.add_conditional_edges(
             'opponent',
-            is_need_transfer_to_proponent,
+            is_debate_end,
             {
-                'proponent': 'rag',  # HACK: 转移控制权给对方前，进行检索。
+                'proponent': 'proponent_rag',
                 'adjudicator': 'adjudicator',
             },
         )
-        # RAG 返回的结果一定交给 proponent 或 opponent 进行处理。
-        self.graph_builder.add_edge('rag', 'proponent')
-        self.graph_builder.add_edge('rag', 'opponent')
         # Adjudicator 读取全部的信息，并做出最终的判断。
         self.graph_builder.add_edge('adjudicator', END)
 
