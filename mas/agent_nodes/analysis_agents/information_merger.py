@@ -1,7 +1,7 @@
 """
 Information Merger.
 
-实际为静态处理node，仅sequential workflow中会使用。
+实际为静态处理 node ，仅 sequential workflow 中会使用。
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ class InformationMerger:
             text_documents=documents,
         )
         document_content = f"Query: \n {current_agent_message}\n RAG Results: \n{document_content}"
-        rag_message_content = ContentAnnotator.annotate_with_html_comment(
+        rag_message_content = ContentAnnotator.safe_annotate_with_html(
             tag='rag',
             original_text=document_content,
         )
