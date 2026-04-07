@@ -73,8 +73,8 @@ class Proponent(BaseAgent):
         return dict(
             decision_shared_messages=debate_process,
             current_message=debate_result.structured_output.agent_message,
-            current_agent_name='proponent',
-            last_agent_name='proponent_rag',
+            current_agent_name='opponent_rag',
+            last_agent_name='proponent',
         )
 
     # ==== 主要方法。 ====
