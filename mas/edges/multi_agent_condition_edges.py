@@ -26,3 +26,20 @@ def is_need_transfer_to_proponent(
 ) -> Literal['adjudicator', 'proponent']:
     raise NotImplementedError
 
+
+def is_debate_end(
+    state: MultiAgentDebateState,
+) -> Literal['proponent', 'adjudicator']:
+    if state.remaining_debate_rounds == 0:
+        # 实验用固定辩论轮次。
+        return 'adjudicator'
+    else:
+        return 'proponent'
+
+
+# ==== for RAG ====
+def check_next_agent(
+    state: MultiAgentDebateState,
+) -> Literal['adjudicator', 'proponent', 'opponent']:
+    raise NotImplementedError
+
