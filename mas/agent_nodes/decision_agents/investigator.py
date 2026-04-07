@@ -1,7 +1,7 @@
 """
 验证者。
 
-Decision-Module部分需要具体设计的Agent。
+Decision-Module 部分需要具体设计的 Agent 。
 """
 
 from __future__ import annotations
@@ -34,12 +34,12 @@ class Investigator(BaseAgent):
         schema_pydantic_base_model: type[BaseModel],
         formatter_llm_system_message: SystemMessage,
     ):
-        # 重要agent，必须要有输出格式。
+        # 重要 agent ，必须要有输出格式。
         super().__init__(
             main_llm=main_llm,
             main_llm_system_message=main_llm_system_message,
             main_llm_max_retries=3,
-            # 需要结构化输出，确定下一步决策和调用的agent。
+            # 需要结构化输出，确定下一步决策和调用的 agent 。
             is_need_structured_output=True,
             formatter_llm=formatter_llm,
             schema_pydantic_base_model=schema_pydantic_base_model,
@@ -54,41 +54,41 @@ class Investigator(BaseAgent):
         config: RunnableConfig,
     ) -> dict:
         """
-        Decision-Module最重要的部分，进行分析和决策。
+        Decision-Module 最重要的部分，进行分析和决策。
 
         Args:
-            state (FinalMASState): 使用的state。需要字段:
+            state (FinalMASState): 使用的 state 。需要字段:
                 - decision_shared_messages:
-                    - Case1: Surveyor之后的shared_messages。
-                    - Case2: Analyst之后的shared_messages。
+                    - Case1: Surveyor 之后的 shared_messages 。
+                    - Case2: Analyst 之后的 shared_messages 。
                 - remaining_validation_rounds: 剩余的验证次数。
             config (RunnableConfig): 运行设置。
 
         Returns:
             dict: 进行更新的字段，包括:
-                - decision_shared_messages: 更新了investigator后的shared_messages。
-                - current_agent_name: 下一个运行的agent。
-                - current_message: investigator对analyst提出的要求。
+                - decision_shared_messages: 更新了 investigator 后的 shared_messages 。
+                - current_agent_name: 下一个运行的 agent 。
+                - current_message: investigator 对 analyst 提出的请求。
                 - remaining_validation_rounds: 剩余的验证次数。
         """
-        # Agent内: 根据甚于验证次数，处理surveyor或analyst的message。
+        # Agent内: 根据甚于验证次数，处理 surveyor 或 analyst 的 message 。
         decision_shared_messages = self.before_call_investigator(
             decision_shared_messages=state.decision_shared_messages,
             remaining_validation_rounds=state.remaining_validation_rounds,
         )
-        # Agent内: 获取investigator的分析和决策。
+        # Agent内: 获取 investigator 的分析和决策。
         investigator_result = await self.verify_details(
             decision_shared_messages=decision_shared_messages,
         )
-        # 整个MAS: 构建shared_messages。
+        # 整个MAS: 构建 shared_messages 。
         decision_shared_messages = self.after_call_investigator(
             investigator_message=investigator_result.ai_message,
             decision_shared_messages=decision_shared_messages,
         )
-        # 根据剩余验证轮数调用下一个agent。
+        # 根据剩余验证轮数调用下一个 agent 。
         if state.remaining_validation_rounds == 0:
             # 已经用完验证次数，需要进行最终决定。
-            # 这个判断是system层级冗余稳定判断。
+            # 这个判断是 system 层级冗余稳定判断。
             return dict(
                 decision_shared_messages=decision_shared_messages,
                 # current_message=investigator_result.structured_output.agent_message,  # 为保持一致返回的字段。
@@ -98,11 +98,11 @@ class Investigator(BaseAgent):
             )
         else:
             # 正常运行。
-            # Case1: 请求的是adjudicator，主动结束分析。
-            # Case2: 请求analyst，对于某些details要求分析。
+            # Case1: 请求的是 adjudicator ，主动结束分析。
+            # Case2: 请求 analyst ，对于某些 details 要求分析。
             return dict(
                 decision_shared_messages=decision_shared_messages,
-                current_message=investigator_result.structured_output.agent_message,  # 当对analyst时，为调查的内容。
+                current_message=investigator_result.structured_output.agent_message,  # 当对 analyst 时，为调查的内容。
                 remaining_validation_rounds=state.remaining_validation_rounds - 1,  # 使用一次验证，更新可验证次数-1。或者去仲裁。
                 current_agent_name=investigator_result.structured_output.agent_name,  # analyst | adjudicator
                 last_agent_name='investigator',
@@ -131,41 +131,41 @@ class Investigator(BaseAgent):
         处理给予Investigator的全部context。
 
         Conditions:
-            - Case1: Surveyor以HumanMessage进行的初始启动。
+            - Case1: Surveyor 以 HumanMessage 进行的初始启动。
                 - Case1.1: 初始启动。
             - Case2: Analyst提交的分析结论。
                 - Case2.1: 常规调查流程中。
                 - Case2.2: 以及用完所有验证次数。
 
         Args:
-            decision_shared_messages (list[AnyMessage]): 由Surveyor初始化，或由Analyst提交的shared_messages。
+            decision_shared_messages (list[AnyMessage]): 由 Surveyor 初始化，或由 Analyst 提交的 shared_messages 。
             remaining_validation_rounds (int): 剩余验证次数。
 
         Returns:
-            list[AnyMessage]: 根据各种条件，添加引导后的，提交给Investigator的shared_messages。
+            list[AnyMessage]: 根据各种条件，添加引导后的，提交给 Investigator 的 shared_messages 。
         """
         decision_shared_messages_ = decision_shared_messages.copy()
-        # 如果是刚刚初始化的decision_shared_messages。里面的message是recognizer写的。
+        # 如果是刚刚初始化的 decision_shared_messages 。里面的 message 是 recognizer 写的。
         if len(decision_shared_messages_) == 1:
-            # 直接返回shared_messages，不做处理。
+            # 直接返回 shared_messages ，不做处理。
             return decision_shared_messages_
-        # else: 正常和analyst进行交互的轮次。
-        # 最后一轮message是:
-        # Case1: Surveyor以HumanMessage进行的初始启动。
-        # Case2: Analyst提交的分析结论。
+        # else: 正常和 analyst 进行交互的轮次。
+        # 最后一轮 message 是:
+        # Case1: Surveyor 以 HumanMessage 进行的初始启动。
+        # Case2: Analyst 提交的分析结论。
         logger.debug(f"decision_shared_messages: {decision_shared_messages_}")
         logger.debug(f"Type of decision_shared_messages: {type(decision_shared_messages_[-1])}")
         assert isinstance(decision_shared_messages_[-1], HumanMessage)
-        # 提取最后一轮的message。
+        # 提取最后一轮的 message 。
         last_round_content = decision_shared_messages_[-1].content
-        # 根据剩余验证次数，添加引导prompt。
+        # 根据剩余验证次数，添加引导 prompt 。
         if remaining_validation_rounds == 0:
             # Case2.2: 以及用完所有验证次数。
             # 最后验证提醒。
             last_round_content = (
                 last_round_content
                 + f"\n还剩{remaining_validation_rounds}次验证次数。"
-                + "\n已经用完调查次数，现在必须做出最终结论交给Adjudicator做出最终决定。"
+                + "\n已经用完调查次数，现在必须做出最终结论交给 Adjudicator 做出最终决定。"
             )
         else:
             # Case1.1: 初始启动。
@@ -174,7 +174,7 @@ class Investigator(BaseAgent):
             last_round_content = (
                 last_round_content
                 + f"\n还剩{remaining_validation_rounds}次验证次数。"
-                + f"\n你还可以提出一些点进行调查，或交给Adjudicator做出最终决定。"
+                + f"\n你还可以提出一些点进行调查，或交给 Adjudicator 做出最终决定。"
             )
         decision_shared_messages_[-1] = HumanMessage(content=last_round_content)
         return decision_shared_messages_
@@ -186,24 +186,24 @@ class Investigator(BaseAgent):
         decision_shared_messages: list[AnyMessage],
     ) -> list[AnyMessage]:
         """
-        对于shared_messages，当前investigator为主要使用者。
+        对于 shared_messages ，当前 investigator 为主要使用者。
 
         Args:
-            investigator_message (AIMessage): Investigator的message。但是没有标记tag。
-            decision_shared_messages (list[AnyMessage]): 在Investigator之前的decision_shared_messages。
+            investigator_message (AIMessage): Investigator 的 message 。但是没有标记 tag 。
+            decision_shared_messages (list[AnyMessage]): 在 Investigator 之前的 decision_shared_messages 。
 
         Returns:
-            list[AnyMessage]: Investigator的message被标记，全部完整的decision_shared_messages。
+            list[AnyMessage]: Investigator 的 message 被标记，全部完整的 decision_shared_messages 。
         """
         assert isinstance(investigator_message, AIMessage)
         # 标注身份。
-        investigator_last_message_content = ContentAnnotator.annotate_with_html_comment(
+        investigator_last_message_content = ContentAnnotator.safe_annotate_with_html(
             tag='investigator',
             original_text=investigator_message.content,
         )
-        # 构建decision_shared_messages。
+        # 构建 decision_shared_messages 。
         decision_shared_messages = decision_shared_messages + [
-            AIMessage(content=investigator_last_message_content),  # 把investigator的信息放进去。
+            AIMessage(content=investigator_last_message_content),  # 把 investigator 的信息放进去。
         ]
         return decision_shared_messages
 
