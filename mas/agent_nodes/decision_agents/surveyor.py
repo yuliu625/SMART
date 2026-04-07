@@ -1,7 +1,7 @@
 """
 识别者。
 
-Decision-Module，起始阶段agent。
+Decision-Module，起始阶段 agent 。
 """
 
 from __future__ import annotations
@@ -31,15 +31,15 @@ class Surveyor(BaseAgent):
         - 初步识别风险，分派验证任务。
 
     架构:
-        - 在MAS中的decision模块。
-        - 在整个MAS开始，仅运行一次。
+        - 在 MAS 中的 decision 模块。
+        - 在整个 MAS 开始，仅运行一次。
     """
     def __init__(
         self,
         main_llm: BaseChatModel,
         main_llm_system_message: SystemMessage,
     ):
-        # 基本的agent，不对于输出进行限制。
+        # 基本的 agent ，不对于输出进行限制。
         super().__init__(
             main_llm=main_llm,
             main_llm_system_message=main_llm_system_message,
@@ -59,35 +59,35 @@ class Surveyor(BaseAgent):
         config: RunnableConfig,
     ) -> dict:
         """
-        由于surveyor为初始化运行且仅运行一次，surveyor不专门设置chat-history，由surveyor完成全部的初始化。
+        由于 surveyor 为初始化运行且仅运行一次， surveyor 不专门设置 chat-history ，由 surveyor 完成全部的初始化。
 
         Args:
-            state (FinalMASState): 使用的state。需要字段:
+            state (FinalMASState): 使用的 state 。需要字段:
                 - original_pdf_text: 原始文档的文本信息。
             config (RunnableConfig): 运行设置。
 
         Returns:
             dict: 进行更新的字段，包括:
-                - decision_shared_messages: 初始化的decision_shared_messages。
-                - current_agent_name: 下一个运行的agent。冗余字段，固定边一定指向 'investigator'。
+                - decision_shared_messages: 初始化的 decision_shared_messages 。
+                - current_agent_name: 下一个运行的 agent 。冗余字段，固定边一定指向 'investigator'。
         """
         recognizer_response = await self.read_original_pdf_text(
             original_pdf_text=state.original_pdf_text,
         )
-        # 获得共享的memory。
+        # 获得共享的 memory 。
         decision_shared_messages = self.initiate_decision_shared_messages(
-            surveyor_message=recognizer_response.ai_message,  # 这里的response只需要surveyor的ai_message。
+            surveyor_message=recognizer_response.ai_message,  # 这里的 response 只需要 surveyor 的 ai_message 。
         )
         assert isinstance(decision_shared_messages, list)
         assert len(decision_shared_messages) == 1
-        assert isinstance(decision_shared_messages[0], HumanMessage)  # 这里需要是HumanMessage才可以启动后续的Investigator。
+        assert isinstance(decision_shared_messages[0], HumanMessage)  # 这里需要是 HumanMessage 才可以启动后续的 Investigator 。
         return dict(
             decision_shared_messages=decision_shared_messages,
-            current_agent_name='investigator',  # 并没有发出请求，但是下一个一定是validator。
+            current_agent_name='investigator',  # 并没有发出请求，但是下一个一定是 investigator 。
             last_agent_name='surveyor',
         )
 
-    # ====主要方法。====
+    # ==== 主要方法。 ====
     async def read_original_pdf_text(
         self,
         original_pdf_text: str,
@@ -101,7 +101,7 @@ class Surveyor(BaseAgent):
         Returns:
             AIMessage: 初始化的decision_shared_messages。agent_request为空。
         """
-        # 对于初始pdf的文本内容进行分析。
+        # 对于初始 PDF 的文本内容进行分析。
         response = await self.a_call_llm_with_retry(
             messages=[
                 self.main_llm_system_message,
@@ -109,36 +109,32 @@ class Surveyor(BaseAgent):
             ],
         )
         return response
-        # return AgentProcessedResult(
-        #     messages=response.ai_message,
-        #     agent_request='validator',  # 并没有发出请求，但是下一个一定是validator。
-        # )
 
-    # ====工具方法。====
+    # ==== 工具方法。 ====
     def initiate_decision_shared_messages(
         self,
         surveyor_message: AIMessage,
     ) -> list[AnyMessage]:
         """
-        将surveyor初始识别的结果转换，封装为初始decision_shared_messages。
-        对于shared_messages，主要使用者为investigator，surveyor以HumanMessage初始化作为启动。
+        将 surveyor 初始识别的结果转换，封装为初始 decision_shared_messages 。
+        对于 shared_messages ，主要使用者为 investigator ， surveyor 以 HumanMessage 初始化作为启动。
 
         Args:
-            surveyor_message (AIMessage): surveyor初始识别的结果。
+            surveyor_message (AIMessage): surveyor 初始识别的结果。
 
         Returns:
             list[AnyMessage]: decision_shared_messages。
-                这个专用方法实际返回的是decision_shared_messages，为list[HumanMessage]，仅一条初始的human-message。
+                这个专用方法实际返回的是 decision_shared_messages ，为 list[HumanMessage]，仅一条初始的 human-message 。
         """
         assert isinstance(surveyor_message, AIMessage)
         # 标注身份。
-        surveyor_first_message_content = ContentAnnotator.annotate_with_html_comment(
+        surveyor_first_message_content = ContentAnnotator.safe_annotate_with_html(
             tag='surveyor',
             original_text=surveyor_message.content,
         )
-        # 构建decision_shared_messages。
+        # 构建 decision_shared_messages 。
         decision_shared_messages = [
-            HumanMessage(content=surveyor_first_message_content),  # 把surveyor的信息放进去。
+            HumanMessage(content=surveyor_first_message_content),  # 把 surveyor 的信息放进去。
         ]
         return decision_shared_messages
 
