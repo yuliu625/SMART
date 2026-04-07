@@ -153,7 +153,7 @@ class Analyst(BaseAgent):
                     last_agent_name='analyst',
                 )
 
-    # ====主要方法。====
+    # ==== 主要方法。 ====
     async def read_instruction_or_documents(
         self,
         analysis_process: list[AnyMessage],
@@ -183,7 +183,7 @@ class Analyst(BaseAgent):
                 text_documents=documents,
             )
             document_content = f"Query: \n {current_message}\n Result: \n{document_content}"
-            rag_message_content = ContentAnnotator.annotate_with_html_comment(
+            rag_message_content = ContentAnnotator.safe_annotate_with_html(
                 tag='rag',
                 original_text=document_content,
             )
@@ -209,7 +209,7 @@ class Analyst(BaseAgent):
             # 初始化 analyst 的信息，并进行分析。
             ## 使用 current_agent_message，不使用 documents 。
             ## assert len(documents) == 0
-            investigator_message_content = ContentAnnotator.annotate_with_html_comment(
+            investigator_message_content = ContentAnnotator.safe_annotate_with_html(
                 tag='investigator',
                 original_text=current_message,
             )
@@ -224,7 +224,7 @@ class Analyst(BaseAgent):
     ) -> list[AnyMessage]:
         assert isinstance(analyst_message, AIMessage)
         # 标注身份。
-        analyst_last_message_content = ContentAnnotator.annotate_with_html_comment(
+        analyst_last_message_content = ContentAnnotator.safe_annotate_with_html(
             tag='analyst',
             original_text=analyst_message.content,
         )
@@ -243,7 +243,7 @@ class Analyst(BaseAgent):
         assert isinstance(analyst_message, AIMessage)
         assert isinstance(decision_shared_messages[-1], AIMessage)
         # 标注身份。
-        analyst_last_message_content = ContentAnnotator.annotate_with_html_comment(
+        analyst_last_message_content = ContentAnnotator.safe_annotate_with_html(
             tag='analyst',
             original_text=analyst_message.content,
         )
