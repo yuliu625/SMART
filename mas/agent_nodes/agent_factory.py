@@ -1,5 +1,5 @@
 """
-构建各个作为agent的node。
+构建各个作为 agent 的 node 。
 """
 
 from __future__ import annotations
@@ -12,6 +12,8 @@ from mas.agent_nodes.decision_agents.adjudicator import Adjudicator
 # Analysis
 from mas.agent_nodes.analysis_agents.analyst import Analyst
 from mas.agent_nodes.analysis_agents.information_merger import InformationMerger
+from mas.agent_nodes.analysis_agents.proponent import Proponent
+from mas.agent_nodes.analysis_agents.opponent import Opponent
 
 from typing import TYPE_CHECKING, Literal, cast
 if TYPE_CHECKING:
@@ -101,6 +103,40 @@ class AgentFactory:
         # HACK: 我知道是这个样子，但是设计protocol会复杂化问题。下面这个对象有支持正确运行的方法。
         # information_merger = cast(BaseAgent, information_merger)
         return information_merger
+
+    @staticmethod
+    def create_proponent(
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage,
+    ) -> BaseAgent:
+        proponent = Proponent(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+        )
+        return proponent
+
+    @staticmethod
+    def create_opponent(
+        main_llm: BaseChatModel,
+        main_llm_system_message: SystemMessage,
+        formatter_llm: BaseChatModel,
+        schema_pydantic_base_model: type[BaseModel],
+        formatter_llm_system_message: SystemMessage,
+    ) -> BaseAgent:
+        opponent = Opponent(
+            main_llm=main_llm,
+            main_llm_system_message=main_llm_system_message,
+            formatter_llm=formatter_llm,
+            schema_pydantic_base_model=schema_pydantic_base_model,
+            formatter_llm_system_message=formatter_llm_system_message,
+        )
+        return opponent
 
     @staticmethod
     def create_rag_agent(
