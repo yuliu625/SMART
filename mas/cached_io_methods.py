@@ -1,7 +1,7 @@
 """
-对于当前MAS的IO方法。
+对于当前 MAS 的 IO 方法。
 
-针对mas.schemas中的定义。
+针对 mas.schemas 中的定义，直接读取对应方法下的 surveyor cache 。
 """
 
 from __future__ import annotations
@@ -9,6 +9,7 @@ from loguru import logger
 
 from mas.schemas.single_agent_state import SingleAgentState
 from mas.schemas.sequential_workflow_state import SequentialWorkflowState
+from mas.schemas.multi_agent_debate_state import MultiAgentDebateState
 from mas.schemas.final_mas_state import FinalMASState
 # from rag.loading.load_text import TextLoadingMethods
 from mas.prompts.prompt_template_loader import PromptTemplateLoader
@@ -27,6 +28,7 @@ from typing import TYPE_CHECKING
 
 
 class CachedIOMethods:
+    # ==== 为代码规整，实际不会使用的方法。 ====
     @staticmethod
     def load_cached_single_agent_state(
         surveyor_cache_path: str | Path,
@@ -89,7 +91,7 @@ class CachedIOMethods:
             current_message=query_text,
             decision_shared_messages=[
                 HumanMessage(
-                    content=ContentAnnotator.annotate_with_html_comment(
+                    content=ContentAnnotator.safe_annotate_with_html(
                         tag='surveyor',
                         original_text=surveyor_content,
                     ),
@@ -126,6 +128,53 @@ class CachedIOMethods:
         return state
 
     @staticmethod
+    def load_cached_multi_agent_debate_state(
+        surveyor_cache_path: str | Path,
+    ) -> MultiAgentDebateState:
+        # 处理路径。
+        surveyor_cache_path = Path(surveyor_cache_path)
+        # 读取文本。
+        surveyor_content = surveyor_cache_path.read_text(encoding='utf-8')
+        # 构造state。
+        multi_agent_debate_state = MultiAgentDebateState(
+            original_pdf_text="",
+            decision_shared_messages=[
+                HumanMessage(
+                    content=ContentAnnotator.safe_annotate_with_html(
+                        tag='surveyor',
+                        original_text=surveyor_content,
+                    ),
+                ),
+            ],
+        )
+        logger.trace(f"\nLoaded Cached MultiAgentDebateState: \n{multi_agent_debate_state}")
+        return multi_agent_debate_state
+
+    @staticmethod
+    def save_cached_multi_agent_debate_state(
+        state: MultiAgentDebateState,
+        result_path: str | Path,
+    ) -> MultiAgentDebateState:
+        # 处理路径。
+        result_path = Path(result_path)
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        # 读取结果。
+        result = dict(
+            decision_shared_messages=messages_to_dict(
+                messages=state['decision_shared_messages'],
+            ),
+            final_decision=state['final_decision'].model_dump(),
+        )
+        logger.trace(f"\nMultiAgentDebateState to save: \n{result}")
+        # 执行保存。
+        result_path.write_text(
+            json.dumps(result, ensure_ascii=False, indent=4),
+            encoding='utf-8',
+        )
+        logger.success(f"\nSaved Cached MultiAgentDebateState: \n{result}")
+        return state
+
+    @staticmethod
     def load_cached_final_mas_state(
         surveyor_cache_path: str | Path,
     ) -> FinalMASState:
@@ -138,7 +187,7 @@ class CachedIOMethods:
             original_pdf_text="",
             decision_shared_messages=[
                 HumanMessage(
-                    content=ContentAnnotator.annotate_with_html_comment(
+                    content=ContentAnnotator.safe_annotate_with_html(
                         tag='surveyor',
                         original_text=surveyor_content,
                     ),
