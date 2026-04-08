@@ -1,7 +1,7 @@
 """
-对于当前MAS的IO方法。
+对于当前 MAS 的 IO 方法。
 
-针对mas.schemas中的定义。
+针对 mas.schemas 中的定义。
 """
 
 from __future__ import annotations
@@ -9,6 +9,7 @@ from loguru import logger
 
 from mas.schemas.single_agent_state import SingleAgentState
 from mas.schemas.sequential_workflow_state import SequentialWorkflowState
+from mas.schemas.multi_agent_debate_state import MultiAgentDebateState
 from mas.schemas.final_mas_state import FinalMASState
 # from rag.loading.load_text import TextLoadingMethods
 from mas.prompts.prompt_template_loader import PromptTemplateLoader
@@ -34,7 +35,7 @@ class IOMethods:
         markdown_file_path = Path(markdown_file_path)
         # 读取文本。
         markdown_text = markdown_file_path.read_text(encoding='utf-8')
-        # 构造state。
+        # 构造 state 。
         single_agent_state = SingleAgentState(
             decision_shared_messages=[
                 HumanMessage(content=markdown_text),
@@ -82,7 +83,7 @@ class IOMethods:
         query_text = PromptTemplateLoader.load_human_message_prompt_template_from_j2(
             human_message_prompt_template_path=general_query_path,
         ).format().content
-        # 构造state。
+        # 构造 state 。
         sequential_workflow_state = SequentialWorkflowState(
             original_pdf_text=markdown_text,
             current_message=query_text,
@@ -117,6 +118,45 @@ class IOMethods:
         return state
 
     @staticmethod
+    def load_multi_agent_debate_state(
+        markdown_file_path: str | Path,
+    ) -> MultiAgentDebateState:
+        # 处理路径。
+        markdown_file_path = Path(markdown_file_path)
+        # 读取文本。
+        markdown_text = markdown_file_path.read_text(encoding='utf-8')
+        # 构造 state 。
+        multi_agent_debate_state = MultiAgentDebateState(
+            original_pdf_text=markdown_text,
+        )
+        logger.trace(f"\n Loaded MultiAgentDebateState: \n{multi_agent_debate_state}")
+        return multi_agent_debate_state
+
+    @staticmethod
+    def save_multi_agent_debate_state(
+        state: MultiAgentDebateState,
+        result_path: str | Path,
+    ) -> MultiAgentDebateState:
+        # 处理路径。
+        result_path = Path(result_path)
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        # 读取结果。
+        result = dict(
+            decision_shared_messages=messages_to_dict(
+                messages=state['decision_shared_messages'],
+            ),
+            final_decision=state['final_decision'].model_dump(),
+        )
+        logger.trace(f"\nMultiAgentDebateState to save: \n{result}")
+        # 执行保存。
+        result_path.write_text(
+            json.dumps(result, ensure_ascii=False, indent=4),
+            encoding='utf-8',
+        )
+        logger.success(f"\nSaved MultiAgentDebateState: \n{result}")
+        return state
+
+    @staticmethod
     def load_final_mas_state(
         markdown_file_path: str | Path,
     ) -> FinalMASState:
@@ -124,7 +164,7 @@ class IOMethods:
         markdown_file_path = Path(markdown_file_path)
         # 读取文本。
         markdown_text = markdown_file_path.read_text(encoding='utf-8')
-        # 构造state。
+        # 构造 state 。
         final_mas_state = FinalMASState(
             original_pdf_text=markdown_text,
         )
