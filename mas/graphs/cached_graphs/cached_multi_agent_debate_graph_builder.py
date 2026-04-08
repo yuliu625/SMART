@@ -39,21 +39,11 @@ class CachedMultiAgentDebateGraphBuilder:
     """
     def __init__(
         self,
-        state#: type[MASState],
+        state: type[MultiAgentDebateState],
     ):
         # 初始化计算图构建。实际中不会以变量传入state，因为state为数据类，更多实现方法为以包导入并写死。
         self.graph_builder = StateGraph(state)
         # 注册需要的工具。
-        raise NotImplementedError
-
-    def build_graph(
-        self,
-        checkpointer: BaseCheckpointSaver | None = None,
-    ) -> CompiledStateGraph:
-        self._add_nodes()
-        self._add_edges()
-        graph = self.graph_builder.compile(checkpointer=checkpointer)
-        return graph
 
     def build_graph(
         self,
