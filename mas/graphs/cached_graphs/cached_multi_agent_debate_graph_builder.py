@@ -103,12 +103,13 @@ class CachedMultiAgentDebateGraphBuilder:
         """
         # 输入的内容由 surveyor 进行处理。
         # self.graph_builder.add_edge(START, 'surveyor')
-
-        # CHANGE: 系统由 proponent 开始，surveyor 的结果从缓存中加载。
-        self.graph_builder.add_edge(START, 'proponent_rag')
         # Proponent 和 opponent 交替进行分析和判断。
         ## 首先约定由 proponent_rag 开始。
         # self.graph_builder.add_edge('surveyor', 'proponent_rag')
+
+        # CHANGE: 系统由 proponent 开始，surveyor 的结果从缓存中加载。
+        self.graph_builder.add_edge(START, 'proponent_rag')
+
         ## 实验用 proponent
         # 根据情况选择选择 rag opponent adjudicator 。
         self.graph_builder.add_edge('proponent_rag', 'proponent')
