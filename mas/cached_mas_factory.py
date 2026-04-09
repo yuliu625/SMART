@@ -1,5 +1,5 @@
 """
-各种MAS的工厂。
+各种 MAS 的工厂。
 
 注意:
     为了可以直接执行，以及方便实验:
@@ -22,6 +22,7 @@ from mas.graphs.cached_graph_factory import CachedGraphFactory
 # Schemas  暂时不进行封装。
 from mas.schemas.single_agent_state import SingleAgentState
 from mas.schemas.sequential_workflow_state import SequentialWorkflowState
+from mas.schemas.multi_agent_debate_state import MultiAgentDebateState
 from mas.schemas.final_mas_state import FinalMASState
 # Structured Output  暂时不进行封装。
 from mas.schemas.structured_output_format import (
@@ -31,6 +32,8 @@ from mas.schemas.structured_output_format import (
     AdjudicatorDecision,
     # Analysis
     AnalystRequest,
+    ProponentRequest,
+    OpponentRequest,
     # RAG
     RewrittenQueries,
 )
@@ -101,16 +104,9 @@ class CachedMASFactory:
     def create_cached_sequential_workflow(
         llm_base_url: str,
         # Surveyor
-        # surveyor_main_llm_base_url: str,
-        # surveyor_main_llm_model_name: str,
         surveyor_main_llm_system_message_template_path: str,
-        # Investigator
         # Adjudicator
-        # adjudicator_main_llm_base_url: str,
-        # adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
-        # adjudicator_formatter_llm_base_url: str,
-        # adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
         # Analyst
         # RAG
@@ -181,32 +177,177 @@ class CachedMASFactory:
         return graph
 
     @staticmethod
+    def create_cached_multi_agent_debate(
+        llm_base_url: str,
+        # Surveyor
+        surveyor_main_llm_system_message_template_path: str,
+        # Adjudicator
+        adjudicator_main_llm_system_message_template_path: str,
+        adjudicator_formatter_llm_system_message_template_path: str,
+        # Proponent
+        proponent_main_llm_system_message_template_path: str,
+        proponent_formatter_llm_system_message_template_path: str,
+        # Opponent
+        opponent_main_llm_system_message_template_path: str,
+        opponent_formatter_llm_system_message_template_path: str,
+        # RAG
+        rag,
+    ) -> CompiledStateGraph:
+        graph = CachedGraphFactory.create_cached_multi_agent_debate_graph(
+            # Surveyor
+            surveyor_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='surveyor-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            surveyor_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=surveyor_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            # Adjudicator
+            adjudicator_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='adjudicator-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            adjudicator_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            adjudicator_formatter_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='formatter-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            adjudicator_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=adjudicator_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
+            # HARDCODED
+            adjudicator_structured_output_format=AdjudicatorDecision,
+            # Proponent
+            proponent_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='proponent-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            proponent_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=proponent_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            proponent_formatter_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='formatter-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            proponent_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=proponent_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
+            # HARDCODED
+            proponent_structured_output_format=ProponentRequest,
+            # Opponent
+            opponent_main_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='opponent-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            opponent_main_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=opponent_main_llm_system_message_template_path,
+                ).format(),
+            ),
+            opponent_formatter_llm=LocalLLMFactory.create_openai_llm(
+                base_url=llm_base_url,
+                # HARDCODED
+                model_name='formatter-llm',
+                # HARDCODED
+                temperature=None,
+                max_tokens=None,
+                logprobs=None,
+                use_responses_api=None,
+                max_retries=3,
+                model_configs={},
+            ),
+            opponent_formatter_llm_system_message=cast(
+                SystemMessage,
+                PromptTemplateLoader.load_system_message_prompt_template_from_j2(
+                    system_message_prompt_template_path=opponent_formatter_llm_system_message_template_path,
+                ).format(),
+            ),
+            # HARDCODED
+            opponent_structured_output_format=OpponentRequest,
+            # RAG
+            rag=rag,
+        )
+        return graph
+
+    @staticmethod
     def create_cached_final_mas(
         llm_base_url: str,
         # Surveyor
-        # surveyor_main_llm_base_url: str,
-        # surveyor_main_llm_model_name: str,
         surveyor_main_llm_system_message_template_path: str,
         # Investigator
-        # investigator_main_llm_base_url: str,
-        # investigator_main_llm_model_name: str,
         investigator_main_llm_system_message_template_path: str,
-        # investigator_formatter_llm_base_url: str,
-        # investigator_formatter_llm_model_name: str,
         investigator_formatter_llm_system_message_template_path: str,
         # Adjudicator
-        # adjudicator_main_llm_base_url: str,
-        # adjudicator_main_llm_model_name: str,
         adjudicator_main_llm_system_message_template_path: str,
-        # adjudicator_formatter_llm_base_url: str,
-        # adjudicator_formatter_llm_model_name: str,
         adjudicator_formatter_llm_system_message_template_path: str,
         # Analyst
-        # analyst_main_llm_base_url: str,
-        # analyst_main_llm_model_name: str,
         analyst_main_llm_system_message_template_path: str,
-        # analyst_formatter_llm_base_url: str,
-        # analyst_formatter_llm_model_name: str,
         analyst_formatter_llm_system_message_template_path: str,
         # RAG
         rag,
